@@ -661,23 +661,6 @@
 
       <div class="divider"></div>
 
-      <!-- OPERATOR -->
-      <div class="field-group">
-        <label class="field-label">Operator</label>
-        <div class="spo-ac-wrap">
-          <input type="text" class="field-input" id="rk-operator-input" placeholder="Ketik nama operator..." autocomplete="off">
-          <div class="spo-ac-drop" id="rk-operator-drop"></div>
-        </div>
-      </div>
-
-      <!-- NO ABSEN (auto) -->
-      <div class="field-group">
-        <label class="field-label">No. Absen Operator <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis)</span></label>
-        <input type="text" class="field-input" id="rk-absen" readonly placeholder="Pilih operator dahulu">
-      </div>
-
-      <div class="divider"></div>
-
       <!-- SUBMIT -->
       <button class="btn-submit" id="rkBtnSubmit" onclick="submitRakForm()" style="background:linear-gradient(135deg,#EA580C,#F97316);box-shadow:0 4px 16px rgba(234,88,12,0.3)">
         <i class="ti ti-send" style="font-size:18px"></i>
@@ -1387,7 +1370,6 @@
     document.getElementById('rkTanggal').value = yyyy+'-'+mm+'-'+dd;
     resetRakForm();
     loadRakMasterData();
-    setupRakOperatorInput();
   }
 
   function resetRakForm() {
@@ -1395,8 +1377,6 @@
     rakGroupCount = 0;
     rakGroupsData = {};
     addRakGroup();
-    document.getElementById('rk-operator-input').value = '';
-    document.getElementById('rk-absen').value = '';
   }
 
   // ---- LOAD MASTER DATA (Operator + Riwayat Penerimaan) via JSONP ----
@@ -1439,9 +1419,9 @@
     var out = [];
     masterDataRak.receipts.forEach(function(r) {
       if (seen[r.spo]) return;
-      if (q && r.spo.toLowerCase().indexOf(q) < 0 && r.style.toLowerCase().indexOf(q) < 0) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
       seen[r.spo] = true;
-      out.push({ spo: r.spo, style: r.style });
+      out.push({ spo: r.spo, style: r.style || '' });
     });
     return out;
   }
@@ -1652,10 +1632,22 @@
       + '<div class="row-grid">'
       + '<div class="row-field"><span class="row-field-label">No. Barcode</span><input type="text" class="row-field-input rk-barcode-input" readonly placeholder="Otomatis"></div>'
       + '<div class="row-field"><span class="row-field-label">Qty</span><input type="text" class="row-field-input rk-qty-input" readonly placeholder="Otomatis"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Operator</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input rk-operator-input" id="rk-operator-input-'+rid+'" placeholder="Ketik nama operator...">'
+      + '<div class="spo-ac-drop rk-operator-drop" id="rk-operator-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input rk-absen-input" readonly placeholder="Otomatis">'
       + '</div></div>';
 
     container.appendChild(div);
     setupRakOPCKInput(gid, rid);
+    setupRakOperatorInput(rid);
     updateRakRowBadge(gid);
   }
 
@@ -1744,28 +1736,29 @@
     if (!sizeSel.value && size) sizeSel.value = size;
   }
 
-  // ---- OPERATOR (manual + suggest, dari DATA MASTER OPERATOR) ----
-  function setupRakOperatorInput() {
-    var input = document.getElementById('rk-operator-input');
-    var drop  = document.getElementById('rk-operator-drop');
+  // ---- OPERATOR per baris (manual + suggest, dari DATA MASTER OPERATOR) ----
+  function setupRakOperatorInput(rid) {
+    var input = document.getElementById('rk-operator-input-' + rid);
+    var drop  = document.getElementById('rk-operator-drop-' + rid);
 
     input.oninput = function() {
-      document.getElementById('rk-absen').value = '';
-      renderRakOperatorDrop(input.value);
+      var row = document.getElementById('rk-row-' + rid);
+      row.querySelector('.rk-absen-input').value = '';
+      renderRakOperatorDrop(rid, input.value);
     };
-    input.onfocus = function() { renderRakOperatorDrop(input.value); };
+    input.onfocus = function() { renderRakOperatorDrop(rid, input.value); };
     document.addEventListener('click', function(e) {
       if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
     });
     drop.addEventListener('click', function(e) {
       var item = e.target.closest('[data-nama]');
       if (!item) return;
-      pilihRakOperator(item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+      pilihRakOperator(rid, item.getAttribute('data-nama'), item.getAttribute('data-absen'));
     });
   }
 
-  function renderRakOperatorDrop(query) {
-    var drop = document.getElementById('rk-operator-drop');
+  function renderRakOperatorDrop(rid, query) {
+    var drop = document.getElementById('rk-operator-drop-' + rid);
     if (!masterDataRak.operators.length) { drop.classList.remove('open'); return; }
     var q = query.toLowerCase().trim();
     var filtered = q
@@ -1784,21 +1777,17 @@
     drop.classList.add('open');
   }
 
-  function pilihRakOperator(nama, absen) {
-    document.getElementById('rk-operator-input').value = nama;
-    document.getElementById('rk-operator-drop').classList.remove('open');
-    document.getElementById('rk-absen').value = absen;
+  function pilihRakOperator(rid, nama, absen) {
+    var row = document.getElementById('rk-row-' + rid);
+    document.getElementById('rk-operator-input-' + rid).value = nama;
+    document.getElementById('rk-operator-drop-' + rid).classList.remove('open');
+    row.querySelector('.rk-absen-input').value = absen;
   }
 
   // ---- COLLECT + SUBMIT ----
   function collectRakData() {
     var tanggal = document.getElementById('rkTanggal').value;
     if (!tanggal) return { error: 'Tanggal harus diisi' };
-
-    var operator = document.getElementById('rk-operator-input').value.trim();
-    var absen    = document.getElementById('rk-absen').value;
-    if (!operator) return { error: 'Operator harus diisi' };
-    if (!absen)    return { error: 'Pilih Operator dari daftar saran agar No. Absen terisi' };
 
     var groups = document.querySelectorAll('#rkGroupsContainer .spo-group');
     if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
@@ -1819,20 +1808,24 @@
 
       rowCards.forEach(function(card) {
         if (errorMsg) return;
-        var size    = card.querySelector('.rk-size-select').value;
-        var opck    = card.querySelector('.rk-opck-input').value.trim();
-        var barcode = card.querySelector('.rk-barcode-input').value;
-        var qty     = card.querySelector('.rk-qty-input').value;
-        if (!size)  { errorMsg = 'Size wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
-        if (!opck)  { errorMsg = 'No. OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        var size     = card.querySelector('.rk-size-select').value;
+        var opck     = card.querySelector('.rk-opck-input').value.trim();
+        var barcode  = card.querySelector('.rk-barcode-input').value;
+        var qty      = card.querySelector('.rk-qty-input').value;
+        var operator = card.querySelector('.rk-operator-input').value.trim();
+        var absen    = card.querySelector('.rk-absen-input').value;
+        if (!size)     { errorMsg = 'Size wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (!opck)     { errorMsg = 'No. OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!barcode || !qty) { errorMsg = 'Pilih No. OPCK dari daftar saran agar Barcode & Qty terisi (SPO ' + spo + ')'; return; }
-        allRows.push({ spo:spo, style:style, size:size, opck:opck, barcode:barcode, qty:qty });
+        if (!operator) { errorMsg = 'Operator wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!absen)    { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, size:size, opck:opck, barcode:barcode, qty:qty, operator:operator, absen:absen });
       });
     });
 
     if (errorMsg) return { error: errorMsg };
     if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
-    return { tanggal:tanggal, operator:operator, absen:absen, rows:allRows };
+    return { tanggal:tanggal, rows:allRows };
   }
 
   function submitRakForm() {
