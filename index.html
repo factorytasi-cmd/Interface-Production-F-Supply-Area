@@ -516,9 +516,12 @@
 
       <!-- SPO -->
       <div class="field-group">
-        <label class="field-label">SPO</label>
-        <select class="field-select" id="fSPO" onchange="onSPOChange()">
-          <option value="">— Pilih SPO —</option>
+        <label class="field-label" style="display:flex;align-items:center;justify-content:space-between">
+          <span>SPO</span>
+          <span id="spoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">u23f3 Memuat...</span>
+        </label>
+        <select class="field-select" id="fSPO" onchange="onSPOChange()" disabled>
+          <option value="">— Memuat data SPO... —</option>
         </select>
       </div>
 
@@ -632,22 +635,46 @@
 
   // ---- LOAD MASTER DATA via JSONP ----
   function loadMasterData() {
-    var url = GAS_URL + '?type=in_kulit_master';
+    setSPOStatus("loading");
+    var url = GAS_URL + "?type=in_kulit_master";
     jsonp(url, function(err, data) {
-      if (err || !data || data.status !== 'ok') {
-        showToast('Gagal memuat data SPO', 'error');
+      if (err || !data || data.status !== "ok") {
+        setSPOStatus("error");
+        showToast("Gagal memuat data SPO", "error");
         return;
       }
       masterData.spo = data.spo || [];
       populateSPODropdown();
+      setSPOStatus("ok", masterData.spo.length);
     });
   }
 
+  function setSPOStatus(state, count) {
+    var el = document.getElementById("spoStatus");
+    var sel = document.getElementById("fSPO");
+    if (state === "loading") {
+      el.textContent = "u23f3 Memuat...";
+      el.style.background = "rgba(234,179,8,0.15)";
+      el.style.color = "#7A5700";
+      sel.disabled = true;
+    } else if (state === "ok") {
+      el.textContent = "u2713 " + count + " SPO tersedia";
+      el.style.background = "rgba(29,158,117,0.15)";
+      el.style.color = "#0A5C42";
+      sel.disabled = false;
+    } else if (state === "error") {
+      el.textContent = "u2717 Gagal memuat";
+      el.style.background = "rgba(220,53,69,0.15)";
+      el.style.color = "#7D1B1B";
+      sel.disabled = false;
+    }
+  }
+
   function populateSPODropdown() {
-    var sel = document.getElementById('fSPO');
-    sel.innerHTML = '<option value="">— Pilih SPO —</option>';
+    var sel = document.getElementById("fSPO");
+    sel.innerHTML = "<option value="">— Pilih SPO —</option>";
     masterData.spo.forEach(function(item) {
-      var opt = document.createElement('option');
+      var opt = document.createElement("option");
       opt.value = item.spo;
       opt.textContent = item.spo;
       sel.appendChild(opt);
