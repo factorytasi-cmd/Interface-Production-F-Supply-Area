@@ -2108,6 +2108,26 @@
     return out;
   }
 
+  // "445-448" -> ["445","446","447","448"]; "445" (tanpa range) -> ["445"]
+  function parseBarcodeRange(rangeStr) {
+    var s = (rangeStr || '').trim();
+    if (!s) return [];
+    var parts = s.split('-');
+    if (parts.length === 2) {
+      var startStr = parts[0].trim();
+      var endStr   = parts[1].trim();
+      var start = parseInt(startStr, 10);
+      var end   = parseInt(endStr, 10);
+      if (!isNaN(start) && !isNaN(end) && end >= start) {
+        var width = startStr.length;
+        var out = [];
+        for (var n = start; n <= end; n++) out.push(String(n).padStart(width, '0'));
+        return out;
+      }
+    }
+    return [s];
+  }
+
   function outBarcodesFor(spo, operator, size) {
     var s = (spo || '').trim().toLowerCase();
     var o = (operator || '').trim().toLowerCase();
@@ -2118,9 +2138,11 @@
       if (r.spo.toLowerCase() !== s) return;
       if (r.operator.toLowerCase() !== o) return;
       if (r.size !== size) return;
-      if (seen[r.barcode]) return;
-      seen[r.barcode] = true;
-      out.push({ barcode: r.barcode, opck: r.opck });
+      parseBarcodeRange(r.barcode).forEach(function(num) {
+        if (seen[num]) return;
+        seen[num] = true;
+        out.push({ barcode: num, opck: r.opck });
+      });
     });
     return out;
   }
