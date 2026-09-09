@@ -96,6 +96,7 @@
     .card-issue   { background: rgba(55,138,221,0.1);  border: 0.5px solid rgba(55,138,221,0.22); }
     .card-cutting { background: rgba(155,109,220,0.1); border: 0.5px solid rgba(155,109,220,0.22); }
     .card-in      { background: rgba(234,179,8,0.1);   border: 0.5px solid rgba(234,179,8,0.28); }
+    .card-rak     { background: rgba(234,88,12,0.1);   border: 0.5px solid rgba(234,88,12,0.25); }
     .card-out     { background: rgba(29,158,117,0.1);  border: 0.5px solid rgba(29,158,117,0.22); }
 
     .card-inner { padding: 20px; }
@@ -105,11 +106,13 @@
     .badge-issue   { background: rgba(55,138,221,0.15);  color: #134E8A; }
     .badge-cutting { background: rgba(155,109,220,0.15); color: #4A1D8A; }
     .badge-in      { background: rgba(234,179,8,0.15);   color: #7A5700; }
+    .badge-rak     { background: rgba(234,88,12,0.15);   color: #9A3E0A; }
     .badge-out     { background: rgba(29,158,117,0.15);  color: #0A5C42; }
 
     .icon-issue   { background: rgba(55,138,221,0.15); }
     .icon-cutting { background: rgba(155,109,220,0.15); }
     .icon-in      { background: rgba(234,179,8,0.15); }
+    .icon-rak     { background: rgba(234,88,12,0.15); }
     .icon-out     { background: rgba(29,158,117,0.15); }
 
     .card-icon-wrap { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
@@ -121,6 +124,7 @@
     .btn-issue   { background: rgba(55,138,221,0.1);  color: #134E8A; border-color: rgba(55,138,221,0.3); }
     .btn-cutting { background: rgba(155,109,220,0.1); color: #4A1D8A; border-color: rgba(155,109,220,0.3); }
     .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
+    .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
     .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
 
     /* FOOTER */
@@ -466,6 +470,23 @@
           </div>
         </div>
 
+        <div class="card card-rak" onclick="goTo('page-form-rak')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-rak">Proses</span>
+              <div class="card-icon-wrap icon-rak">
+                <i class="ti ti-transfer" style="font-size:20px;color:#EA580C"></i>
+              </div>
+            </div>
+            <div class="card-title">Rak ke Proses</div>
+            <div class="card-desc">Catat perpindahan kulit dari rak penyimpanan ke proses produksi</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-arrow-right-circle" style="font-size:13px"></i> Input per perpindahan</span>
+              <span class="card-btn btn-rak">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
         <div class="card card-out">
           <div class="card-inner">
             <div class="card-top">
@@ -575,7 +596,141 @@
     </div>
   </div>
 
-  <!-- ==================== PAGE 4: DAILY ISSUE ==================== -->
+  <!-- ==================== PAGE 4: RAK KE PROSES ==================== -->
+  <div class="page" id="page-form-rak">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">RAK KE PROSES</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#EA580C,#F97316)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › RAK KE PROSES</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(234,88,12,0.12);border-color:rgba(234,88,12,0.3)">
+        <i class="ti ti-transfer" style="color:#EA580C"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#9A3E0A">Rak ke Proses</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="rkTanggal">
+      </div>
+
+      <!-- SPO -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">SPO</label>
+        <span id="rkSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,88,12,0.12);color:#9A3E0A;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="field-group">
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="rk-spo-input" placeholder="Ketik nomor SPO..." autocomplete="off">
+          <div class="spo-ac-drop" id="rk-spo-drop"></div>
+        </div>
+      </div>
+
+      <!-- STYLE (auto) -->
+      <div class="field-group">
+        <label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>
+        <div class="style-display" id="rk-style-display">Pilih atau ketik SPO</div>
+      </div>
+
+      <!-- SIZE -->
+      <div class="field-group">
+        <label class="field-label">Size</label>
+        <select class="field-select" id="rk-size-select">
+          <option value="">— Pilih atau ketik SPO dahulu —</option>
+        </select>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- NO. OPCK -->
+      <div class="field-group">
+        <label class="field-label">No. OPCK</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="rk-opck-input" placeholder="Ketik / pilih No. OPCK..." autocomplete="off">
+          <div class="spo-ac-drop" id="rk-opck-drop"></div>
+        </div>
+      </div>
+
+      <!-- BARCODE (auto) -->
+      <div class="field-group">
+        <label class="field-label">Nomor Barcode <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari No. OPCK)</span></label>
+        <input type="text" class="field-input" id="rk-barcode" readonly placeholder="Pilih No. OPCK dahulu">
+      </div>
+
+      <!-- QTY (auto) -->
+      <div class="field-group">
+        <label class="field-label">Qty <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis)</span></label>
+        <input type="text" class="field-input" id="rk-qty" readonly placeholder="Pilih No. OPCK dahulu">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- OPERATOR -->
+      <div class="field-group">
+        <label class="field-label">Operator</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="rk-operator-input" placeholder="Ketik nama operator..." autocomplete="off">
+          <div class="spo-ac-drop" id="rk-operator-drop"></div>
+        </div>
+      </div>
+
+      <!-- NO ABSEN (auto) -->
+      <div class="field-group">
+        <label class="field-label">No. Absen Operator <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis)</span></label>
+        <input type="text" class="field-input" id="rk-absen" readonly placeholder="Pilih operator dahulu">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="rkBtnSubmit" onclick="submitRakForm()" style="background:linear-gradient(135deg,#EA580C,#F97316);box-shadow:0 4px 16px rgba(234,88,12,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 5: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
     <div class="header-zone">
       <div class="status-bar">
@@ -907,6 +1062,7 @@
     document.getElementById(pageId).classList.add('active');
     window.scrollTo(0, 0);
     if (pageId === "page-form-in") initForm();
+    if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-daily-issue") initDailyIssue();
   }
 
@@ -956,20 +1112,23 @@
   }
 
   function setSPOStatus(state, count) {
-    var el = document.getElementById("spoStatus");
-    if (state === "loading") {
-      el.textContent = "⏳ Memuat...";
-      el.style.background = "rgba(234,179,8,0.15)";
-      el.style.color = "#7A5700";
-    } else if (state === "ok") {
-      el.textContent = "✓ " + count + " SPO tersedia";
-      el.style.background = "rgba(29,158,117,0.15)";
-      el.style.color = "#0A5C42";
-    } else if (state === "error") {
-      el.textContent = "✕ Gagal memuat (isi manual tetap bisa)";
-      el.style.background = "rgba(220,53,69,0.15)";
-      el.style.color = "#7D1B1B";
-    }
+    ['spoStatus', 'rkSpoStatus'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (state === "loading") {
+        el.textContent = "⏳ Memuat...";
+        el.style.background = "rgba(234,179,8,0.15)";
+        el.style.color = "#7A5700";
+      } else if (state === "ok") {
+        el.textContent = "✓ " + count + " SPO tersedia";
+        el.style.background = "rgba(29,158,117,0.15)";
+        el.style.color = "#0A5C42";
+      } else if (state === "error") {
+        el.textContent = "✕ Gagal memuat (isi manual tetap bisa)";
+        el.style.background = "rgba(220,53,69,0.15)";
+        el.style.color = "#7D1B1B";
+      }
+    });
   }
 
   function findSPOEntry(spo) {
@@ -1246,6 +1405,266 @@
       }
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ===== RAK KE PROSES =====
+  var masterDataRak = { operators: [], receipts: [] };
+
+  function initRakForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('rkTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetRakFields();
+    loadMasterData();
+    loadRakMasterData();
+    setupRakSPOInput();
+    setupRakOPCKInput();
+    setupRakOperatorInput();
+  }
+
+  function resetRakFields() {
+    document.getElementById('rk-spo-input').value = '';
+    document.getElementById('rk-style-display').textContent = 'Pilih atau ketik SPO';
+    document.getElementById('rk-style-display').className = 'style-display';
+    document.getElementById('rk-size-select').innerHTML = '<option value="">— Pilih atau ketik SPO dahulu —</option>';
+    document.getElementById('rk-opck-input').value = '';
+    document.getElementById('rk-barcode').value = '';
+    document.getElementById('rk-qty').value = '';
+    document.getElementById('rk-operator-input').value = '';
+    document.getElementById('rk-absen').value = '';
+  }
+
+  // ---- LOAD MASTER DATA (Operator + Riwayat Penerimaan) via JSONP ----
+  function loadRakMasterData() {
+    var url = GAS_URL + '?type=rak_master';
+    jsonp(url, function(err, data) {
+      if (err || !data || data.status !== 'ok') return;
+      masterDataRak.operators = data.operators || [];
+      masterDataRak.receipts  = data.receipts  || [];
+    });
+  }
+
+  // ---- SPO (manual + suggest, dari DATA MASTER WIP) ----
+  function setupRakSPOInput() {
+    var input = document.getElementById('rk-spo-input');
+    var drop  = document.getElementById('rk-spo-drop');
+
+    input.oninput = function() {
+      renderRakSPODrop(input.value);
+      matchRakSPOStyle(input.value);
+    };
+    input.onfocus = function() { renderRakSPODrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihRakSPO(item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderRakSPODrop(query) {
+    var drop = document.getElementById('rk-spo-drop');
+    if (!masterData.spo.length) { drop.classList.remove('open'); return; }
+    var q = query.toLowerCase().trim();
+    var filtered = q
+      ? masterData.spo.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
+      : masterData.spo;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRakSPO(spo, style) {
+    document.getElementById('rk-spo-input').value = spo;
+    document.getElementById('rk-spo-drop').classList.remove('open');
+    applyRakSPOStyle(spo, style);
+  }
+
+  function matchRakSPOStyle(typedSpo) {
+    var found = findSPOEntry(typedSpo);
+    if (found) applyRakSPOStyle(found.spo, found.style);
+    else {
+      document.getElementById('rk-style-display').textContent = 'Pilih atau ketik SPO';
+      document.getElementById('rk-style-display').className = 'style-display';
+      document.getElementById('rk-size-select').innerHTML = '<option value="">— Pilih atau ketik SPO dahulu —</option>';
+    }
+  }
+
+  function applyRakSPOStyle(spo, style) {
+    var disp = document.getElementById('rk-style-display');
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    var found = findSPOEntry(spo);
+    updateSizeOptions(document.getElementById('rk-size-select'), found ? found.sizes : []);
+    // SPO berubah -> No. OPCK / Barcode / Qty sebelumnya sudah tidak relevan
+    document.getElementById('rk-opck-input').value = '';
+    document.getElementById('rk-barcode').value = '';
+    document.getElementById('rk-qty').value = '';
+  }
+
+  // ---- NO. OPCK (manual + suggest, dari riwayat Form Penerimaan Kulit) ----
+  function setupRakOPCKInput() {
+    var input = document.getElementById('rk-opck-input');
+    var drop  = document.getElementById('rk-opck-drop');
+
+    input.oninput = function() {
+      document.getElementById('rk-barcode').value = '';
+      document.getElementById('rk-qty').value = '';
+      renderRakOPCKDrop(input.value);
+    };
+    input.onfocus = function() { renderRakOPCKDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-opck]');
+      if (!item) return;
+      pilihRakOPCK(item.getAttribute('data-opck'), item.getAttribute('data-barcode'), item.getAttribute('data-qty'), item.getAttribute('data-size'));
+    });
+  }
+
+  function renderRakOPCKDrop(query) {
+    var drop = document.getElementById('rk-opck-drop');
+    var spo  = document.getElementById('rk-spo-input').value.trim().toLowerCase();
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var size = document.getElementById('rk-size-select').value;
+    var q = query.toLowerCase().trim();
+    var filtered = masterDataRak.receipts.filter(function(r) {
+      if (r.spo.toLowerCase() !== spo) return false;
+      if (size && r.size !== size) return false;
+      if (q && r.opck.toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var opckHL = q ? r.opck.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.opck;
+      return '<div class="spo-ac-item" data-opck="' + r.opck + '" data-barcode="' + r.barcode + '" data-qty="' + r.qty + '" data-size="' + r.size + '">'
+        + '<span class="spo-ac-spo">' + opckHL + '</span>'
+        + '<span class="spo-ac-style">' + r.size + ' · Qty ' + r.qty + '</span>'
+        + '</div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRakOPCK(opck, barcode, qty, size) {
+    document.getElementById('rk-opck-input').value = opck;
+    document.getElementById('rk-opck-drop').classList.remove('open');
+    document.getElementById('rk-barcode').value = barcode;
+    document.getElementById('rk-qty').value = qty;
+    var sizeSel = document.getElementById('rk-size-select');
+    if (!sizeSel.value && size) sizeSel.value = size;
+  }
+
+  // ---- OPERATOR (manual + suggest, dari DATA MASTER OPERATOR) ----
+  function setupRakOperatorInput() {
+    var input = document.getElementById('rk-operator-input');
+    var drop  = document.getElementById('rk-operator-drop');
+
+    input.oninput = function() {
+      document.getElementById('rk-absen').value = '';
+      renderRakOperatorDrop(input.value);
+    };
+    input.onfocus = function() { renderRakOperatorDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-nama]');
+      if (!item) return;
+      pilihRakOperator(item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderRakOperatorDrop(query) {
+    var drop = document.getElementById('rk-operator-drop');
+    if (!masterDataRak.operators.length) { drop.classList.remove('open'); return; }
+    var q = query.toLowerCase().trim();
+    var filtered = q
+      ? masterDataRak.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
+      : masterDataRak.operators;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var namaHL = q ? o.nama.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o.nama;
+      return '<div class="spo-ac-item" data-nama="' + o.nama + '" data-absen="' + o.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + o.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRakOperator(nama, absen) {
+    document.getElementById('rk-operator-input').value = nama;
+    document.getElementById('rk-operator-drop').classList.remove('open');
+    document.getElementById('rk-absen').value = absen;
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectRakData() {
+    var tanggal = document.getElementById('rkTanggal').value;
+    var spo     = document.getElementById('rk-spo-input').value.trim();
+    var style   = document.getElementById('rk-style-display').textContent;
+    var size    = document.getElementById('rk-size-select').value;
+    var opck    = document.getElementById('rk-opck-input').value.trim();
+    var barcode = document.getElementById('rk-barcode').value;
+    var qty     = document.getElementById('rk-qty').value;
+    var operator = document.getElementById('rk-operator-input').value.trim();
+    var absen     = document.getElementById('rk-absen').value;
+
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+    if (!spo)     return { error: 'SPO harus diisi' };
+    if (!size)    return { error: 'Size harus dipilih' };
+    if (!opck)    return { error: 'No. OPCK harus diisi' };
+    if (!barcode || !qty) return { error: 'Pilih No. OPCK dari daftar saran agar Barcode & Qty terisi' };
+    if (!operator) return { error: 'Operator harus diisi' };
+    if (!absen)    return { error: 'Pilih Operator dari daftar saran agar No. Absen terisi' };
+
+    return { tanggal:tanggal, spo:spo, style:style, size:size, opck:opck, barcode:barcode, qty:qty, operator:operator, absen:absen };
+  }
+
+  function submitRakForm() {
+    var data = collectRakData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_URL + '?type=save_rak_proses&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetRakFields();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
