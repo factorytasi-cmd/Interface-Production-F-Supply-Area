@@ -273,24 +273,6 @@
       .header-zone { padding-top: env(safe-area-inset-top, 20px); }
       .footer-zone { padding-bottom: env(safe-area-inset-bottom, 28px); }
     }
-
-    /* PRINT STYLES */
-    @media print {
-      body { background: white; padding: 0; display: block; }
-      .phone { max-width: 100%; border: none; border-radius: 0; }
-      .page { display: none !important; }
-      #page-form-in.active { display: block !important; }
-      .back-btn, .btn-submit, .btn-add-row, .row-delete, .setup-notice { display: none !important; }
-      .header-zone { background: white !important; }
-      .logo-text, .area-label-text { color: #111 !important; }
-      .tagline { color: #1D9E75 !important; }
-      .subtitle, .live-txt { color: #666 !important; }
-      .status-bar { color: #888 !important; }
-      .date-pill span { background: #f0f0f0 !important; border-color: #ddd !important; color: #555 !important; }
-      .footer-zone { background: white !important; }
-      .live-dot { display: none; }
-      .form-zone { background: white !important; }
-    }
   </style>
 </head>
 <body>
@@ -550,7 +532,7 @@
       <!-- SUBMIT -->
       <button class="btn-submit" id="btnSubmit" onclick="submitForm()">
         <i class="ti ti-send" style="font-size:18px"></i>
-        Kirim &amp; Cetak
+        Kirim
       </button>
 
     </div>
@@ -1085,6 +1067,7 @@
       var barcode = card.querySelector('.barcode-input').value.trim();
       var qty     = card.querySelector('.qty-input').value;
       var sfkulit = card.querySelector('.sfkulit-input').value;
+      var berat   = card.querySelector('.berat-input').value;
       if (!size || !opck || !barcode) { valid = false; return; }
       rows.push({ size:size, opck:opck, sftab:sftab, barcode:barcode, qty:qty, sfkulit:sfkulit, berat:berat });
     });
@@ -1118,7 +1101,6 @@
       }
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
-        setTimeout(function() { window.print(); }, 1000);
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
