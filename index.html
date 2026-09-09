@@ -216,6 +216,54 @@
     }
     .btn-add-row:active { background: rgba(234,179,8,0.12); border-color: rgba(234,179,8,0.7); }
 
+    /* SPO GROUPS */
+    .spo-group {
+      background: #FAFAF8; border-radius: 16px;
+      border: 1.5px solid #E8E8E6; padding: 14px;
+      margin-bottom: 14px; position: relative;
+    }
+    .spo-group-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .spo-group-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #B8860B; background: rgba(234,179,8,0.12); padding: 3px 10px; border-radius: 99px;
+    }
+    .spo-group-delete {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(220,53,69,0.08); border: 1px solid rgba(220,53,69,0.2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #DC3545; font-size: 14px;
+    }
+    .spo-group-delete:active { background: rgba(220,53,69,0.18); }
+
+    .btn-add-group {
+      width: 100%; padding: 13px; border-radius: 12px;
+      border: 2px solid #EAB308; background: rgba(234,179,8,0.08);
+      color: #7A5700; font-size: 13px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.15s; margin: 4px 0 18px;
+    }
+    .btn-add-group:active { background: rgba(234,179,8,0.18); }
+
+    /* SPO AUTOCOMPLETE */
+    .spo-ac-wrap { position: relative; }
+    .spo-ac-drop {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: white; border-radius: 12px; border: 1.5px solid #E0E2E0;
+      z-index: 100; max-height: 200px; overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: none;
+    }
+    .spo-ac-drop.open { display: block; }
+    .spo-ac-item { padding: 11px 14px; cursor: pointer; font-size: 13px; color: #111; border-bottom: .5px solid #F0F0EE; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .spo-ac-item:last-child { border-bottom: none; }
+    .spo-ac-item:active { background: #FBF6E5; }
+    .spo-ac-item mark { background: none; color: #B8860B; font-weight: 700; }
+    .spo-ac-spo { font-weight: 700; white-space: nowrap; }
+    .spo-ac-style { font-size: 11px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55%; }
+    .spo-ac-empty { padding: 12px 14px; font-size: 13px; color: #999; text-align: center; }
+
     .divider { height: 1px; background: #E8E8E6; margin: 18px 0; }
 
     .btn-submit {
@@ -496,36 +544,18 @@
         <input type="date" class="field-input" id="fTanggal">
       </div>
 
-      <!-- SPO -->
-      <div class="field-group">
-        <label class="field-label" style="display:flex;align-items:center;justify-content:space-between">
-          <span>SPO</span>
-          <span id="spoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">u23f3 Memuat...</span>
-        </label>
-        <select class="field-select" id="fSPO" onchange="onSPOChange()" disabled>
-          <option value="">— Memuat data SPO... —</option>
-        </select>
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data SPO &amp; Size</label>
+        <span id="spoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
 
-      <!-- STYLE (auto) -->
-      <div class="field-group">
-        <label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>
-        <div class="style-display" id="fStyleDisplay">Pilih SPO terlebih dahulu</div>
-      </div>
+      <!-- SPO GROUPS -->
+      <div id="groupsContainer"></div>
 
-      <div class="divider"></div>
-
-      <!-- ROWS -->
-      <div class="rows-section">
-        <div class="rows-label">
-          <span>Detail Kulit</span>
-          <span id="rowCountBadge" style="background:rgba(234,179,8,0.15);color:#7A5700;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">1 baris</span>
-        </div>
-        <div id="rowsContainer"></div>
-        <button class="btn-add-row" onclick="addRow()">
-          <i class="ti ti-plus" style="font-size:16px"></i> Tambah Baris
-        </button>
-      </div>
+      <button class="btn-add-group" onclick="addGroup()">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
 
       <div class="divider"></div>
 
@@ -544,9 +574,6 @@
       </div>
     </div>
   </div>
-
-</div><!-- /phone -->
-
 
   <!-- ==================== PAGE 4: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
@@ -905,11 +932,11 @@
     var mm   = String(today.getMonth()+1).padStart(2,'0');
     var dd   = String(today.getDate()).padStart(2,'0');
     document.getElementById('fTanggal').value = yyyy+'-'+mm+'-'+dd;
-    document.getElementById('fStyleDisplay').textContent = 'Pilih SPO terlebih dahulu';
-    document.getElementById('fStyleDisplay').className = 'style-display';
-    document.getElementById('rowsContainer').innerHTML = '';
+    document.getElementById('groupsContainer').innerHTML = '';
+    groupCount = 0;
     rowCount = 0;
-    addRow();
+    groupsData = {};
+    addGroup();
     loadMasterData();
   }
 
@@ -924,63 +951,34 @@
         return;
       }
       masterData.spo = data.spo || [];
-      populateSPODropdown();
       setSPOStatus("ok", masterData.spo.length);
     });
   }
 
   function setSPOStatus(state, count) {
     var el = document.getElementById("spoStatus");
-    var sel = document.getElementById("fSPO");
     if (state === "loading") {
-      el.textContent = "u23f3 Memuat...";
+      el.textContent = "⏳ Memuat...";
       el.style.background = "rgba(234,179,8,0.15)";
       el.style.color = "#7A5700";
-      sel.disabled = true;
     } else if (state === "ok") {
-      el.textContent = "u2713 " + count + " SPO tersedia";
+      el.textContent = "✓ " + count + " SPO tersedia";
       el.style.background = "rgba(29,158,117,0.15)";
       el.style.color = "#0A5C42";
-      sel.disabled = false;
     } else if (state === "error") {
-      el.textContent = "u2717 Gagal memuat";
+      el.textContent = "✕ Gagal memuat (isi manual tetap bisa)";
       el.style.background = "rgba(220,53,69,0.15)";
       el.style.color = "#7D1B1B";
-      sel.disabled = false;
     }
   }
 
-  function populateSPODropdown() {
-    var sel = document.getElementById("fSPO");
-    sel.innerHTML = '<option value="">— Pilih SPO —</option>';
-    masterData.spo.forEach(function(item) {
-      var opt = document.createElement("option");
-      opt.value = item.spo;
-      opt.textContent = item.spo;
-      sel.appendChild(opt);
-    });
-  }
-
-  function onSPOChange() {
-    var val = document.getElementById('fSPO').value;
-    var disp = document.getElementById('fStyleDisplay');
-    var found = null;
+  function findSPOEntry(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
     for (var i = 0; i < masterData.spo.length; i++) {
-      if (masterData.spo[i].spo === val) { found = masterData.spo[i]; break; }
+      if (masterData.spo[i].spo.toLowerCase() === s) return masterData.spo[i];
     }
-    if (found) {
-      disp.textContent = found.style;
-      disp.className = 'style-display filled';
-      document.querySelectorAll('.size-select').forEach(function(sel) {
-        updateSizeOptions(sel, found.sizes);
-      });
-    } else {
-      disp.textContent = 'Pilih SPO terlebih dahulu';
-      disp.className = 'style-display';
-      document.querySelectorAll('.size-select').forEach(function(sel) {
-        sel.innerHTML = '<option value="">— Pilih Size —</option>';
-      });
-    }
+    return null;
   }
 
   function updateSizeOptions(sel, sizes) {
@@ -994,28 +992,157 @@
     });
   }
 
-  // ---- ROWS ----
+  // ---- SPO GROUPS ----
+  var groupCount = 0;
+  var groupsData = {};
+
+  function addGroup() {
+    groupCount++;
+    var gid = groupCount;
+    groupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('groupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input spo-input" id="spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="row-badge-' + gid + '" style="background:rgba(234,179,8,0.15);color:#7A5700;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupSPOInput(gid);
+    addRow(gid);
+    updateGroupDeleteButtons();
+  }
+
+  function updateGroupDeleteButtons() {
+    var groups = document.querySelectorAll('.spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteGroup(gid) {
+    var el = document.getElementById('group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete groupsData[gid];
+    updateGroupDeleteButtons();
+  }
+
+  // ---- SPO AUTOCOMPLETE (manual entry + suggestion) ----
+  function setupSPOInput(gid) {
+    var input = document.getElementById('spo-input-' + gid);
+    var drop  = document.getElementById('spo-drop-' + gid);
+
+    input.oninput = function() {
+      groupsData[gid].spo = input.value.trim();
+      renderSPODrop(gid, input.value);
+      matchSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderSPODrop(gid, query) {
+    var drop = document.getElementById('spo-drop-' + gid);
+    if (!masterData.spo.length) { drop.classList.remove('open'); return; }
+    var q = query.toLowerCase().trim();
+    var filtered = q
+      ? masterData.spo.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
+      : masterData.spo;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihSPO(gid, spo, style) {
+    groupsData[gid].spo = spo;
+    groupsData[gid].style = style;
+    document.getElementById('spo-input-' + gid).value = spo;
+    document.getElementById('spo-drop-' + gid).classList.remove('open');
+    var disp = document.getElementById('style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    var found = findSPOEntry(spo);
+    document.querySelectorAll('#rows-container-' + gid + ' .size-select').forEach(function(sel) {
+      updateSizeOptions(sel, found ? found.sizes : []);
+    });
+  }
+
+  function matchSPOStyle(gid, typedSpo) {
+    var found = findSPOEntry(typedSpo);
+    var disp = document.getElementById('style-display-' + gid);
+    if (found) {
+      groupsData[gid].style = found.style;
+      disp.textContent = found.style;
+      disp.className = 'style-display filled';
+      document.querySelectorAll('#rows-container-' + gid + ' .size-select').forEach(function(sel) {
+        updateSizeOptions(sel, found.sizes);
+      });
+    } else {
+      groupsData[gid].style = '';
+      disp.textContent = 'Pilih atau ketik SPO';
+      disp.className = 'style-display';
+    }
+  }
+
+  // ---- ROWS (SIZE) ----
   var rowCount = 0;
 
-  function addRow() {
+  function addRow(gid) {
     rowCount++;
-    var container = document.getElementById('rowsContainer');
+    var rid = rowCount;
+    var container = document.getElementById('rows-container-' + gid);
+
     var div = document.createElement('div');
     div.className = 'row-card';
-    div.id = 'row-' + rowCount;
+    div.id = 'row-' + rid;
 
-    var spoVal = document.getElementById('fSPO').value;
-    var found = null;
-    for (var i = 0; i < masterData.spo.length; i++) {
-      if (masterData.spo[i].spo === spoVal) { found = masterData.spo[i]; break; }
-    }
+    var found = findSPOEntry(groupsData[gid] ? groupsData[gid].spo : '');
     var sizes = found ? found.sizes : [];
     var sizeOpts = sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
 
-    var delBtn = rowCount > 1 ? '<div class="row-delete" onclick="deleteRow('+rowCount+')"><i class="ti ti-trash"></i></div>' : '';
-
-    div.innerHTML = '<div class="row-num">BARIS '+rowCount+'</div>'
-      + delBtn
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
       + '<div style="margin-top:8px">'
       + '<div class="row-field" style="margin-bottom:8px">'
       + '<span class="row-field-label">Size</span>'
@@ -1035,46 +1162,66 @@
       + '<div class="row-field"><span class="row-field-label">Berat Awal (kg)</span><input type="number" class="row-field-input berat-input" placeholder="0.00" min="0" step="0.01"></div></div></div>';
 
     container.appendChild(div);
-    updateRowBadge();
+    updateRowBadge(gid);
   }
 
-  function deleteRow(id) {
-    var el = document.getElementById('row-' + id);
+  function deleteRow(gid, rid) {
+    var container = document.getElementById('rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('row-' + rid);
     if (el) el.parentNode.removeChild(el);
-    updateRowBadge();
+    updateRowBadge(gid);
   }
 
-  function updateRowBadge() {
-    var n = document.querySelectorAll('.row-card').length;
-    document.getElementById('rowCountBadge').textContent = n + ' baris';
+  function updateRowBadge(gid) {
+    var container = document.getElementById('rows-container-' + gid);
+    var badge = document.getElementById('row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
   }
 
   // ---- COLLECT DATA ----
   function collectData() {
     var tanggal = document.getElementById('fTanggal').value;
-    var spo     = document.getElementById('fSPO').value;
-    var style   = document.getElementById('fStyleDisplay').textContent;
-
     if (!tanggal) return { error: 'Tanggal harus diisi' };
-    if (!spo)     return { error: 'SPO harus dipilih' };
 
-    var rows = [];
-    var valid = true;
-    document.querySelectorAll('.row-card').forEach(function(card) {
-      var size    = card.querySelector('.size-select').value;
-      var opck    = card.querySelector('.opck-input').value.trim();
-      var sftab   = card.querySelector('.sftab-input').value;
-      var barcode = card.querySelector('.barcode-input').value.trim();
-      var qty     = card.querySelector('.qty-input').value;
-      var sfkulit = card.querySelector('.sfkulit-input').value;
-      var berat   = card.querySelector('.berat-input').value;
-      if (!size || !opck || !barcode) { valid = false; return; }
-      rows.push({ size:size, opck:opck, sftab:sftab, barcode:barcode, qty:qty, sfkulit:sfkulit, berat:berat });
+    var groups = document.querySelectorAll('.spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('group-', '');
+      var spo = document.getElementById('spo-input-' + gid).value.trim();
+      var style = groupsData[gid] ? groupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var size    = card.querySelector('.size-select').value;
+        var opck    = card.querySelector('.opck-input').value.trim();
+        var sftab   = card.querySelector('.sftab-input').value;
+        var barcode = card.querySelector('.barcode-input').value.trim();
+        var qty     = card.querySelector('.qty-input').value;
+        var sfkulit = card.querySelector('.sfkulit-input').value;
+        var berat   = card.querySelector('.berat-input').value;
+        if (!size || !opck || !barcode) { errorMsg = 'Size, No. OPCK, dan No. Barcode wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, size:size, opck:opck, sftab:sftab, barcode:barcode, qty:qty, sfkulit:sfkulit, berat:berat });
+      });
     });
 
-    if (!valid) return { error: 'Size, No. OPCK, dan No. Barcode wajib diisi di setiap baris' };
-    if (rows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
-    return { tanggal:tanggal, spo:spo, style:style, rows:rows };
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
   }
 
   // ---- SUBMIT via JSONP (sama persis pola Output Per Jam) ----
@@ -1086,8 +1233,6 @@
 
     var payload = {
       tanggal: data.tanggal,
-      spo:     data.spo,
-      style:   data.style,
       rows:    data.rows
     };
 
