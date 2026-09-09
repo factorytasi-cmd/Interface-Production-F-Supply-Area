@@ -970,7 +970,7 @@
 
   function populateSPODropdown() {
     var sel = document.getElementById("fSPO");
-    sel.innerHTML = "<option value="">— Pilih SPO —</option>";
+    sel.innerHTML = '<option value="">— Pilih SPO —</option>';
     masterData.spo.forEach(function(item) {
       var opt = document.createElement("option");
       opt.value = item.spo;
