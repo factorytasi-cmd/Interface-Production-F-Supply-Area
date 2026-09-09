@@ -566,19 +566,35 @@
   // ============================================================
   //  CONFIG — GANTI URL INI DENGAN URL APPS SCRIPT ANDA
   // ============================================================
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_kH-P1RyaPXJmrNR3Ow3YzieKQRNIsEWQgmASxTUJIRBc5RJaV-mgPqxcj-nAsJ8/exec';
-  const SHEET_ID = '1LZQ_gycwCx1Z5_S8gNSktleNUEML3kGqVi3GWuLzBws';
+  // ============================================================
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbw_kH-P1RyaPXJmrNR3Ow3YzieKQRNIsEWQgmASxTUJIRBc5RJaV-mgPqxcj-nAsJ8/exec';
   // ============================================================
 
-  // Master data (akan diload dari Google Sheets via Apps Script)
-  // Sementara pakai contoh data agar form bisa ditest
-  let masterData = {
-    spo: [] // [{spo:'SPO001', style:'STYLE-A', sizes:['S','M','L','XL']}]
-  };
+  var masterData = { spo: [] };
+
+  // ---- JSONP HELPER (sama persis dengan Output Per Jam) ----
+  function jsonp(url, callback) {
+    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    window[cbName] = function(data) {
+      callback(null, data);
+      delete window[cbName];
+      var el = document.getElementById(cbName);
+      if (el) el.parentNode.removeChild(el);
+    };
+    var s = document.createElement('script');
+    s.id = cbName;
+    s.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+    s.onerror = function() {
+      callback(new Error('Gagal'), null);
+      delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+    };
+    document.body.appendChild(s);
+  }
 
   // ---- PAGE NAVIGATION ----
   function goTo(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
     document.getElementById(pageId).classList.add('active');
     window.scrollTo(0, 0);
     if (pageId === 'page-form-in') initForm();
@@ -586,70 +602,52 @@
 
   // ---- CLOCK ----
   function update() {
-    const now = new Date();
-    const hh = now.getHours().toString().padStart(2,'0');
-    const mm = now.getMinutes().toString().padStart(2,'0');
-    document.querySelectorAll('.waktu-el').forEach(el => el.textContent = hh+':'+mm);
-    const days   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    const now2 = new Date();
-    document.querySelectorAll('.tgl-el').forEach(el =>
-      el.textContent = days[now2.getDay()]+', '+now2.getDate()+' '+months[now2.getMonth()]+' '+now2.getFullYear()
-    );
+    var now = new Date();
+    var hh = now.getHours().toString().padStart(2,'0');
+    var mm = now.getMinutes().toString().padStart(2,'0');
+    document.querySelectorAll('.waktu-el').forEach(function(el) { el.textContent = hh+':'+mm; });
+    var days   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    document.querySelectorAll('.tgl-el').forEach(function(el) {
+      el.textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+    });
   }
   update();
   setInterval(update, 30000);
 
   // ---- FORM INIT ----
   function initForm() {
-    // Set today's date
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm   = String(today.getMonth()+1).padStart(2,'0');
-    const dd   = String(today.getDate()).padStart(2,'0');
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
     document.getElementById('fTanggal').value = yyyy+'-'+mm+'-'+dd;
-
-    // Reset style display
     document.getElementById('fStyleDisplay').textContent = 'Pilih SPO terlebih dahulu';
     document.getElementById('fStyleDisplay').className = 'style-display';
-
-    // Load master data
-    loadMasterData();
-
-    // Init rows
     document.getElementById('rowsContainer').innerHTML = '';
     rowCount = 0;
     addRow();
+    loadMasterData();
   }
 
-  // ---- LOAD MASTER DATA ----
-  async function loadMasterData() {
-    if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') {
-      // Demo data jika belum setup
-      masterData.spo = [
-        { spo: 'SPO-001', style: 'OXFORD LOAFER', sizes: ['36','37','38','39','40','41','42'] },
-        { spo: 'SPO-002', style: 'DERBY BROGUE',  sizes: ['38','39','40','41','42','43'] },
-        { spo: 'SPO-003', style: 'CHELSEA BOOT',  sizes: ['37','38','39','40','41','42'] },
-      ];
-      populateSPODropdown();
-      return;
-    }
-    try {
-      const res = await fetch(APPS_SCRIPT_URL + '?action=getMasterData');
-      const data = await res.json();
+  // ---- LOAD MASTER DATA via JSONP ----
+  function loadMasterData() {
+    var url = GAS_URL + '?type=in_kulit_master';
+    jsonp(url, function(err, data) {
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal memuat data SPO', 'error');
+        return;
+      }
       masterData.spo = data.spo || [];
       populateSPODropdown();
-    } catch(e) {
-      console.error('Gagal load master data:', e);
-      showToast('Gagal memuat data master', 'error');
-    }
+    });
   }
 
   function populateSPODropdown() {
-    const sel = document.getElementById('fSPO');
+    var sel = document.getElementById('fSPO');
     sel.innerHTML = '<option value="">— Pilih SPO —</option>';
-    masterData.spo.forEach(item => {
-      const opt = document.createElement('option');
+    masterData.spo.forEach(function(item) {
+      var opt = document.createElement('option');
       opt.value = item.spo;
       opt.textContent = item.spo;
       sel.appendChild(opt);
@@ -657,30 +655,32 @@
   }
 
   function onSPOChange() {
-    const val = document.getElementById('fSPO').value;
-    const disp = document.getElementById('fStyleDisplay');
-    const found = masterData.spo.find(x => x.spo === val);
+    var val = document.getElementById('fSPO').value;
+    var disp = document.getElementById('fStyleDisplay');
+    var found = null;
+    for (var i = 0; i < masterData.spo.length; i++) {
+      if (masterData.spo[i].spo === val) { found = masterData.spo[i]; break; }
+    }
     if (found) {
       disp.textContent = found.style;
       disp.className = 'style-display filled';
-      // Update all size dropdowns
-      document.querySelectorAll('.size-select').forEach(sel => {
+      document.querySelectorAll('.size-select').forEach(function(sel) {
         updateSizeOptions(sel, found.sizes);
       });
     } else {
       disp.textContent = 'Pilih SPO terlebih dahulu';
       disp.className = 'style-display';
-      document.querySelectorAll('.size-select').forEach(sel => {
+      document.querySelectorAll('.size-select').forEach(function(sel) {
         sel.innerHTML = '<option value="">— Pilih Size —</option>';
       });
     }
   }
 
   function updateSizeOptions(sel, sizes) {
-    const prev = sel.value;
+    var prev = sel.value;
     sel.innerHTML = '<option value="">— Pilih Size —</option>';
-    sizes.forEach(s => {
-      const opt = document.createElement('option');
+    sizes.forEach(function(s) {
+      var opt = document.createElement('option');
       opt.value = s; opt.textContent = s;
       if (s === prev) opt.selected = true;
       sel.appendChild(opt);
@@ -688,132 +688,116 @@
   }
 
   // ---- ROWS ----
-  let rowCount = 0;
+  var rowCount = 0;
 
   function addRow() {
     rowCount++;
-    const container = document.getElementById('rowsContainer');
-    const div = document.createElement('div');
+    var container = document.getElementById('rowsContainer');
+    var div = document.createElement('div');
     div.className = 'row-card';
     div.id = 'row-' + rowCount;
 
-    // Get current sizes
-    const spoVal = document.getElementById('fSPO').value;
-    const found  = masterData.spo.find(x => x.spo === spoVal);
-    const sizes  = found ? found.sizes : [];
-    const sizeOpts = sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+    var spoVal = document.getElementById('fSPO').value;
+    var found = null;
+    for (var i = 0; i < masterData.spo.length; i++) {
+      if (masterData.spo[i].spo === spoVal) { found = masterData.spo[i]; break; }
+    }
+    var sizes = found ? found.sizes : [];
+    var sizeOpts = sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
 
-    div.innerHTML = `
-      <div class="row-num">BARIS ${rowCount}</div>
-      ${rowCount > 1 ? `<div class="row-delete" onclick="deleteRow(${rowCount})"><i class="ti ti-trash"></i></div>` : ''}
-      <div style="margin-top:8px">
-        <div class="row-field" style="margin-bottom:8px">
-          <span class="row-field-label">Size</span>
-          <select class="row-field-select size-select">
-            <option value="">— Pilih Size —</option>
-            ${sizeOpts}
-          </select>
-        </div>
-        <div class="row-grid">
-          <div class="row-field">
-            <span class="row-field-label">No. OPCK</span>
-            <input type="text" class="row-field-input opck-input" placeholder="Nomor OPCK">
-          </div>
-          <div class="row-field">
-            <span class="row-field-label">SF Tab</span>
-            <input type="number" class="row-field-input sftab-input" placeholder="0" min="0">
-          </div>
-        </div>
-        <div class="row-grid" style="margin-top:8px">
-          <div class="row-field">
-            <span class="row-field-label">No. Barcode</span>
-            <input type="text" class="row-field-input barcode-input" placeholder="Nomor Barcode">
-          </div>
-          <div class="row-field">
-            <span class="row-field-label">Qty</span>
-            <input type="number" class="row-field-input qty-input" placeholder="0" min="0">
-          </div>
-        </div>
-        <div class="row-field" style="margin-top:8px">
-          <span class="row-field-label">SF Kulit</span>
-          <input type="number" class="row-field-input sfkulit-input" placeholder="0" min="0" step="0.01">
-        </div>
-      </div>
-    `;
+    var delBtn = rowCount > 1 ? '<div class="row-delete" onclick="deleteRow('+rowCount+')"><i class="ti ti-trash"></i></div>' : '';
+
+    div.innerHTML = '<div class="row-num">BARIS '+rowCount+'</div>'
+      + delBtn
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<select class="row-field-select size-select"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input opck-input" placeholder="Nomor OPCK"></div>'
+      + '<div class="row-field"><span class="row-field-label">SF Tab</span><input type="number" class="row-field-input sftab-input" placeholder="0" min="0"></div>'
+      + '</div>'
+      + '<div class="row-grid" style="margin-top:8px">'
+      + '<div class="row-field"><span class="row-field-label">No. Barcode</span><input type="text" class="row-field-input barcode-input" placeholder="Nomor Barcode"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input qty-input" placeholder="0" min="0"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">SF Kulit</span>'
+      + '<input type="number" class="row-field-input sfkulit-input" placeholder="0" min="0" step="0.01">'
+      + '</div></div>';
+
     container.appendChild(div);
     updateRowBadge();
   }
 
   function deleteRow(id) {
-    const el = document.getElementById('row-' + id);
-    if (el) el.remove();
+    var el = document.getElementById('row-' + id);
+    if (el) el.parentNode.removeChild(el);
     updateRowBadge();
   }
 
   function updateRowBadge() {
-    const n = document.querySelectorAll('.row-card').length;
-    document.getElementById('rowCountBadge').textContent = n + (n === 1 ? ' baris' : ' baris');
+    var n = document.querySelectorAll('.row-card').length;
+    document.getElementById('rowCountBadge').textContent = n + ' baris';
   }
 
-  // ---- COLLECT FORM DATA ----
+  // ---- COLLECT DATA ----
   function collectData() {
-    const tanggal = document.getElementById('fTanggal').value;
-    const spo     = document.getElementById('fSPO').value;
-    const style   = document.getElementById('fStyleDisplay').textContent;
+    var tanggal = document.getElementById('fTanggal').value;
+    var spo     = document.getElementById('fSPO').value;
+    var style   = document.getElementById('fStyleDisplay').textContent;
 
     if (!tanggal) return { error: 'Tanggal harus diisi' };
     if (!spo)     return { error: 'SPO harus dipilih' };
 
-    const rows = [];
-    let valid = true;
-    document.querySelectorAll('.row-card').forEach(card => {
-      const size    = card.querySelector('.size-select').value;
-      const opck    = card.querySelector('.opck-input').value.trim();
-      const sftab   = card.querySelector('.sftab-input').value;
-      const barcode = card.querySelector('.barcode-input').value.trim();
-      const qty     = card.querySelector('.qty-input').value;
-      const sfkulit = card.querySelector('.sfkulit-input').value;
-
+    var rows = [];
+    var valid = true;
+    document.querySelectorAll('.row-card').forEach(function(card) {
+      var size    = card.querySelector('.size-select').value;
+      var opck    = card.querySelector('.opck-input').value.trim();
+      var sftab   = card.querySelector('.sftab-input').value;
+      var barcode = card.querySelector('.barcode-input').value.trim();
+      var qty     = card.querySelector('.qty-input').value;
+      var sfkulit = card.querySelector('.sfkulit-input').value;
       if (!size || !opck || !barcode) { valid = false; return; }
-      rows.push({ size, opck, sftab, barcode, qty, sfkulit });
+      rows.push({ size:size, opck:opck, sftab:sftab, barcode:barcode, qty:qty, sfkulit:sfkulit });
     });
 
-    if (!valid) return { error: 'Size, No. OPCK, dan No. Barcode harus diisi di setiap baris' };
+    if (!valid) return { error: 'Size, No. OPCK, dan No. Barcode wajib diisi di setiap baris' };
     if (rows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
-
-    return { tanggal, spo, style, rows };
+    return { tanggal:tanggal, spo:spo, style:style, rows:rows };
   }
 
-  // ---- SUBMIT ----
-  async function submitForm() {
-    const data = collectData();
+  // ---- SUBMIT via JSONP (sama persis pola Output Per Jam) ----
+  function submitForm() {
+    var data = collectData();
     if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
 
-    if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') {
-      showToast('Mode Demo — Apps Script belum dikonfigurasi', 'error');
-      setTimeout(() => window.print(), 800);
-      return;
-    }
-
     showLoading(true);
-    try {
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'saveInKulit', ...data })
-      });
-      const result = await res.json();
+
+    var payload = {
+      tanggal: data.tanggal,
+      spo:     data.spo,
+      style:   data.style,
+      rows:    data.rows
+    };
+
+    var url = GAS_URL + '?type=save_in_kulit&payload=' + encodeURIComponent(JSON.stringify(payload));
+
+    jsonp(url, function(err, result) {
       showLoading(false);
-      if (result.success) {
-        showToast('✓ Data berhasil disimpan!', 'success');
-        setTimeout(() => window.print(), 800);
-      } else {
-        showToast('Gagal: ' + (result.message || 'Coba lagi'), 'error');
+      if (err) {
+        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        return;
       }
-    } catch(e) {
-      showLoading(false);
-      showToast('Gagal mengirim data. Cek koneksi internet.', 'error');
-    }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        setTimeout(function() { window.print(); }, 1000);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
   }
 
   // ---- UI HELPERS ----
@@ -821,11 +805,11 @@
     document.getElementById('loadingOverlay').classList.toggle('show', show);
   }
 
-  function showToast(msg, type = '') {
-    const t = document.getElementById('toast');
+  function showToast(msg, type) {
+    var t = document.getElementById('toast');
     t.textContent = msg;
-    t.className = 'toast show ' + type;
-    setTimeout(() => t.className = 'toast', 3000);
+    t.className = 'toast show ' + (type || '');
+    setTimeout(function() { t.className = 'toast'; }, 3000);
   }
 </script>
 </body>
