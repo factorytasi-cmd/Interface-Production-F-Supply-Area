@@ -353,7 +353,7 @@
           </div>
         </div>
 
-        <a class="card card-issue" href="https://factorytasi-cmd.github.io/daily-issue/" target="_blank" rel="noopener">
+        <div class="card card-issue" onclick="goTo('page-daily-issue')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-issue">Harian</span>
@@ -368,7 +368,7 @@
               <span class="card-btn btn-issue">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
-        </a>
+        </div>
 
       </div>
     </div>
@@ -565,6 +565,303 @@
 
 </div><!-- /phone -->
 
+
+  <!-- ==================== PAGE 4: DAILY ISSUE ==================== -->
+  <div class="page" id="page-daily-issue">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-home')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:18px;letter-spacing:2px">DAILY ISSUE</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#378ADD,#1D9E75)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px;margin-bottom:4px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › DAILY ISSUE PRODUKSI</div>
+    </div>
+
+    <!-- STATUS BANNER -->
+    <div class="di-status-banner" id="di-status-banner">
+      <div class="banner-dot"></div>
+      <span id="di-banner-text"></span>
+    </div>
+
+    <div class="di-content">
+
+      <!-- KONFIGURASI -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">⚙️ Konfigurasi</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-cfg-field">
+            <label>Anthropic API Key</label>
+            <input type="password" id="di-apikey" placeholder="sk-ant-api03-..." />
+          </div>
+          <div class="di-cfg-field">
+            <label>Google Apps Script URL</label>
+            <input type="text" id="di-gasurl" placeholder="https://script.google.com/macros/s/..." />
+          </div>
+          <p style="font-size:11px;color:#aaa;margin-top:6px">Isi sekali, tersimpan di perangkat ini.</p>
+        </div>
+      </div>
+
+      <!-- SPO & STYLE -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">SPO &amp; Style</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-field">
+            <div class="di-field-label"><i class="ti ti-file-text"></i> SPO / Order</div>
+            <div class="di-ac-wrap">
+              <input type="text" id="di-spo-input" class="di-field-input" placeholder="Ketik nomor SPO..." autocomplete="off" />
+              <div class="di-ac-drop" id="di-spo-dropdown"></div>
+            </div>
+          </div>
+          <div class="di-field">
+            <div class="di-field-label"><i class="ti ti-tag"></i> Style</div>
+            <div class="di-field-filled" id="di-style-display">
+              <i class="ti ti-info-circle" style="color:#999;font-size:14px"></i>
+              <span id="di-style-text" style="color:#999;font-style:italic;font-size:13px">Terisi otomatis saat SPO dipilih</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REKAM AUDIO -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">🎙️ Rekam Audio</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-rec-center">
+            <div class="di-wave" id="di-wave">
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+            </div>
+            <div class="di-rec-timer" id="di-timer">00:00</div>
+            <button class="di-rec-ring" id="di-rec-btn" onclick="diToggleRecord()">
+              <span class="di-rec-icon" id="di-rec-icon">🎙️</span>
+            </button>
+            <div class="di-rec-status" id="di-rec-status">Tekan untuk mulai merekam</div>
+          </div>
+          <audio id="di-audio-player" controls style="display:none;width:100%;margin-top:10px;border-radius:10px"></audio>
+          <div style="display:flex;align-items:center;gap:8px;margin:14px 0 8px">
+            <div style="flex:1;height:1px;background:#E5E7E6"></div>
+            <span style="font-size:11px;color:#aaa;white-space:nowrap">Transkripsi</span>
+            <div style="flex:1;height:1px;background:#E5E7E6"></div>
+          </div>
+          <textarea class="di-textarea" id="di-transkrip" placeholder='Hasil transkripsi muncul di sini, atau ketik manual...'></textarea>
+          <div id="di-status-bar" style="font-size:12px;color:#999;min-height:22px;margin-top:8px"></div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="di-btn-secondary" onclick="diClearAll()">
+              <i class="ti ti-trash" style="font-size:15px"></i> Bersihkan
+            </button>
+            <button class="di-btn-primary" onclick="diParseWithAI()" id="di-btn-parse">
+              <i class="ti ti-robot" style="font-size:16px"></i> Parsing AI
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="di-card" id="di-preview-card" style="display:none">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">📋 Preview Data</span>
+        </div>
+        <div class="di-card-body">
+          <div id="di-preview-area"><div class="di-empty-state">Belum ada data.</div></div>
+        </div>
+      </div>
+
+      <!-- FOTO -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">📷 Foto Pendukung</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-field-label" style="margin-bottom:10px"><i class="ti ti-camera"></i> Upload Foto (Maks. 3 foto)</div>
+          <div class="di-photo-grid">
+            <div class="di-photo-slot" id="di-slot-0" onclick="diTriggerPhoto(0)">
+              <div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div>
+              <div style="font-size:10px;color:#BBB">Foto 1</div>
+            </div>
+            <div class="di-photo-slot" id="di-slot-1" onclick="diTriggerPhoto(1)">
+              <div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div>
+              <div style="font-size:10px;color:#BBB">Foto 2</div>
+            </div>
+            <div class="di-photo-slot" id="di-slot-2" onclick="diTriggerPhoto(2)">
+              <div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div>
+              <div style="font-size:10px;color:#BBB">Foto 3</div>
+            </div>
+          </div>
+          <div id="di-photo-btn-row" style="display:none;gap:8px;margin-top:10px">
+            <button class="di-btn-secondary" onclick="diTriggerCamera()"><i class="ti ti-camera" style="font-size:15px"></i> Kamera</button>
+            <button class="di-btn-secondary" onclick="diTriggerGallery()"><i class="ti ti-photo" style="font-size:15px"></i> Galeri</button>
+            <button class="di-btn-secondary" style="flex:none;padding:13px 14px" onclick="diTutupSlotPicker()"><i class="ti ti-x" style="font-size:15px"></i></button>
+          </div>
+          <div style="font-size:11px;color:#999;margin-top:6px;text-align:right" id="di-photo-count">0 / 3 foto</div>
+          <input type="file" id="di-photo-camera" accept="image/*" capture="environment" style="display:none" onchange="diOnPhotoSelected(event)">
+          <input type="file" id="di-photo-gallery" accept="image/*" style="display:none" onchange="diOnPhotoSelected(event)">
+        </div>
+      </div>
+
+      <!-- CONFIRM DIALOG -->
+      <div class="di-confirm-overlay" id="di-confirm-overlay">
+        <div class="di-confirm-sheet">
+          <h3>⚠️ Tidak Ada Foto</h3>
+          <p>Tidak ada foto yang dilampirkan.<br>Lanjutkan kirim laporan tanpa foto?</p>
+          <div style="display:flex;gap:10px">
+            <button class="di-confirm-cancel" onclick="diTutupKonfirmasi()">Batal</button>
+            <button class="di-confirm-ok" onclick="diLanjutKirimTanpaFoto()">Ya, Kirim Tanpa Foto</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <button class="di-btn-submit" id="di-btn-kirim" onclick="diKirimKeSheet()" disabled>
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim ke Google Sheet
+      </button>
+
+    </div>
+
+    <div class="footer-zone" style="margin-top:0">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+<style>
+/* ===== DAILY ISSUE STYLES ===== */
+.di-status-banner{margin:0 18px 12px;border-radius:14px;padding:11px 14px;display:none;align-items:center;gap:10px;font-size:12px;font-weight:500}
+.di-status-banner.show{display:flex}
+.di-status-banner.info{background:rgba(55,138,221,0.1);border:.5px solid rgba(55,138,221,0.25);color:#378ADD}
+.di-status-banner.done{background:rgba(29,158,117,0.1);border:.5px solid rgba(29,158,117,0.25);color:#1D9E75}
+.di-status-banner.failed{background:rgba(220,53,69,0.08);border:.5px solid rgba(220,53,69,0.25);color:#dc3545}
+.banner-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.di-status-banner.info .banner-dot{background:#378ADD}
+.di-status-banner.done .banner-dot{background:#1D9E75}
+.di-status-banner.failed .banner-dot{background:#dc3545}
+
+.di-content{background:#F0F2F1;padding:20px 18px 28px}
+.di-card{background:white;border-radius:20px;border:.5px solid rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden}
+.di-card-header{background:rgba(55,138,221,0.07);padding:14px 18px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid rgba(55,138,221,0.12)}
+.di-card-title{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#134E8A}
+.di-card-body{padding:18px}
+
+.di-field{margin-bottom:14px}
+.di-field:last-child{margin-bottom:0}
+.di-field-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.di-field-label i{color:#378ADD;font-size:13px}
+.di-field-input{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #E5E7E6;font-size:14px;color:#111;background:#FAFAFA;outline:none;font-family:inherit;appearance:none}
+.di-field-input:focus{border-color:#378ADD;background:white}
+.di-field-filled{background:#F0F6FB;border:1.5px solid rgba(55,138,221,0.3);border-radius:12px;padding:11px 14px;font-size:14px;color:#134E8A;font-weight:500;display:flex;align-items:center;gap:6px;min-height:44px}
+.di-textarea{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #E5E7E6;font-size:14px;color:#111;background:#FAFAFA;outline:none;font-family:inherit;resize:none;min-height:90px;line-height:1.5}
+.di-textarea:focus{border-color:#378ADD;background:white}
+
+.di-ac-wrap{position:relative}
+.di-ac-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;background:white;border-radius:14px;border:1.5px solid #E5E7E6;z-index:100;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:none}
+.di-ac-drop.open{display:block}
+.di-ac-item{padding:11px 14px;cursor:pointer;font-size:13px;color:#111;border-bottom:.5px solid #F0F2F1;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.di-ac-item:last-child{border-bottom:none}
+.di-ac-item:active{background:#F0F6FB}
+.di-ac-item mark{background:none;color:#378ADD;font-weight:700}
+.di-ac-spo{font-weight:700;white-space:nowrap}
+.di-ac-style{font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+.di-ac-empty{padding:12px 14px;font-size:13px;color:#999;text-align:center}
+
+.di-rec-center{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0}
+.di-rec-ring{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:rgba(55,138,221,0.1);transition:transform .1s;position:relative}
+.di-rec-ring.recording{background:#dc3545;animation:direcpulse 1.4s infinite}
+.di-rec-ring.done{background:rgba(55,138,221,0.15)}
+.di-rec-ring:active{transform:scale(0.95)}
+@keyframes direcpulse{0%,100%{box-shadow:0 0 0 0 rgba(220,53,69,0.4)}50%{box-shadow:0 0 0 14px rgba(220,53,69,0)}}
+.di-rec-icon{font-size:30px}
+.di-rec-timer{font-size:26px;font-weight:300;color:#111;font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.di-rec-status{font-size:12px;color:#999;text-align:center}
+.di-wave{display:flex;align-items:center;gap:3px;height:28px}
+.di-wave-bar{width:3px;border-radius:2px;background:#378ADD;height:4px;transition:height .07s}
+
+.di-cfg-field{margin-bottom:10px}
+.di-cfg-field label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:6px;display:block}
+.di-cfg-field input{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #E5E7E6;font-size:13px;color:#111;background:#FAFAFA;outline:none;font-family:inherit}
+.di-cfg-field input:focus{border-color:#378ADD;background:white}
+
+.di-btn-primary{flex:1;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#378ADD,#1D9E75);color:white;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
+.di-btn-secondary{flex:1;padding:13px;border-radius:14px;border:1.5px solid #E5E7E6;background:white;color:#555;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
+.di-btn-secondary:active{background:#F0F2F1}
+.di-btn-submit{width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#378ADD,#1D9E75);color:white;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;font-family:inherit;margin-top:4px}
+.di-btn-submit:disabled{opacity:.45;cursor:not-allowed}
+.di-btn-submit:active{opacity:.85}
+
+.di-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.di-photo-slot{aspect-ratio:1;border-radius:12px;border:1.5px dashed #D0D0D0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#FAFAFA;overflow:hidden;position:relative;transition:border-color .15s}
+.di-photo-slot:hover{border-color:#378ADD}
+.di-photo-slot.filled{border:none}
+.di-photo-slot img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.di-photo-remove{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:white;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.di-preview-wrap{overflow-x:auto;border-radius:12px;border:1px solid #E5E7E6}
+.di-preview-wrap table{width:100%;border-collapse:collapse;font-size:12px;min-width:580px}
+.di-preview-wrap th{background:#F0F2F1;padding:8px 10px;text-align:left;font-weight:600;color:#666;white-space:nowrap;border-bottom:1px solid #E5E7E6}
+.di-preview-wrap td{padding:8px 10px;border-bottom:.5px solid #F0F2F1;color:#111;vertical-align:top}
+.di-preview-wrap tr:last-child td{border-bottom:none}
+.di-badge{background:rgba(55,138,221,0.1);color:#134E8A;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.di-empty-state{text-align:center;padding:20px;color:#aaa;font-size:13px}
+
+.di-confirm-overlay{display:none;position:fixed;inset:0;background:rgba(10,26,29,0.7);z-index:600;align-items:flex-end;justify-content:center}
+.di-confirm-overlay.show{display:flex}
+.di-confirm-sheet{background:white;border-radius:24px 24px 0 0;padding:24px 20px 36px;width:100%;max-width:420px}
+.di-confirm-sheet h3{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+.di-confirm-sheet p{font-size:13px;color:#666;text-align:center;line-height:1.5;margin-bottom:20px}
+.di-confirm-cancel{flex:1;padding:13px;border-radius:14px;border:1.5px solid #E5E7E6;background:white;color:#555;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+.di-confirm-ok{flex:1;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#378ADD,#1D9E75);color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* LOADING DI */
+.di-loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,26,29,0.75);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.di-loading-overlay.show{display:flex}
+.di-spinner{width:40px;height:40px;border:3px solid rgba(55,138,221,0.2);border-top-color:#378ADD;border-radius:50%;animation:spin .8s linear infinite}
+.di-loading-text{color:white;font-size:13px;opacity:.7}
+</style>
+
+<!-- DI LOADING -->
+<div class="di-loading-overlay" id="di-loading">
+  <div class="di-spinner"></div>
+  <div class="di-loading-text" id="di-loading-text">Memuat...</div>
+</div>
 <script>
   // ============================================================
   //  CONFIG — GANTI URL INI DENGAN URL APPS SCRIPT ANDA
@@ -600,7 +897,8 @@
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
     document.getElementById(pageId).classList.add('active');
     window.scrollTo(0, 0);
-    if (pageId === 'page-form-in') initForm();
+    if (pageId === "page-form-in") initForm();
+    if (pageId === "page-daily-issue") initDailyIssue();
   }
 
   // ---- CLOCK ----
@@ -837,6 +1135,468 @@
     t.textContent = msg;
     t.className = 'toast show ' + (type || '');
     setTimeout(function() { t.className = 'toast'; }, 3000);
+  }
+
+  // ===== DAILY ISSUE LOGIC =====
+  var DI_APIKEY_KEY = 'dip_apikey';
+  var DI_GASURL_KEY = 'dip_gasurl';
+  var DI_CACHE_KEY  = 'litra_daily_issue_db';
+  var DI_CACHE_TTL  = 60 * 60 * 1000;
+
+  var diMasterItems   = [];
+  var diSelectedSPO   = '';
+  var diSelectedStyle = '';
+  var diParsedRows    = [];
+  var diPhotos        = [null, null, null];
+  var diActiveSlot    = 0;
+  var diMediaRec = null, diChunks = [], diRecInterval = null, diRecSecs = 0, diIsRec = false;
+  var diWaveInterval = null, diRecognition = null, diLiveText = '';
+  var diFilteredItems = [];
+
+  var CLOUDINARY_CLOUD  = 'd79iwwwf';
+  var CLOUDINARY_PRESET = 'litra_asi';
+
+  // Init Daily Issue saat halaman dibuka
+  function initDailyIssue() {
+    var ak = localStorage.getItem(DI_APIKEY_KEY);
+    var gu = localStorage.getItem(DI_GASURL_KEY);
+    if (ak) document.getElementById('di-apikey').value = ak;
+    if (gu) document.getElementById('di-gasurl').value = gu;
+
+    document.getElementById('di-apikey').onchange = function(e) {
+      localStorage.setItem(DI_APIKEY_KEY, e.target.value.trim());
+    };
+    document.getElementById('di-gasurl').onchange = function(e) {
+      localStorage.setItem(DI_GASURL_KEY, e.target.value.trim());
+    };
+
+    diSetupSPOInput();
+    diLoadMasterList();
+  }
+
+  // ---- BANNER ----
+  function diSetBanner(type, msg) {
+    var b = document.getElementById('di-status-banner');
+    b.className = 'di-status-banner';
+    if (!type) { b.style.display = 'none'; return; }
+    b.classList.add('show', type);
+    document.getElementById('di-banner-text').textContent = msg;
+  }
+
+  // ---- LOAD MASTER ----
+  function diLoadMasterList() {
+    var gasUrl = localStorage.getItem(DI_GASURL_KEY);
+    if (!gasUrl) { diSetBanner('info', 'Isi API Key & Script URL di Konfigurasi'); return; }
+    try {
+      var raw = localStorage.getItem(DI_CACHE_KEY);
+      if (raw) {
+        var cache = JSON.parse(raw);
+        if (Date.now() - cache.ts < DI_CACHE_TTL) {
+          diMasterItems = cache.items;
+          diSetBanner('done', '✓ ' + diMasterItems.length + ' SPO-Style siap');
+          setTimeout(function() { diSetBanner('',''); }, 3000);
+          diFetchAndCache(false, gasUrl);
+          return;
+        }
+      }
+    } catch(e) {}
+    diFetchAndCache(true, gasUrl);
+  }
+
+  function diFetchAndCache(showLoader, gasUrl) {
+    if (showLoader) diShowLoading('Memuat master list...');
+    var cbName = 'diCb_' + Date.now();
+    var timer;
+    var script = document.createElement('script');
+
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      diMasterItems = data.items || [];
+      localStorage.setItem(DI_CACHE_KEY, JSON.stringify({ ts: Date.now(), items: diMasterItems }));
+      if (showLoader) {
+        diHideLoading();
+        diSetBanner('done', '✓ ' + diMasterItems.length + ' SPO-Style loaded');
+        setTimeout(function() { diSetBanner('',''); }, 4000);
+      }
+    };
+
+    timer = setTimeout(function() {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (showLoader) {
+        diHideLoading();
+        diSetBanner('failed', 'Gagal load master list. Cek koneksi.');
+      }
+    }, 15000);
+
+    script.src = gasUrl + '?callback=' + cbName + '&t=' + Date.now();
+    script.onerror = function() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (showLoader) { diHideLoading(); diSetBanner('failed', 'Gagal load master list.'); }
+    };
+    document.body.appendChild(script);
+  }
+
+  // ---- SPO AUTOCOMPLETE ----
+  function diSetupSPOInput() {
+    var input = document.getElementById('di-spo-input');
+    var drop  = document.getElementById('di-spo-dropdown');
+    input.oninput = function() { diRenderSPODrop(input.value); };
+    input.onfocus = function() { diRenderSPODrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-idx]');
+      if (!item) return;
+      var idx = parseInt(item.getAttribute('data-idx'));
+      var d = diFilteredItems[idx];
+      if (d) diPilihSPO(d.spo, d.style);
+    });
+  }
+
+  function diRenderSPODrop(query) {
+    var drop = document.getElementById('di-spo-dropdown');
+    if (!diMasterItems.length) return;
+    var q = query.toLowerCase().trim();
+    diFilteredItems = q
+      ? diMasterItems.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
+      : diMasterItems;
+    var show = diFilteredItems.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="di-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open'); return;
+    }
+    drop.innerHTML = show.map(function(item, idx) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="di-ac-item" data-idx="' + idx + '"><span class="di-ac-spo">' + spoHL + '</span><span class="di-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function diPilihSPO(spo, style) {
+    diSelectedSPO   = spo;
+    diSelectedStyle = style;
+    document.getElementById('di-spo-input').value = spo;
+    document.getElementById('di-spo-dropdown').classList.remove('open');
+    var st = document.getElementById('di-style-text');
+    st.textContent  = style;
+    st.style.color  = '#134E8A';
+    st.style.fontStyle = 'normal';
+  }
+
+  // ---- WAVE ----
+  var diBars = null;
+  function diAnimWave(on) {
+    clearInterval(diWaveInterval);
+    if (!diBars) diBars = document.querySelectorAll('.di-wave-bar');
+    if (on) {
+      diWaveInterval = setInterval(function() {
+        diBars.forEach(function(b) { b.style.height = (4 + Math.random() * 24) + 'px'; });
+      }, 80);
+    } else {
+      var h = [4,8,14,20,24,20,14,8,4,8,16,22,16,10,4];
+      diBars.forEach(function(b, i) { b.style.height = (h[i] || 6) + 'px'; });
+    }
+  }
+
+  function diFmt2(n) { return String(n).padStart(2,'0'); }
+  function diFmtTime(s) { return diFmt2(Math.floor(s/60)) + ':' + diFmt2(s%60); }
+  function diGetTodayFormatted() {
+    var d = new Date();
+    return String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0') + '/' + d.getFullYear();
+  }
+
+  // ---- RECORD ----
+  function diToggleRecord() {
+    if (!diIsRec) {
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+        diChunks = []; diRecSecs = 0;
+        diMediaRec = new MediaRecorder(stream);
+        diMediaRec.ondataavailable = function(e) { diChunks.push(e.data); };
+        diMediaRec.onstop = function() {
+          stream.getTracks().forEach(function(t) { t.stop(); });
+          var blob = new Blob(diChunks, {type:'audio/webm'});
+          var ap = document.getElementById('di-audio-player');
+          ap.src = URL.createObjectURL(blob);
+          ap.style.display = 'block';
+          document.getElementById('di-rec-btn').className = 'di-rec-ring done';
+          document.getElementById('di-rec-icon').textContent = '✅';
+          document.getElementById('di-rec-status').textContent = 'Rekaman selesai. Dengarkan atau lanjut parsing.';
+          diAnimWave(false);
+        };
+        diMediaRec.start(); diIsRec = true;
+        document.getElementById('di-rec-btn').className = 'di-rec-ring recording';
+        document.getElementById('di-rec-icon').textContent = '⏹️';
+        document.getElementById('di-rec-status').textContent = 'Sedang merekam… tekan lagi untuk berhenti';
+        diAnimWave(true);
+        diRecInterval = setInterval(function() { diRecSecs++; document.getElementById('di-timer').textContent = diFmtTime(diRecSecs); }, 1000);
+        diStartLiveSpeech();
+      }).catch(function() { diShowToast('Izin mikrofon ditolak', 'error'); });
+    } else {
+      diMediaRec.stop(); diIsRec = false;
+      clearInterval(diRecInterval);
+      diStopLiveSpeech();
+    }
+  }
+
+  function diStartLiveSpeech() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { diSetStatus('Gunakan mic keyboard untuk transkripsi.'); return; }
+    diRecognition = new SR();
+    diRecognition.lang = 'id-ID';
+    diRecognition.continuous = true;
+    diRecognition.interimResults = true;
+    diLiveText = '';
+    diRecognition.onresult = function(e) {
+      var interim = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) diLiveText += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
+      }
+      document.getElementById('di-transkrip').value = diLiveText + interim;
+    };
+    diRecognition.onerror = function() {};
+    diRecognition.start();
+    diSetStatus('🔴 Merekam dan mentranskripsi…');
+  }
+
+  function diStopLiveSpeech() {
+    if (diRecognition) { try { diRecognition.stop(); } catch(e){} }
+    diSetStatus('Transkripsi selesai. Periksa teks lalu tekan Parsing AI.');
+  }
+
+  // ---- AI PARSING ----
+  function diParseWithAI() {
+    var apiKey    = document.getElementById('di-apikey').value.trim();
+    var transkrip = document.getElementById('di-transkrip').value.trim();
+    if (!apiKey)    { diShowToast('Isi API Key dulu di Konfigurasi', 'error'); return; }
+    if (!transkrip) { diShowToast('Transkripsi kosong', 'error'); return; }
+    if (!diSelectedSPO) { diShowToast('Pilih SPO terlebih dahulu', 'error'); return; }
+
+    document.getElementById('di-btn-parse').disabled = true;
+    diShowLoading('AI sedang menganalisis…');
+
+    var today  = diGetTodayFormatted();
+    var prompt = 'Kamu adalah sistem ekstraksi data untuk laporan produksi pabrik sepatu/garmen.\n\nDari transkripsi audio berikut, ekstrak data dan kembalikan HANYA JSON array (tanpa penjelasan, tanpa markdown).\n\nPENTING: SPO dan Style sudah dipilih sebelumnya, gunakan nilai ini dan JANGAN ubah:\n- spo: "' + diSelectedSPO + '"\n- style: "' + diSelectedStyle + '"\n\nAturan ekstraksi:\n- Jika ada beberapa size, buat SATU objek per size\n- Tanggal hari ini: ' + today + '\n- Jika ada field yang tidak disebutkan, isi dengan "-"\n- qty harus angka saja\n- "pic" adalah nama leader/supervisor yang melapor\n- "operator" adalah nama operator\n- "divisi" adalah divisi/bagian produksi\n\nKATEGORI — pilih SATU: Material Defect, Sewing Defect, Cutting Method Issue, Capacity Issue, Warehouse Escape, Cutting Defect, Consumption\n\nFormat JSON:\n[{"tanggal":"...","divisi":"...","pic":"...","style":"' + diSelectedStyle + '","issue":"...","size":"...","qty":"...","kategori":"...","operator":"...","spo":"' + diSelectedSPO + '"}]\n\nTranskripsi:\n"' + transkrip + '"';
+
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user', content:prompt}]})
+    }).then(function(res) { return res.json(); }).then(function(data) {
+      if (data.error) throw new Error(data.error.message);
+      var clean = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+      diParsedRows = JSON.parse(clean);
+      diHideLoading();
+      diRenderPreview(diParsedRows);
+      document.getElementById('di-preview-card').style.display = 'block';
+      document.getElementById('di-btn-kirim').disabled = false;
+      diSetStatus('✅ Parsing selesai! Periksa preview lalu kirim.');
+      diShowToast('Parsing berhasil!', 'success');
+      diSetBanner('done', '✓ Parsing selesai — ' + diParsedRows.length + ' baris data');
+      document.getElementById('di-preview-card').scrollIntoView({behavior:'smooth'});
+    }).catch(function(e) {
+      diHideLoading();
+      diSetStatus('❌ Gagal parsing: ' + e.message);
+      diShowToast('Gagal parsing AI', 'error');
+      diSetBanner('failed', 'Parsing gagal: ' + e.message);
+    }).finally(function() {
+      document.getElementById('di-btn-parse').disabled = false;
+    });
+  }
+
+  // ---- PREVIEW ----
+  function diRenderPreview(rows) {
+    if (!rows.length) return;
+    var html = '<div class="di-preview-wrap"><table><thead><tr>';
+    ['Tanggal','Divisi','PIC','Style','Issue','Size','Qty','Kategori','Operator','SPO'].forEach(function(c) { html += '<th>' + c + '</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr><td>' + r.tanggal + '</td><td>' + r.divisi + '</td><td>' + r.pic + '</td><td>' + r.style + '</td><td>' + r.issue + '</td><td>' + r.size + '</td><td>' + r.qty + '</td><td><span class="di-badge">' + r.kategori + '</span></td><td>' + r.operator + '</td><td>' + r.spo + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    document.getElementById('di-preview-area').innerHTML = html;
+  }
+
+  // ---- KIRIM ----
+  function diKirimKeSheet() {
+    var gasUrl = document.getElementById('di-gasurl').value.trim();
+    if (!gasUrl)            { diShowToast('Isi Script URL dulu', 'error'); return; }
+    if (!diParsedRows.length) { diShowToast('Tidak ada data', 'error'); return; }
+    var adaFoto = diPhotos.some(function(p) { return p !== null; });
+    if (!adaFoto) {
+      document.getElementById('di-confirm-overlay').classList.add('show');
+      return;
+    }
+    document.getElementById('di-btn-kirim').disabled = true;
+    diUploadPhotos().then(function(fotoObj) {
+      diEksekusiKirim(fotoObj);
+    }).catch(function(e) {
+      diHideLoading();
+      diSetBanner('failed', e.message);
+      diShowToast('Gagal upload foto', 'error');
+      document.getElementById('di-btn-kirim').disabled = false;
+    });
+  }
+
+  function diEksekusiKirim(fotoUrls) {
+    var gasUrl = document.getElementById('di-gasurl').value.trim();
+    document.getElementById('di-btn-kirim').disabled = true;
+    diShowLoading('Mengirim ke Google Sheet…');
+    diSetBanner('info', 'Mengirim ' + diParsedRows.length + ' baris data...');
+    var rowsWithFoto = diParsedRows.map(function(r) {
+      return Object.assign({}, r, { foto1: fotoUrls.foto1||'', foto2: fotoUrls.foto2||'', foto3: fotoUrls.foto3||'' });
+    });
+    fetch(gasUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({rows: rowsWithFoto})
+    }).then(function() {
+      diHideLoading();
+      diSetBanner('done', '✓ ' + diParsedRows.length + ' data berhasil terkirim!');
+      diShowToast('✓ Data berhasil masuk ke Sheet!', 'success');
+      diParsedRows = [];
+      setTimeout(function() { diClearAll(); diSetBanner('',''); }, 3000);
+    }).catch(function(e) {
+      diHideLoading();
+      diSetBanner('failed', 'Gagal kirim: ' + e.message);
+      diShowToast('Gagal kirim ke Sheet', 'error');
+      document.getElementById('di-btn-kirim').disabled = false;
+    });
+  }
+
+  // ---- FOTO ----
+  function diTriggerPhoto(slot) {
+    if (diPhotos[slot] !== null) return;
+    diActiveSlot = slot;
+    var btnRow = document.getElementById('di-photo-btn-row');
+    btnRow.style.display = 'flex';
+  }
+  function diTutupSlotPicker() { document.getElementById('di-photo-btn-row').style.display = 'none'; }
+  function diTriggerCamera() { var i = document.getElementById('di-photo-camera'); i.value=''; i.click(); }
+  function diTriggerGallery() { var i = document.getElementById('di-photo-gallery'); i.value=''; i.click(); }
+
+  function diOnPhotoSelected(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { diShowToast('Ukuran foto maksimal 10MB', 'error'); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var base64Full = ev.target.result;
+      diPhotos[diActiveSlot] = { file:file, base64:base64Full.split(',')[1], mimeType:file.type, preview:base64Full };
+      diRenderPhotoSlot(diActiveSlot);
+      diUpdatePhotoCount();
+      diTutupSlotPicker();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function diRenderPhotoSlot(idx) {
+    var slot = document.getElementById('di-slot-' + idx);
+    var p = diPhotos[idx];
+    if (p) {
+      slot.classList.add('filled');
+      slot.innerHTML = '<img src="' + p.preview + '" alt="foto ' + (idx+1) + '"><button class="di-photo-remove" onclick="diRemovePhoto(event,' + idx + ')">✕</button>';
+      slot.onclick = null;
+    } else {
+      slot.classList.remove('filled');
+      slot.innerHTML = '<div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div><div style="font-size:10px;color:#BBB">Foto ' + (idx+1) + '</div>';
+      slot.onclick = (function(i) { return function() { diTriggerPhoto(i); }; })(idx);
+    }
+  }
+
+  function diRemovePhoto(e, idx) {
+    e.stopPropagation();
+    diPhotos[idx] = null;
+    diRenderPhotoSlot(idx);
+    diUpdatePhotoCount();
+    diTutupSlotPicker();
+  }
+
+  function diUpdatePhotoCount() {
+    var count = diPhotos.filter(function(p) { return p !== null; }).length;
+    document.getElementById('di-photo-count').textContent = count + ' / 3 foto';
+  }
+
+  function diUploadPhotos() {
+    var filled = diPhotos.filter(function(p) { return p !== null; });
+    var urls = [];
+    var i = 0;
+    function next() {
+      if (i >= filled.length) return Promise.resolve({ foto1: urls[0]||'', foto2: urls[1]||'', foto3: urls[2]||'' });
+      var p = filled[i];
+      diShowLoading('Mengupload foto ' + (i+1) + ' dari ' + filled.length + '…');
+      return diUploadToCloudinary(p).then(function(url) {
+        urls.push(url); i++;
+        return next();
+      });
+    }
+    return next();
+  }
+
+  function diUploadToCloudinary(photo) {
+    var formData = new FormData();
+    formData.append('file', 'data:' + photo.mimeType + ';base64,' + photo.base64);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', 'daily_issue_produksi');
+    return fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', {
+      method: 'POST', body: formData
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      if (data.secure_url) return data.secure_url;
+      throw new Error(data.error ? data.error.message : 'Upload gagal');
+    });
+  }
+
+  function diTutupKonfirmasi() { document.getElementById('di-confirm-overlay').classList.remove('show'); }
+  function diLanjutKirimTanpaFoto() { diTutupKonfirmasi(); diEksekusiKirim({foto1:'',foto2:'',foto3:''}); }
+
+  // ---- CLEAR ----
+  function diClearAll() {
+    document.getElementById('di-transkrip').value = '';
+    document.getElementById('di-timer').textContent = '00:00';
+    document.getElementById('di-rec-btn').className = 'di-rec-ring';
+    document.getElementById('di-rec-icon').textContent = '🎙️';
+    document.getElementById('di-rec-status').textContent = 'Tekan untuk mulai merekam';
+    document.getElementById('di-audio-player').style.display = 'none';
+    document.getElementById('di-audio-player').src = '';
+    document.getElementById('di-preview-card').style.display = 'none';
+    document.getElementById('di-preview-area').innerHTML = '<div class="di-empty-state">Belum ada data.</div>';
+    document.getElementById('di-btn-kirim').disabled = true;
+    document.getElementById('di-spo-input').value = '';
+    document.getElementById('di-spo-dropdown').classList.remove('open');
+    var st = document.getElementById('di-style-text');
+    st.textContent = 'Terisi otomatis saat SPO dipilih';
+    st.style.color = '#999'; st.style.fontStyle = 'italic';
+    diSetStatus('');
+    diAnimWave(false);
+    diRecSecs = 0; diParsedRows = [];
+    diSelectedSPO = ''; diSelectedStyle = '';
+    diPhotos = [null, null, null];
+    [0,1,2].forEach(function(i) { diRenderPhotoSlot(i); });
+    diUpdatePhotoCount();
+  }
+
+  // ---- UTILS ----
+  function diSetStatus(msg) { document.getElementById('di-status-bar').textContent = msg; }
+  function diShowLoading(t) { document.getElementById('di-loading-text').textContent = t; document.getElementById('di-loading').classList.add('show'); }
+  function diHideLoading()  { document.getElementById('di-loading').classList.remove('show'); }
+  function diShowToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (type || '');
+    setTimeout(function() { t.className = 'toast'; }, 3500);
   }
 </script>
 </body>
