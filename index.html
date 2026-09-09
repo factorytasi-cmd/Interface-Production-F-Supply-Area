@@ -487,7 +487,7 @@
           </div>
         </div>
 
-        <div class="card card-out">
+        <div class="card card-out" onclick="goTo('page-form-out')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -677,7 +677,146 @@
     </div>
   </div>
 
-  <!-- ==================== PAGE 5: DAILY ISSUE ==================== -->
+  <!-- ==================== PAGE 5: OUT POLA ==================== -->
+  <div class="page" id="page-form-out">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">OUT POLA</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#1D9E75,#34D399)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › OUT POLA</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(29,158,117,0.12);border-color:rgba(29,158,117,0.3)">
+        <i class="ti ti-package-export" style="color:#1D9E75"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#0A5C42">Out Pola dari Cutting Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="ofTanggal">
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari Form Keluar Kulit Dari Rak)</label>
+        <span id="ofStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(29,158,117,0.12);color:#0A5C42;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+
+      <!-- SPO -->
+      <div class="field-group">
+        <label class="field-label">SPO</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="of-spo-input" placeholder="Ketik nomor SPO..." autocomplete="off">
+          <div class="spo-ac-drop" id="of-spo-drop"></div>
+        </div>
+      </div>
+
+      <!-- STYLE (auto) -->
+      <div class="field-group">
+        <label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>
+        <div class="style-display" id="of-style-display">Pilih atau ketik SPO</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- OPERATOR -->
+      <div class="field-group">
+        <label class="field-label">Operator</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="of-operator-input" placeholder="Ketik nama operator..." autocomplete="off">
+          <div class="spo-ac-drop" id="of-operator-drop"></div>
+        </div>
+      </div>
+
+      <!-- NO ABSEN (auto) -->
+      <div class="field-group">
+        <label class="field-label">No. Absen <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis)</span></label>
+        <input type="text" class="field-input" id="of-absen" readonly placeholder="Pilih operator dahulu">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SIZE -->
+      <div class="field-group">
+        <label class="field-label">Size</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="of-size-input" placeholder="Ketik / pilih Size..." autocomplete="off">
+          <div class="spo-ac-drop" id="of-size-drop"></div>
+        </div>
+      </div>
+
+      <!-- NO. BARCODE -->
+      <div class="field-group">
+        <label class="field-label">No. Barcode</label>
+        <select class="field-select" id="of-barcode-select" onchange="onOfBarcodeChange()">
+          <option value="">— Pilih SPO, Operator &amp; Size dahulu —</option>
+        </select>
+      </div>
+
+      <!-- NO. OPCK (auto) -->
+      <div class="field-group">
+        <label class="field-label">No. OPCK <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari No. Barcode)</span></label>
+        <input type="text" class="field-input" id="of-opck" readonly placeholder="Pilih No. Barcode dahulu">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- QTY -->
+      <div class="field-group">
+        <label class="field-label">Qty</label>
+        <input type="number" class="field-input" id="of-qty" placeholder="0" min="0">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="ofBtnSubmit" onclick="submitOutForm()" style="background:linear-gradient(135deg,#1D9E75,#34D399);box-shadow:0 4px 16px rgba(29,158,117,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 6: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
     <div class="header-zone">
       <div class="status-bar">
@@ -1010,6 +1149,7 @@
     window.scrollTo(0, 0);
     if (pageId === "page-form-in") initForm();
     if (pageId === "page-form-rak") initRakForm();
+    if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-daily-issue") initDailyIssue();
   }
 
@@ -1844,6 +1984,393 @@
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
         resetRakForm();
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ===== OUT POLA DARI CUTTING KULIT =====
+  // Sumber data SPO/Style/Operator/No.Absen/Size/No.Barcode/No.OPCK: sheet "Form Keluar Kulit Dari Rak"
+  var masterDataOut = { records: [] };
+
+  function initOutForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('ofTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetOutForm();
+    loadOutMasterData();
+    setupOfSPOInput();
+    setupOfOperatorInput();
+    setupOfSizeInput();
+  }
+
+  function resetOutForm() {
+    document.getElementById('of-spo-input').value = '';
+    document.getElementById('of-style-display').textContent = 'Pilih atau ketik SPO';
+    document.getElementById('of-style-display').className = 'style-display';
+    document.getElementById('of-operator-input').value = '';
+    document.getElementById('of-absen').value = '';
+    document.getElementById('of-size-input').value = '';
+    document.getElementById('of-barcode-select').innerHTML = '<option value="">— Pilih SPO, Operator &amp; Size dahulu —</option>';
+    document.getElementById('of-opck').value = '';
+    document.getElementById('of-qty').value = '';
+  }
+
+  // ---- LOAD MASTER DATA via JSONP ----
+  function loadOutMasterData() {
+    setOfStatus('loading');
+    var url = GAS_URL + '?type=out_pola_master';
+    jsonp(url, function(err, data) {
+      if (err || !data || data.status !== 'ok') {
+        setOfStatus('error');
+        return;
+      }
+      masterDataOut.records = data.records || [];
+      setOfStatus('ok', distinctOutSPOs('').length);
+    });
+  }
+
+  function setOfStatus(state, count) {
+    var el = document.getElementById('ofStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(29,158,117,0.12)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  // ---- HELPER: baca riwayat "Form Keluar Kulit Dari Rak" (masterDataOut.records) ----
+  function distinctOutSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  function outStyleForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterDataOut.records.length; i++) {
+      if (masterDataOut.records[i].spo.toLowerCase() === s) return masterDataOut.records[i].style;
+    }
+    return null;
+  }
+
+  function distinctOutOperators(spo, query) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return [];
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (seen[r.operator]) return;
+      if (q && r.operator.toLowerCase().indexOf(q) < 0) return;
+      seen[r.operator] = true;
+      out.push({ operator: r.operator, absen: r.absen });
+    });
+    return out;
+  }
+
+  function distinctOutSizes(spo, operator, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var o = (operator || '').trim().toLowerCase();
+    if (!s || !o) return [];
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (r.operator.toLowerCase() !== o) return;
+      if (seen[r.size]) return;
+      if (q && r.size.toLowerCase().indexOf(q) < 0) return;
+      seen[r.size] = true;
+      out.push(r.size);
+    });
+    return out;
+  }
+
+  function outBarcodesFor(spo, operator, size) {
+    var s = (spo || '').trim().toLowerCase();
+    var o = (operator || '').trim().toLowerCase();
+    if (!s || !o || !size) return [];
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (r.operator.toLowerCase() !== o) return;
+      if (r.size !== size) return;
+      if (seen[r.barcode]) return;
+      seen[r.barcode] = true;
+      out.push({ barcode: r.barcode, opck: r.opck });
+    });
+    return out;
+  }
+
+  // ---- CASCADE RESET ----
+  function resetOfFromSize() {
+    document.getElementById('of-opck').value = '';
+    refreshOfBarcodeOptions();
+  }
+
+  function resetOfFromOperator() {
+    document.getElementById('of-size-input').value = '';
+    resetOfFromSize();
+  }
+
+  function resetOfFromSPO() {
+    document.getElementById('of-operator-input').value = '';
+    document.getElementById('of-absen').value = '';
+    resetOfFromOperator();
+  }
+
+  function refreshOfBarcodeOptions() {
+    var sel = document.getElementById('of-barcode-select');
+    var spo = document.getElementById('of-spo-input').value.trim();
+    var operator = document.getElementById('of-operator-input').value.trim();
+    var size = document.getElementById('of-size-input').value.trim();
+    if (!spo || !operator || !size) {
+      sel.innerHTML = '<option value="">— Pilih SPO, Operator &amp; Size dahulu —</option>';
+      return;
+    }
+    var list = outBarcodesFor(spo, operator, size);
+    if (list.length === 0) {
+      sel.innerHTML = '<option value="">— Tidak ada No. Barcode —</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">— Pilih No. Barcode —</option>' + list.map(function(b) {
+      return '<option value="' + b.barcode + '" data-opck="' + b.opck + '">' + b.barcode + '</option>';
+    }).join('');
+  }
+
+  function onOfBarcodeChange() {
+    var sel = document.getElementById('of-barcode-select');
+    var opt = sel.options[sel.selectedIndex];
+    document.getElementById('of-opck').value = opt ? (opt.getAttribute('data-opck') || '') : '';
+  }
+
+  // ---- SPO (manual + suggest) ----
+  function setupOfSPOInput() {
+    var input = document.getElementById('of-spo-input');
+    var drop  = document.getElementById('of-spo-drop');
+
+    input.oninput = function() {
+      renderOfSPODrop(input.value);
+      matchOfSPOStyle(input.value);
+    };
+    input.onfocus = function() { renderOfSPODrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihOfSPO(item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderOfSPODrop(query) {
+    var drop = document.getElementById('of-spo-drop');
+    if (!masterDataOut.records.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfSPO(spo, style) {
+    document.getElementById('of-spo-input').value = spo;
+    document.getElementById('of-spo-drop').classList.remove('open');
+    applyOfSPO(spo, style);
+  }
+
+  function matchOfSPOStyle(typedSpo) {
+    var style = outStyleForSPO(typedSpo);
+    if (style) {
+      applyOfSPO(typedSpo.trim(), style);
+    } else {
+      document.getElementById('of-style-display').textContent = 'Pilih atau ketik SPO';
+      document.getElementById('of-style-display').className = 'style-display';
+      resetOfFromSPO();
+    }
+  }
+
+  function applyOfSPO(spo, style) {
+    var disp = document.getElementById('of-style-display');
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    resetOfFromSPO();
+  }
+
+  // ---- OPERATOR (manual + suggest, difilter oleh SPO) ----
+  function setupOfOperatorInput() {
+    var input = document.getElementById('of-operator-input');
+    var drop  = document.getElementById('of-operator-drop');
+
+    input.oninput = function() {
+      document.getElementById('of-absen').value = '';
+      resetOfFromOperator();
+      renderOfOperatorDrop(input.value);
+    };
+    input.onfocus = function() { renderOfOperatorDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-operator]');
+      if (!item) return;
+      pilihOfOperator(item.getAttribute('data-operator'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderOfOperatorDrop(query) {
+    var drop = document.getElementById('of-operator-drop');
+    var spo = document.getElementById('of-spo-input').value.trim();
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutOperators(spo, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var namaHL = q ? item.operator.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.operator;
+      return '<div class="spo-ac-item" data-operator="' + item.operator + '" data-absen="' + item.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + item.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfOperator(operator, absen) {
+    document.getElementById('of-operator-input').value = operator;
+    document.getElementById('of-operator-drop').classList.remove('open');
+    document.getElementById('of-absen').value = absen;
+    resetOfFromOperator();
+  }
+
+  // ---- SIZE (manual + suggest, difilter oleh SPO + Operator) ----
+  function setupOfSizeInput() {
+    var input = document.getElementById('of-size-input');
+    var drop  = document.getElementById('of-size-drop');
+
+    input.oninput = function() {
+      resetOfFromSize();
+      renderOfSizeDrop(input.value);
+    };
+    input.onfocus = function() { renderOfSizeDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-size]');
+      if (!item) return;
+      pilihOfSize(item.getAttribute('data-size'));
+    });
+  }
+
+  function renderOfSizeDrop(query) {
+    var drop = document.getElementById('of-size-drop');
+    var spo = document.getElementById('of-spo-input').value.trim();
+    var operator = document.getElementById('of-operator-input').value.trim();
+    if (!spo || !operator) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih SPO &amp; Operator dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutSizes(spo, operator, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(s) {
+      var sHL = q ? s.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : s;
+      return '<div class="spo-ac-item" data-size="' + s + '"><span class="spo-ac-spo">' + sHL + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfSize(size) {
+    document.getElementById('of-size-input').value = size;
+    document.getElementById('of-size-drop').classList.remove('open');
+    resetOfFromSize();
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectOutData() {
+    var tanggal  = document.getElementById('ofTanggal').value;
+    var spo      = document.getElementById('of-spo-input').value.trim();
+    var style    = document.getElementById('of-style-display').textContent;
+    var operator = document.getElementById('of-operator-input').value.trim();
+    var absen    = document.getElementById('of-absen').value;
+    var size     = document.getElementById('of-size-input').value.trim();
+    var barcode  = document.getElementById('of-barcode-select').value;
+    var opck     = document.getElementById('of-opck').value;
+    var qty      = document.getElementById('of-qty').value;
+
+    if (!tanggal)  return { error: 'Tanggal harus diisi' };
+    if (!spo)      return { error: 'SPO harus diisi' };
+    if (!operator) return { error: 'Operator harus diisi' };
+    if (!absen)    return { error: 'Pilih Operator dari daftar saran agar No. Absen terisi' };
+    if (!size)     return { error: 'Size harus diisi' };
+    if (!barcode)  return { error: 'No. Barcode harus dipilih' };
+    if (!opck)     return { error: 'No. OPCK tidak terisi — pilih ulang No. Barcode' };
+    if (!qty)      return { error: 'Qty harus diisi' };
+
+    return { tanggal:tanggal, spo:spo, style:style, operator:operator, absen:absen, size:size, barcode:barcode, opck:opck, qty:qty };
+  }
+
+  function submitOutForm() {
+    var data = collectOutData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_URL + '?type=save_output_pola&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetOutForm();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
