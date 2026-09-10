@@ -284,15 +284,18 @@
       background: linear-gradient(135deg, #0EA5E9, #38BDF8);
       color: white; border-color: transparent;
     }
-    .wip-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #E0E2E0; background: white; }
-    .wip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 460px; }
-    .wip-table th {
-      background: #F0F2F1; padding: 9px 10px; text-align: left; font-weight: 600;
-      color: #666; white-space: nowrap; border-bottom: 1px solid #E5E7E6;
+    .wip-list { display: flex; flex-direction: column; gap: 8px; }
+    .wip-item { background: white; border: 1px solid #E0E2E0; border-radius: 12px; padding: 12px 14px; }
+    .wip-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .wip-item-spo { font-size: 14px; font-weight: 700; color: #111; }
+    .wip-item-size {
+      font-size: 11px; font-weight: 600; color: #075985;
+      background: rgba(14,165,233,0.12); padding: 2px 8px; border-radius: 99px; white-space: nowrap; flex-shrink: 0;
     }
-    .wip-table td { padding: 9px 10px; border-bottom: .5px solid #F0F2F1; color: #111; }
-    .wip-table tr:last-child td { border-bottom: none; }
-    .wip-table td:last-child, .wip-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .wip-item-style { font-size: 12px; color: #666; line-height: 1.4; margin-bottom: 8px; word-break: break-word; }
+    .wip-item-qty { display: flex; align-items: baseline; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #E8E8E6; }
+    .wip-item-qty-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .wip-item-qty-value { font-size: 18px; font-weight: 700; color: #0EA5E9; font-variant-numeric: tabular-nums; }
     .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
 
     .divider { height: 1px; background: #E8E8E6; margin: 18px 0; }
@@ -860,21 +863,15 @@
 
       <!-- WIP RAK VIEW -->
       <div id="wipViewRak" class="wip-view">
-        <div class="wip-table-wrap">
-          <table class="wip-table">
-            <thead><tr><th>SPO</th><th>Style</th><th>Size</th><th>WIP Rak</th></tr></thead>
-            <tbody id="wipRakBody"><tr><td colspan="4" class="wip-empty">Memuat data...</td></tr></tbody>
-          </table>
+        <div class="wip-list" id="wipRakList">
+          <div class="wip-empty">Memuat data...</div>
         </div>
       </div>
 
       <!-- WIP PROSES VIEW -->
       <div id="wipViewProses" class="wip-view" style="display:none">
-        <div class="wip-table-wrap">
-          <table class="wip-table">
-            <thead><tr><th>SPO</th><th>Style</th><th>Size</th><th>WIP Proses</th></tr></thead>
-            <tbody id="wipProsesBody"><tr><td colspan="4" class="wip-empty">Memuat data...</td></tr></tbody>
-          </table>
+        <div class="wip-list" id="wipProsesList">
+          <div class="wip-empty">Memuat data...</div>
         </div>
       </div>
 
@@ -2684,14 +2681,19 @@
 
   function renderWipTable(which) {
     var rows = wipData[which];
-    var body = document.getElementById(which === 'rak' ? 'wipRakBody' : 'wipProsesBody');
-    if (!body) return;
+    var qtyLabel = which === 'rak' ? 'WIP Rak' : 'WIP Proses';
+    var container = document.getElementById(which === 'rak' ? 'wipRakList' : 'wipProsesList');
+    if (!container) return;
     if (!rows.length) {
-      body.innerHTML = '<tr><td colspan="4" class="wip-empty">Tidak ada data</td></tr>';
+      container.innerHTML = '<div class="wip-empty">Tidak ada data</div>';
       return;
     }
-    body.innerHTML = rows.map(function(r) {
-      return '<tr><td>' + _escWip(r.spo) + '</td><td>' + _escWip(r.style) + '</td><td>' + _escWip(r.size) + '</td><td>' + _escWip(r.wip) + '</td></tr>';
+    container.innerHTML = rows.map(function(r) {
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+        + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(r.wip) + '</span></div>'
+        + '</div>';
     }).join('');
   }
 
