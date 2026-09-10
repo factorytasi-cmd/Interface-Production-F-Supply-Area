@@ -733,70 +733,12 @@
         <span id="ofStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(29,158,117,0.12);color:#0A5C42;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
 
-      <!-- SPO -->
-      <div class="field-group">
-        <label class="field-label">SPO</label>
-        <div class="spo-ac-wrap">
-          <input type="text" class="field-input" id="of-spo-input" placeholder="Ketik nomor SPO..." autocomplete="off">
-          <div class="spo-ac-drop" id="of-spo-drop"></div>
-        </div>
-      </div>
+      <!-- SPO GROUPS -->
+      <div id="ofGroupsContainer"></div>
 
-      <!-- STYLE (auto) -->
-      <div class="field-group">
-        <label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>
-        <div class="style-display" id="of-style-display">Pilih atau ketik SPO</div>
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- OPERATOR -->
-      <div class="field-group">
-        <label class="field-label">Operator</label>
-        <div class="spo-ac-wrap">
-          <input type="text" class="field-input" id="of-operator-input" placeholder="Ketik nama operator..." autocomplete="off">
-          <div class="spo-ac-drop" id="of-operator-drop"></div>
-        </div>
-      </div>
-
-      <!-- NO ABSEN (auto) -->
-      <div class="field-group">
-        <label class="field-label">No. Absen <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis)</span></label>
-        <input type="text" class="field-input" id="of-absen" readonly placeholder="Pilih operator dahulu">
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- SIZE -->
-      <div class="field-group">
-        <label class="field-label">Size</label>
-        <div class="spo-ac-wrap">
-          <input type="text" class="field-input" id="of-size-input" placeholder="Ketik / pilih Size..." autocomplete="off">
-          <div class="spo-ac-drop" id="of-size-drop"></div>
-        </div>
-      </div>
-
-      <!-- NO. BARCODE -->
-      <div class="field-group">
-        <label class="field-label">No. Barcode</label>
-        <select class="field-select" id="of-barcode-select" onchange="onOfBarcodeChange()">
-          <option value="">— Pilih SPO, Operator &amp; Size dahulu —</option>
-        </select>
-      </div>
-
-      <!-- NO. OPCK (auto) -->
-      <div class="field-group">
-        <label class="field-label">No. OPCK <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari No. Barcode)</span></label>
-        <input type="text" class="field-input" id="of-opck" readonly placeholder="Pilih No. Barcode dahulu">
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- QTY -->
-      <div class="field-group">
-        <label class="field-label">Qty</label>
-        <input type="number" class="field-input" id="of-qty" placeholder="0" min="0">
-      </div>
+      <button class="btn-add-group" onclick="addOfGroup()" style="border-color:#1D9E75;background:rgba(29,158,117,0.08);color:#0A5C42">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
 
       <div class="divider"></div>
 
@@ -1994,6 +1936,10 @@
   // Sumber data SPO/Style/Operator/No.Absen/Size/No.Barcode/No.OPCK: sheet "Form Keluar Kulit Dari Rak"
   var masterDataOut = { records: [] };
 
+  var ofGroupCount = 0;
+  var ofRowCount   = 0;
+  var ofGroupsData = {};
+
   function initOutForm() {
     var today = new Date();
     var yyyy = today.getFullYear();
@@ -2002,21 +1948,13 @@
     document.getElementById('ofTanggal').value = yyyy+'-'+mm+'-'+dd;
     resetOutForm();
     loadOutMasterData();
-    setupOfSPOInput();
-    setupOfOperatorInput();
-    setupOfSizeInput();
   }
 
   function resetOutForm() {
-    document.getElementById('of-spo-input').value = '';
-    document.getElementById('of-style-display').textContent = 'Pilih atau ketik SPO';
-    document.getElementById('of-style-display').className = 'style-display';
-    document.getElementById('of-operator-input').value = '';
-    document.getElementById('of-absen').value = '';
-    document.getElementById('of-size-input').value = '';
-    document.getElementById('of-barcode-select').innerHTML = '<option value="">— Pilih SPO, Operator &amp; Size dahulu —</option>';
-    document.getElementById('of-opck').value = '';
-    document.getElementById('of-qty').value = '';
+    document.getElementById('ofGroupsContainer').innerHTML = '';
+    ofGroupCount = 0;
+    ofGroupsData = {};
+    addOfGroup();
   }
 
   // ---- LOAD MASTER DATA via JSONP ----
@@ -2147,30 +2085,96 @@
     return out;
   }
 
-  // ---- CASCADE RESET ----
-  function resetOfFromSize() {
-    document.getElementById('of-opck').value = '';
-    refreshOfBarcodeOptions();
+  // ---- SPO GROUPS ----
+  function addOfGroup() {
+    ofGroupCount++;
+    var gid = ofGroupCount;
+    ofGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('ofGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'of-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteOfGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="of-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="of-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="of-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="of-row-badge-' + gid + '" style="background:rgba(29,158,117,0.15);color:#0A5C42;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="of-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addOfRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupOfSPOInput(gid);
+    addOfRow(gid);
+    updateOfGroupDeleteButtons();
   }
 
-  function resetOfFromOperator() {
-    document.getElementById('of-size-input').value = '';
-    resetOfFromSize();
+  function updateOfGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#ofGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
   }
 
-  function resetOfFromSPO() {
-    document.getElementById('of-operator-input').value = '';
-    document.getElementById('of-absen').value = '';
-    resetOfFromOperator();
+  function deleteOfGroup(gid) {
+    var el = document.getElementById('of-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete ofGroupsData[gid];
+    updateOfGroupDeleteButtons();
   }
 
-  function refreshOfBarcodeOptions() {
-    var sel = document.getElementById('of-barcode-select');
-    var spo = document.getElementById('of-spo-input').value.trim();
-    var operator = document.getElementById('of-operator-input').value.trim();
-    var size = document.getElementById('of-size-input').value.trim();
+  // ---- CASCADE RESET (per baris) ----
+  function resetOfRowFromSize(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    row.querySelector('.of-opck-input').value = '';
+    refreshOfBarcodeOptions(rid);
+  }
+
+  function resetOfRowFromOperator(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    row.querySelector('.of-size-input').value = '';
+    resetOfRowFromSize(rid);
+  }
+
+  // SPO grup berubah -> semua baris size di grup ini sudah tidak relevan
+  function resetOfGroupRows(gid) {
+    document.querySelectorAll('#of-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      var rid = card.id.replace('of-row-', '');
+      card.querySelector('.of-operator-input').value = '';
+      card.querySelector('.of-absen-input').value = '';
+      resetOfRowFromOperator(rid);
+    });
+  }
+
+  function refreshOfBarcodeOptions(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    var gid = row.closest('.spo-group').id.replace('of-group-', '');
+    var sel = row.querySelector('.of-barcode-select');
+    var spo = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
+    var operator = row.querySelector('.of-operator-input').value.trim();
+    var size = row.querySelector('.of-size-input').value.trim();
     if (!spo || !operator || !size) {
-      sel.innerHTML = '<option value="">— Pilih SPO, Operator &amp; Size dahulu —</option>';
+      sel.innerHTML = '<option value="">— Pilih Operator &amp; Size dahulu —</option>';
       return;
     }
     var list = outBarcodesFor(spo, operator, size);
@@ -2183,34 +2187,35 @@
     }).join('');
   }
 
-  function onOfBarcodeChange() {
-    var sel = document.getElementById('of-barcode-select');
+  function onOfBarcodeChange(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    var sel = row.querySelector('.of-barcode-select');
     var opt = sel.options[sel.selectedIndex];
-    document.getElementById('of-opck').value = opt ? (opt.getAttribute('data-opck') || '') : '';
+    row.querySelector('.of-opck-input').value = opt ? (opt.getAttribute('data-opck') || '') : '';
   }
 
-  // ---- SPO (manual + suggest) ----
-  function setupOfSPOInput() {
-    var input = document.getElementById('of-spo-input');
-    var drop  = document.getElementById('of-spo-drop');
+  // ---- SPO per grup (manual + suggest) ----
+  function setupOfSPOInput(gid) {
+    var input = document.getElementById('of-spo-input-' + gid);
+    var drop  = document.getElementById('of-spo-drop-' + gid);
 
     input.oninput = function() {
-      renderOfSPODrop(input.value);
-      matchOfSPOStyle(input.value);
+      renderOfSPODrop(gid, input.value);
+      matchOfSPOStyle(gid, input.value);
     };
-    input.onfocus = function() { renderOfSPODrop(input.value); };
+    input.onfocus = function() { renderOfSPODrop(gid, input.value); };
     document.addEventListener('click', function(e) {
       if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
     });
     drop.addEventListener('click', function(e) {
       var item = e.target.closest('[data-spo]');
       if (!item) return;
-      pilihOfSPO(item.getAttribute('data-spo'), item.getAttribute('data-style'));
+      pilihOfSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
     });
   }
 
-  function renderOfSPODrop(query) {
-    var drop = document.getElementById('of-spo-drop');
+  function renderOfSPODrop(gid, query) {
+    var drop = document.getElementById('of-spo-drop-' + gid);
     if (!masterDataOut.records.length) {
       drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
       drop.classList.add('open');
@@ -2230,54 +2235,125 @@
     drop.classList.add('open');
   }
 
-  function pilihOfSPO(spo, style) {
-    document.getElementById('of-spo-input').value = spo;
-    document.getElementById('of-spo-drop').classList.remove('open');
-    applyOfSPO(spo, style);
+  function pilihOfSPO(gid, spo, style) {
+    document.getElementById('of-spo-input-' + gid).value = spo;
+    document.getElementById('of-spo-drop-' + gid).classList.remove('open');
+    applyOfSPO(gid, spo, style);
   }
 
-  function matchOfSPOStyle(typedSpo) {
+  function matchOfSPOStyle(gid, typedSpo) {
     var style = outStyleForSPO(typedSpo);
     if (style) {
-      applyOfSPO(typedSpo.trim(), style);
+      applyOfSPO(gid, typedSpo.trim(), style);
     } else {
-      document.getElementById('of-style-display').textContent = 'Pilih atau ketik SPO';
-      document.getElementById('of-style-display').className = 'style-display';
-      resetOfFromSPO();
+      ofGroupsData[gid].spo = typedSpo.trim();
+      ofGroupsData[gid].style = '';
+      document.getElementById('of-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('of-style-display-' + gid).className = 'style-display';
+      resetOfGroupRows(gid);
     }
   }
 
-  function applyOfSPO(spo, style) {
-    var disp = document.getElementById('of-style-display');
+  function applyOfSPO(gid, spo, style) {
+    ofGroupsData[gid].spo = spo;
+    ofGroupsData[gid].style = style;
+    var disp = document.getElementById('of-style-display-' + gid);
     disp.textContent = style;
     disp.className = 'style-display filled';
-    resetOfFromSPO();
+    resetOfGroupRows(gid);
   }
 
-  // ---- OPERATOR (manual + suggest, difilter oleh SPO) ----
-  function setupOfOperatorInput() {
-    var input = document.getElementById('of-operator-input');
-    var drop  = document.getElementById('of-operator-drop');
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addOfRow(gid) {
+    ofRowCount++;
+    var rid = ofRowCount;
+    var container = document.getElementById('of-rows-container-' + gid);
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'of-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteOfRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Operator</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input of-operator-input" id="of-operator-input-'+rid+'" placeholder="Ketik nama operator...">'
+      + '<div class="spo-ac-drop of-operator-drop" id="of-operator-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input of-absen-input" readonly placeholder="Otomatis">'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input of-size-input" id="of-size-input-'+rid+'" placeholder="Ketik / pilih Size...">'
+      + '<div class="spo-ac-drop of-size-drop" id="of-size-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. Barcode</span>'
+      + '<select class="row-field-select of-barcode-select" onchange="onOfBarcodeChange(\''+rid+'\')"><option value="">— Pilih Operator &amp; Size dahulu —</option></select>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input of-opck-input" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input of-qty-input" placeholder="0" min="0"></div>'
+      + '</div></div>';
+
+    container.appendChild(div);
+    setupOfOperatorInput(rid);
+    setupOfSizeInput(rid);
+    updateOfRowBadge(gid);
+  }
+
+  function deleteOfRow(gid, rid) {
+    var container = document.getElementById('of-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('of-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateOfRowBadge(gid);
+  }
+
+  function updateOfRowBadge(gid) {
+    var container = document.getElementById('of-rows-container-' + gid);
+    var badge = document.getElementById('of-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  // ---- OPERATOR per baris (manual + suggest, difilter oleh SPO grup) ----
+  function setupOfOperatorInput(rid) {
+    var input = document.getElementById('of-operator-input-' + rid);
+    var drop  = document.getElementById('of-operator-drop-' + rid);
+    var row   = document.getElementById('of-row-' + rid);
 
     input.oninput = function() {
-      document.getElementById('of-absen').value = '';
-      resetOfFromOperator();
-      renderOfOperatorDrop(input.value);
+      row.querySelector('.of-absen-input').value = '';
+      resetOfRowFromOperator(rid);
+      renderOfOperatorDrop(rid, input.value);
     };
-    input.onfocus = function() { renderOfOperatorDrop(input.value); };
+    input.onfocus = function() { renderOfOperatorDrop(rid, input.value); };
     document.addEventListener('click', function(e) {
       if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
     });
     drop.addEventListener('click', function(e) {
       var item = e.target.closest('[data-operator]');
       if (!item) return;
-      pilihOfOperator(item.getAttribute('data-operator'), item.getAttribute('data-absen'));
+      pilihOfOperator(rid, item.getAttribute('data-operator'), item.getAttribute('data-absen'));
     });
   }
 
-  function renderOfOperatorDrop(query) {
-    var drop = document.getElementById('of-operator-drop');
-    var spo = document.getElementById('of-spo-input').value.trim();
+  function renderOfOperatorDrop(rid, query) {
+    var drop = document.getElementById('of-operator-drop-' + rid);
+    var row  = document.getElementById('of-row-' + rid);
+    var gid  = row.closest('.spo-group').id.replace('of-group-', '');
+    var spo  = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
     if (!spo) {
       drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
       drop.classList.add('open');
@@ -2297,37 +2373,40 @@
     drop.classList.add('open');
   }
 
-  function pilihOfOperator(operator, absen) {
-    document.getElementById('of-operator-input').value = operator;
-    document.getElementById('of-operator-drop').classList.remove('open');
-    document.getElementById('of-absen').value = absen;
-    resetOfFromOperator();
+  function pilihOfOperator(rid, operator, absen) {
+    var row = document.getElementById('of-row-' + rid);
+    document.getElementById('of-operator-input-' + rid).value = operator;
+    document.getElementById('of-operator-drop-' + rid).classList.remove('open');
+    row.querySelector('.of-absen-input').value = absen;
+    resetOfRowFromOperator(rid);
   }
 
-  // ---- SIZE (manual + suggest, difilter oleh SPO + Operator) ----
-  function setupOfSizeInput() {
-    var input = document.getElementById('of-size-input');
-    var drop  = document.getElementById('of-size-drop');
+  // ---- SIZE per baris (manual + suggest, difilter oleh SPO grup + Operator baris) ----
+  function setupOfSizeInput(rid) {
+    var input = document.getElementById('of-size-input-' + rid);
+    var drop  = document.getElementById('of-size-drop-' + rid);
 
     input.oninput = function() {
-      resetOfFromSize();
-      renderOfSizeDrop(input.value);
+      resetOfRowFromSize(rid);
+      renderOfSizeDrop(rid, input.value);
     };
-    input.onfocus = function() { renderOfSizeDrop(input.value); };
+    input.onfocus = function() { renderOfSizeDrop(rid, input.value); };
     document.addEventListener('click', function(e) {
       if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
     });
     drop.addEventListener('click', function(e) {
       var item = e.target.closest('[data-size]');
       if (!item) return;
-      pilihOfSize(item.getAttribute('data-size'));
+      pilihOfSize(rid, item.getAttribute('data-size'));
     });
   }
 
-  function renderOfSizeDrop(query) {
-    var drop = document.getElementById('of-size-drop');
-    var spo = document.getElementById('of-spo-input').value.trim();
-    var operator = document.getElementById('of-operator-input').value.trim();
+  function renderOfSizeDrop(rid, query) {
+    var drop = document.getElementById('of-size-drop-' + rid);
+    var row  = document.getElementById('of-row-' + rid);
+    var gid  = row.closest('.spo-group').id.replace('of-group-', '');
+    var spo  = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
+    var operator = row.querySelector('.of-operator-input').value.trim();
     if (!spo || !operator) {
       drop.innerHTML = '<div class="spo-ac-empty">Pilih SPO &amp; Operator dahulu</div>';
       drop.classList.add('open');
@@ -2347,34 +2426,57 @@
     drop.classList.add('open');
   }
 
-  function pilihOfSize(size) {
-    document.getElementById('of-size-input').value = size;
-    document.getElementById('of-size-drop').classList.remove('open');
-    resetOfFromSize();
+  function pilihOfSize(rid, size) {
+    document.getElementById('of-size-input-' + rid).value = size;
+    document.getElementById('of-size-drop-' + rid).classList.remove('open');
+    resetOfRowFromSize(rid);
   }
 
   // ---- COLLECT + SUBMIT ----
   function collectOutData() {
-    var tanggal  = document.getElementById('ofTanggal').value;
-    var spo      = document.getElementById('of-spo-input').value.trim();
-    var style    = document.getElementById('of-style-display').textContent;
-    var operator = document.getElementById('of-operator-input').value.trim();
-    var absen    = document.getElementById('of-absen').value;
-    var size     = document.getElementById('of-size-input').value.trim();
-    var barcode  = document.getElementById('of-barcode-select').value;
-    var opck     = document.getElementById('of-opck').value;
-    var qty      = document.getElementById('of-qty').value;
+    var tanggal = document.getElementById('ofTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
 
-    if (!tanggal)  return { error: 'Tanggal harus diisi' };
-    if (!spo)      return { error: 'SPO harus diisi' };
-    if (!operator) return { error: 'Operator harus diisi' };
-    if (!absen)    return { error: 'Pilih Operator dari daftar saran agar No. Absen terisi' };
-    if (!size)     return { error: 'Size harus diisi' };
-    if (!barcode)  return { error: 'No. Barcode harus dipilih' };
-    if (!opck)     return { error: 'No. OPCK tidak terisi — pilih ulang No. Barcode' };
-    if (!qty)      return { error: 'Qty harus diisi' };
+    var groups = document.querySelectorAll('#ofGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
 
-    return { tanggal:tanggal, spo:spo, style:style, operator:operator, absen:absen, size:size, barcode:barcode, opck:opck, qty:qty };
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('of-group-', '');
+      var spo = document.getElementById('of-spo-input-' + gid).value.trim();
+      var style = ofGroupsData[gid] ? ofGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var operator = card.querySelector('.of-operator-input').value.trim();
+        var absen    = card.querySelector('.of-absen-input').value;
+        var size     = card.querySelector('.of-size-input').value.trim();
+        var barcode  = card.querySelector('.of-barcode-select').value;
+        var opck     = card.querySelector('.of-opck-input').value;
+        var qty      = card.querySelector('.of-qty-input').value;
+
+        if (!operator) { errorMsg = 'Operator wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!absen)    { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ')'; return; }
+        if (!size)     { errorMsg = 'Size wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!barcode)  { errorMsg = 'No. Barcode wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (!opck)     { errorMsg = 'No. OPCK tidak terisi — pilih ulang No. Barcode (SPO ' + spo + ')'; return; }
+        if (!qty)      { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+
+        allRows.push({ spo:spo, style:style, operator:operator, absen:absen, size:size, barcode:barcode, opck:opck, qty:qty });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
   }
 
   function submitOutForm() {
