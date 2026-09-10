@@ -98,6 +98,7 @@
     .card-in      { background: rgba(234,179,8,0.1);   border: 0.5px solid rgba(234,179,8,0.28); }
     .card-rak     { background: rgba(234,88,12,0.1);   border: 0.5px solid rgba(234,88,12,0.25); }
     .card-out     { background: rgba(29,158,117,0.1);  border: 0.5px solid rgba(29,158,117,0.22); }
+    .card-wip     { background: rgba(14,165,233,0.1);  border: 0.5px solid rgba(14,165,233,0.25); }
 
     .card-inner { padding: 20px; }
     .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
@@ -108,12 +109,14 @@
     .badge-in      { background: rgba(234,179,8,0.15);   color: #7A5700; }
     .badge-rak     { background: rgba(234,88,12,0.15);   color: #9A3E0A; }
     .badge-out     { background: rgba(29,158,117,0.15);  color: #0A5C42; }
+    .badge-wip     { background: rgba(14,165,233,0.15);  color: #075985; }
 
     .icon-issue   { background: rgba(55,138,221,0.15); }
     .icon-cutting { background: rgba(155,109,220,0.15); }
     .icon-in      { background: rgba(234,179,8,0.15); }
     .icon-rak     { background: rgba(234,88,12,0.15); }
     .icon-out     { background: rgba(29,158,117,0.15); }
+    .icon-wip     { background: rgba(14,165,233,0.15); }
 
     .card-icon-wrap { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
     .card-title { font-size: 22px; font-weight: 600; color: #111; margin-bottom: 6px; letter-spacing: -0.3px; }
@@ -126,6 +129,7 @@
     .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
     .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
     .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
+    .btn-wip     { background: rgba(14,165,233,0.1);  color: #075985; border-color: rgba(14,165,233,0.32); }
 
     /* FOOTER */
     .footer-zone { background: #0A1A1D; padding: 16px 18px 28px; }
@@ -267,6 +271,29 @@
     .spo-ac-spo { font-weight: 700; white-space: nowrap; }
     .spo-ac-style { font-size: 11px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55%; }
     .spo-ac-empty { padding: 12px 14px; font-size: 13px; color: #999; text-align: center; }
+
+    /* WIP TOGGLE (Hide/Unhide, bukan menu bar) */
+    .wip-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+    .wip-toggle-btn {
+      flex: 1; padding: 11px; border-radius: 12px;
+      border: 1.5px solid #E0E2E0; background: white;
+      color: #666; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .wip-toggle-btn.active {
+      background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+      color: white; border-color: transparent;
+    }
+    .wip-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #E0E2E0; background: white; }
+    .wip-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 460px; }
+    .wip-table th {
+      background: #F0F2F1; padding: 9px 10px; text-align: left; font-weight: 600;
+      color: #666; white-space: nowrap; border-bottom: 1px solid #E5E7E6;
+    }
+    .wip-table td { padding: 9px 10px; border-bottom: .5px solid #F0F2F1; color: #111; }
+    .wip-table tr:last-child td { border-bottom: none; }
+    .wip-table td:last-child, .wip-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
 
     .divider { height: 1px; background: #E8E8E6; margin: 18px 0; }
 
@@ -500,6 +527,23 @@
             <div class="card-footer">
               <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per pengeluaran</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-wip" onclick="goTo('page-wip-cutting')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-wip">Monitoring</span>
+              <div class="card-icon-wrap icon-wip">
+                <i class="ti ti-chart-bar" style="font-size:20px;color:#0EA5E9"></i>
+              </div>
+            </div>
+            <div class="card-title">Data WIP Cutting Kulit</div>
+            <div class="card-desc">Lihat data WIP Rak dan WIP Proses cutting kulit</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-eye" style="font-size:13px"></i> Tampilan data</span>
+              <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
         </div>
@@ -758,7 +802,93 @@
     </div>
   </div>
 
-  <!-- ==================== PAGE 6: DAILY ISSUE ==================== -->
+  <!-- ==================== PAGE 6: DATA WIP CUTTING KULIT ==================== -->
+  <div class="page" id="page-wip-cutting">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">DATA WIP CUTTING KULIT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › DATA WIP</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(14,165,233,0.12);border-color:rgba(14,165,233,0.3)">
+        <i class="ti ti-chart-bar" style="color:#0EA5E9"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#075985">Data WIP Cutting Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari WIP RAK &amp; WIP PROSES)</label>
+        <span id="wipStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="wipTabRak" onclick="showWipView('rak')">WIP Rak</button>
+        <button type="button" class="wip-toggle-btn" id="wipTabProses" onclick="showWipView('proses')">WIP Proses</button>
+      </div>
+
+      <!-- WIP RAK VIEW -->
+      <div id="wipViewRak" class="wip-view">
+        <div class="wip-table-wrap">
+          <table class="wip-table">
+            <thead><tr><th>SPO</th><th>Style</th><th>Size</th><th>WIP Rak</th></tr></thead>
+            <tbody id="wipRakBody"><tr><td colspan="4" class="wip-empty">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- WIP PROSES VIEW -->
+      <div id="wipViewProses" class="wip-view" style="display:none">
+        <div class="wip-table-wrap">
+          <table class="wip-table">
+            <thead><tr><th>SPO</th><th>Style</th><th>Size</th><th>WIP Proses</th></tr></thead>
+            <tbody id="wipProsesBody"><tr><td colspan="4" class="wip-empty">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 7: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
     <div class="header-zone">
       <div class="status-bar">
@@ -1092,6 +1222,7 @@
     if (pageId === "page-form-in") initForm();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
+    if (pageId === "page-wip-cutting") initWipCuttingPage();
     if (pageId === "page-daily-issue") initDailyIssue();
   }
 
@@ -2499,6 +2630,77 @@
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
     });
+  }
+
+  // ===== DATA WIP CUTTING KULIT =====
+  // Tampilan read-only, sumber data: sheet "WIP RAK" & "WIP PROSES".
+  // Toggle antar tampilan pakai hide/unhide (bukan navigasi halaman/menu bar).
+  var wipData = { rak: [], proses: [] };
+
+  function initWipCuttingPage() {
+    showWipView('rak');
+    loadWipCuttingData();
+  }
+
+  function loadWipCuttingData() {
+    setWipStatus('loading');
+    var url = GAS_URL + '?type=wip_cutting_data';
+    jsonp(url, function(err, data) {
+      if (err || !data || data.status !== 'ok') {
+        setWipStatus('error');
+        return;
+      }
+      wipData.rak    = data.rak    || [];
+      wipData.proses = data.proses || [];
+      setWipStatus('ok', wipData.rak.length + wipData.proses.length);
+      renderWipTable('rak');
+      renderWipTable('proses');
+    });
+  }
+
+  function setWipStatus(state, count) {
+    var el = document.getElementById('wipStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(14,165,233,0.12)';
+      el.style.color = '#075985';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  function _escWip(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
+    });
+  }
+
+  function renderWipTable(which) {
+    var rows = wipData[which];
+    var body = document.getElementById(which === 'rak' ? 'wipRakBody' : 'wipProsesBody');
+    if (!body) return;
+    if (!rows.length) {
+      body.innerHTML = '<tr><td colspan="4" class="wip-empty">Tidak ada data</td></tr>';
+      return;
+    }
+    body.innerHTML = rows.map(function(r) {
+      return '<tr><td>' + _escWip(r.spo) + '</td><td>' + _escWip(r.style) + '</td><td>' + _escWip(r.size) + '</td><td>' + _escWip(r.wip) + '</td></tr>';
+    }).join('');
+  }
+
+  // Hide/unhide antar tampilan WIP Rak & WIP Proses (bukan menu bar/navigasi halaman)
+  function showWipView(which) {
+    document.getElementById('wipViewRak').style.display    = which === 'rak'    ? 'block' : 'none';
+    document.getElementById('wipViewProses').style.display = which === 'proses' ? 'block' : 'none';
+    document.getElementById('wipTabRak').classList.toggle('active', which === 'rak');
+    document.getElementById('wipTabProses').classList.toggle('active', which === 'proses');
   }
 
   // ---- UI HELPERS ----
