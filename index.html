@@ -2220,6 +2220,14 @@
     return [s];
   }
 
+  // Google Sheets membuang leading zero dari string angka murni begitu ditulis ke sel (mis. "009"
+  // jadi 9). Normalisasi ke bentuk angka polos di sisi ini juga supaya tetap match dengan key
+  // usedBarcodes yang dibuat backend dari nilai yang sudah kena efek itu.
+  function _normNum(s) {
+    s = (s == null ? '' : s).toString().trim();
+    return /^\d+$/.test(s) ? String(parseInt(s, 10)) : s;
+  }
+
   function outBarcodesFor(spo, operator, size) {
     var s = (spo || '').trim().toLowerCase();
     var o = (operator || '').trim().toLowerCase();
@@ -2233,7 +2241,7 @@
       parseBarcodeRange(r.barcode).forEach(function(num) {
         if (seen[num]) return;
         // Nomor barcode ini sudah pernah disubmit lewat Out Pola sebelumnya -> jangan tampilkan lagi
-        if (masterDataOut.usedBarcodes[r.spo + '|' + r.opck + '|' + num]) return;
+        if (masterDataOut.usedBarcodes[r.spo + '|' + _normNum(r.opck) + '|' + _normNum(num)]) return;
         seen[num] = true;
         out.push({ barcode: num, opck: r.opck });
       });
