@@ -293,10 +293,19 @@
       background: rgba(14,165,233,0.12); padding: 2px 8px; border-radius: 99px; white-space: nowrap; flex-shrink: 0;
     }
     .wip-item-style { font-size: 12px; color: #666; line-height: 1.4; margin-bottom: 8px; word-break: break-word; }
-    .wip-item-operator { font-size: 11px; color: #0EA5E9; font-weight: 600; margin-bottom: 8px; margin-top: -4px; display: flex; align-items: center; gap: 4px; }
+    .wip-item-operator { font-size: 11px; color: #0EA5E9; font-weight: 600; margin-bottom: 2px; margin-top: -4px; display: flex; align-items: center; gap: 4px; }
+    .wip-item-meta { font-size: 10.5px; color: #999; margin-bottom: 8px; }
     .wip-item-qty { display: flex; align-items: baseline; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #E8E8E6; }
     .wip-item-qty-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
     .wip-item-qty-value { font-size: 18px; font-weight: 700; color: #0EA5E9; font-variant-numeric: tabular-nums; }
+    .wip-filter { display: flex; gap: 8px; margin-bottom: 12px; }
+    .wip-filter-input {
+      flex: 1; padding: 9px 12px; border-radius: 10px;
+      border: 1.5px solid #E0E2E0; background: white;
+      font-size: 12px; color: #111; font-family: inherit; outline: none;
+      transition: border-color 0.15s;
+    }
+    .wip-filter-input:focus { border-color: #0EA5E9; }
     .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
 
     .divider { height: 1px; background: #E8E8E6; margin: 18px 0; }
@@ -861,6 +870,12 @@
         <button type="button" class="wip-toggle-btn active" id="wipTabRak" onclick="showWipView('rak')">WIP Rak</button>
         <button type="button" class="wip-toggle-btn" id="wipTabProses" onclick="showWipView('proses')">WIP Proses</button>
         <button type="button" class="wip-toggle-btn" id="wipTabProsesOperator" onclick="showWipView('prosesOperator')">WIP Proses Operator</button>
+      </div>
+
+      <!-- FILTER SPO & SIZE (berlaku untuk tampilan yang sedang aktif) -->
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="wipFilterSpo" placeholder="Filter SPO..." oninput="applyWipFilter()">
+        <input type="text" class="wip-filter-input" id="wipFilterSize" placeholder="Filter Size..." oninput="applyWipFilter()">
       </div>
 
       <!-- WIP RAK VIEW -->
@@ -2645,10 +2660,12 @@
   var WIP_VIEW_CONFIG = {
     rak:            { containerId: 'wipRakList',            qtyLabel: 'WIP Rak' },
     proses:         { containerId: 'wipProsesList',         qtyLabel: 'WIP Proses' },
-    prosesOperator: { containerId: 'wipProsesOperatorList', qtyLabel: 'Qty' }
+    prosesOperator: { containerId: 'wipProsesOperatorList', qtyLabel: 'Balance' }
   };
 
   function initWipCuttingPage() {
+    document.getElementById('wipFilterSpo').value = '';
+    document.getElementById('wipFilterSize').value = '';
     showWipView('rak');
     loadWipCuttingData();
   }
@@ -2695,8 +2712,29 @@
     });
   }
 
+  function getWipFilterValues() {
+    var spoEl  = document.getElementById('wipFilterSpo');
+    var sizeEl = document.getElementById('wipFilterSize');
+    return {
+      spo:  (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
+      size: (sizeEl ? sizeEl.value : '').toLowerCase().trim()
+    };
+  }
+
+  // Filter SPO & Size berlaku untuk ketiga tampilan sekaligus (tetap ikut saat toggle tab)
+  function applyWipFilter() {
+    renderWipTable('rak');
+    renderWipTable('proses');
+    renderWipTable('prosesOperator');
+  }
+
   function renderWipTable(which) {
-    var rows = wipData[which];
+    var f = getWipFilterValues();
+    var rows = wipData[which].filter(function(r) {
+      if (f.spo  && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
+      if (f.size && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      return true;
+    });
     var cfg = WIP_VIEW_CONFIG[which];
     var container = document.getElementById(cfg.containerId);
     if (!container) return;
@@ -2707,8 +2745,9 @@
     container.innerHTML = rows.map(function(r) {
       var operatorLine = which === 'prosesOperator'
         ? '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + '</div>'
+          + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>'
         : '';
-      var qtyValue = which === 'prosesOperator' ? r.qty : r.wip;
+      var qtyValue = which === 'prosesOperator' ? r.balance : r.wip;
       return '<div class="wip-item">'
         + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
         + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
