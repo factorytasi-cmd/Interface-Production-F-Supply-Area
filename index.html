@@ -1376,7 +1376,7 @@
   }
 
   function updateGroupDeleteButtons() {
-    var groups = document.querySelectorAll('.spo-group');
+    var groups = document.querySelectorAll('#groupsContainer .spo-group');
     groups.forEach(function(g) {
       var btn = g.querySelector('.spo-group-delete');
       if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
@@ -1525,7 +1525,7 @@
     var tanggal = document.getElementById('fTanggal').value;
     if (!tanggal) return { error: 'Tanggal harus diisi' };
 
-    var groups = document.querySelectorAll('.spo-group');
+    var groups = document.querySelectorAll('#groupsContainer .spo-group');
     if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
 
     var allRows = [];
@@ -1583,6 +1583,11 @@
       }
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
+        // Cache lokal: langsung "lampirkan" baris yang baru disimpan ke dropdown Rak ke Proses,
+        // tanpa perlu reload data — supaya kalau user langsung pindah ke menu itu, datanya sudah ada.
+        data.rows.forEach(function(row) {
+          masterDataRak.receipts.push({ spo: row.spo, style: row.style, opck: row.opck, size: row.size, barcode: row.barcode, qty: row.qty });
+        });
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
@@ -2077,6 +2082,17 @@
       }
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
+        // Cache lokal: baris yang baru disimpan langsung "lampirkan" ke dropdown Out Pola...
+        data.rows.forEach(function(row) {
+          masterDataOut.records.push({ spo: row.spo, style: row.style, opck: row.opck, barcode: row.barcode, size: row.size, absen: row.absen, operator: row.operator });
+        });
+        // ...dan No. OPCK yang baru saja dipindah ke rak dibuang dari cache Rak ke Proses sendiri,
+        // supaya tidak bisa dipilih dobel kalau user langsung isi Rak ke Proses lagi di sesi yang sama.
+        masterDataRak.receipts = masterDataRak.receipts.filter(function(r) {
+          return !data.rows.some(function(row) {
+            return r.spo.toLowerCase() === row.spo.toLowerCase() && String(r.opck).trim() === String(row.opck).trim();
+          });
+        });
         resetRakForm();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
@@ -2658,6 +2674,11 @@
       }
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
+        // Cache lokal: nomor barcode yang baru saja disubmit langsung ditandai "sudah dipakai",
+        // supaya tidak muncul lagi di dropdown kalau user langsung isi Out Pola lagi di sesi yang sama.
+        data.rows.forEach(function(row) {
+          masterDataOut.usedBarcodes[row.spo + '|' + _normNum(row.opck) + '|' + _normNum(row.barcode)] = true;
+        });
         resetOutForm();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
