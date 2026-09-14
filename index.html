@@ -2086,7 +2086,7 @@
 
   // ===== OUT POLA DARI CUTTING KULIT =====
   // Sumber data SPO/Style/Operator/No.Absen/Size/No.Barcode/No.OPCK: sheet "Form Keluar Kulit Dari Rak"
-  var masterDataOut = { records: [] };
+  var masterDataOut = { records: [], usedBarcodes: {} };
 
   var ofGroupCount = 0;
   var ofRowCount   = 0;
@@ -2119,6 +2119,8 @@
         return;
       }
       masterDataOut.records = data.records || [];
+      masterDataOut.usedBarcodes = {};
+      (data.usedBarcodes || []).forEach(function(key) { masterDataOut.usedBarcodes[key] = true; });
       setOfStatus('ok', distinctOutSPOs('').length);
     });
   }
@@ -2230,6 +2232,8 @@
       if (r.size !== size) return;
       parseBarcodeRange(r.barcode).forEach(function(num) {
         if (seen[num]) return;
+        // Nomor barcode ini sudah pernah disubmit lewat Out Pola sebelumnya -> jangan tampilkan lagi
+        if (masterDataOut.usedBarcodes[r.spo + '|' + r.opck + '|' + num]) return;
         seen[num] = true;
         out.push({ barcode: num, opck: r.opck });
       });
