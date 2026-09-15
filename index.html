@@ -98,6 +98,7 @@
     .card-in      { background: rgba(234,179,8,0.1);   border: 0.5px solid rgba(234,179,8,0.28); }
     .card-rak     { background: rgba(234,88,12,0.1);   border: 0.5px solid rgba(234,88,12,0.25); }
     .card-out     { background: rgba(29,158,117,0.1);  border: 0.5px solid rgba(29,158,117,0.22); }
+    .card-gap     { background: rgba(225,29,72,0.1);   border: 0.5px solid rgba(225,29,72,0.25); }
     .card-wip     { background: rgba(14,165,233,0.1);  border: 0.5px solid rgba(14,165,233,0.25); }
 
     .card-inner { padding: 20px; }
@@ -109,6 +110,7 @@
     .badge-in      { background: rgba(234,179,8,0.15);   color: #7A5700; }
     .badge-rak     { background: rgba(234,88,12,0.15);   color: #9A3E0A; }
     .badge-out     { background: rgba(29,158,117,0.15);  color: #0A5C42; }
+    .badge-gap     { background: rgba(225,29,72,0.15);   color: #9F1239; }
     .badge-wip     { background: rgba(14,165,233,0.15);  color: #075985; }
 
     .icon-issue   { background: rgba(55,138,221,0.15); }
@@ -116,6 +118,7 @@
     .icon-in      { background: rgba(234,179,8,0.15); }
     .icon-rak     { background: rgba(234,88,12,0.15); }
     .icon-out     { background: rgba(29,158,117,0.15); }
+    .icon-gap     { background: rgba(225,29,72,0.15); }
     .icon-wip     { background: rgba(14,165,233,0.15); }
 
     .card-icon-wrap { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
@@ -129,6 +132,7 @@
     .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
     .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
     .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
+    .btn-gap     { background: rgba(225,29,72,0.1);   color: #9F1239; border-color: rgba(225,29,72,0.32); }
     .btn-wip     { background: rgba(14,165,233,0.1);  color: #075985; border-color: rgba(14,165,233,0.32); }
 
     /* FOOTER */
@@ -307,6 +311,17 @@
     }
     .wip-filter-input:focus { border-color: #0EA5E9; }
     .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
+
+    /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
+    #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
+    #page-gap-cutting .wip-filter-input:focus { border-color: #E11D48; }
+
+    .gap-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+    .gap-badge-aman       { background: rgba(29,158,117,0.15); color: #0A5C42; }
+    .gap-badge-prioritas  { background: rgba(234,179,8,0.15);  color: #7A5700; }
+    .gap-badge-urgent     { background: rgba(234,88,12,0.15);  color: #9A3E0A; }
+    .gap-badge-bigproblem { background: rgba(220,38,38,0.15);  color: #991B1B; }
+    .gap-badge-default    { background: rgba(148,163,184,0.15); color: #475569; }
 
     .divider { height: 1px; background: #E8E8E6; margin: 18px 0; }
 
@@ -540,6 +555,23 @@
             <div class="card-footer">
               <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per pengeluaran</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-gap" onclick="goTo('page-gap-cutting')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-gap">Monitoring</span>
+              <div class="card-icon-wrap icon-gap">
+                <i class="ti ti-alert-triangle" style="font-size:20px;color:#E11D48"></i>
+              </div>
+            </div>
+            <div class="card-title">Data GAP IN/OUT Cutting Kulit</div>
+            <div class="card-desc">Lihat data GAP IN dan GAP OUT cutting kulit</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-eye" style="font-size:13px"></i> Tampilan data</span>
+              <span class="card-btn btn-gap">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
         </div>
@@ -815,7 +847,92 @@
     </div>
   </div>
 
-  <!-- ==================== PAGE 6: DATA WIP CUTTING KULIT ==================== -->
+  <!-- ==================== PAGE 6: DATA GAP IN/OUT CUTTING KULIT ==================== -->
+  <div class="page" id="page-gap-cutting">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">DATA GAP IN/OUT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#E11D48,#FB7185)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › DATA GAP</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(225,29,72,0.12);border-color:rgba(225,29,72,0.3)">
+        <i class="ti ti-alert-triangle" style="color:#E11D48"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#9F1239">Data GAP IN/OUT Cutting Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari GAP IN/OUT Cut. Kulit)</label>
+        <span id="gapStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(225,29,72,0.12);color:#9F1239;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="gapTabIn" onclick="showGapView('gapIn')">GAP IN</button>
+        <button type="button" class="wip-toggle-btn" id="gapTabOut" onclick="showGapView('gapOut')">GAP OUT</button>
+      </div>
+
+      <!-- FILTER SPO -->
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="gapFilterSpo" placeholder="Filter SPO..." oninput="applyGapFilter()">
+      </div>
+
+      <!-- GAP IN VIEW -->
+      <div id="gapViewIn" class="wip-view">
+        <div class="wip-list" id="gapInList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- GAP OUT VIEW -->
+      <div id="gapViewOut" class="wip-view" style="display:none">
+        <div class="wip-list" id="gapOutList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 7: DATA WIP CUTTING KULIT ==================== -->
   <div class="page" id="page-wip-cutting">
     <div class="header-zone">
       <div class="status-bar">
@@ -909,7 +1026,7 @@
     </div>
   </div>
 
-  <!-- ==================== PAGE 7: DAILY ISSUE ==================== -->
+  <!-- ==================== PAGE 8: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
     <div class="header-zone">
       <div class="status-bar">
@@ -1243,6 +1360,7 @@
     if (pageId === "page-form-in") initForm();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
+    if (pageId === "page-gap-cutting") initGapCuttingPage();
     if (pageId === "page-wip-cutting") initWipCuttingPage();
     if (pageId === "page-daily-issue") initDailyIssue();
   }
@@ -2684,6 +2802,96 @@
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
     });
+  }
+
+  // ===== DATA GAP IN/OUT CUTTING KULIT =====
+  // Tampilan read-only, sumber data: spreadsheet terpisah, sheet "GAP IN Cut. Kulit" & "GAP OUT Cut. Kulit".
+  // Toggle antar tampilan pakai hide/unhide (bukan navigasi halaman/menu bar), sama seperti Data WIP.
+  var gapData = { gapIn: [], gapOut: [] };
+
+  function initGapCuttingPage() {
+    document.getElementById('gapFilterSpo').value = '';
+    showGapView('gapIn');
+    loadGapCuttingData();
+  }
+
+  function loadGapCuttingData() {
+    setGapStatus('loading');
+    var url = GAS_URL + '?type=gap_cutting_data';
+    jsonp(url, function(err, data) {
+      if (err || !data || data.status !== 'ok') {
+        setGapStatus('error');
+        return;
+      }
+      gapData.gapIn  = data.gapIn  || [];
+      gapData.gapOut = data.gapOut || [];
+      setGapStatus('ok', gapData.gapIn.length + gapData.gapOut.length);
+      renderGapTable('gapIn');
+      renderGapTable('gapOut');
+    });
+  }
+
+  function setGapStatus(state, count) {
+    var el = document.getElementById('gapStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(225,29,72,0.12)';
+      el.style.color = '#9F1239';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  function applyGapFilter() {
+    renderGapTable('gapIn');
+    renderGapTable('gapOut');
+  }
+
+  function _gapBadgeClass(statusProblem) {
+    var s = (statusProblem || '').toUpperCase();
+    if (s.indexOf('BIG PROBLEM') >= 0) return 'gap-badge-bigproblem';
+    if (s.indexOf('URGENT') >= 0) return 'gap-badge-urgent';
+    if (s.indexOf('PRIORITAS') >= 0) return 'gap-badge-prioritas';
+    if (s.indexOf('AMAN') >= 0) return 'gap-badge-aman';
+    return 'gap-badge-default';
+  }
+
+  function renderGapTable(which) {
+    var f = (document.getElementById('gapFilterSpo').value || '').toLowerCase().trim();
+    var rows = gapData[which].filter(function(r) {
+      if (f && r.spo.toLowerCase().indexOf(f) < 0) return false;
+      return true;
+    });
+    var container = document.getElementById(which === 'gapIn' ? 'gapInList' : 'gapOutList');
+    if (!container) return;
+    if (!rows.length) {
+      container.innerHTML = '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+    container.innerHTML = rows.map(function(r) {
+      var qtyColor = (parseFloat(r.minQty) < 0) ? '#DC2626' : '#0EA5E9';
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="gap-badge ' + _gapBadgeClass(r.statusProblem) + '">' + _escWip(r.statusProblem || '-') + '</span></div>'
+        + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+        + '<div class="wip-item-meta">' + _escWip(r.status) + ' · Kode ' + _escWip(r.kode) + ' · ' + _escWip(r.ket) + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">Min Qty</span><span class="wip-item-qty-value" style="color:' + qtyColor + '">' + _escWip(r.minQty) + '</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Hide/unhide antar tampilan GAP IN / GAP OUT (bukan menu bar/navigasi halaman)
+  function showGapView(which) {
+    document.getElementById('gapViewIn').style.display  = which === 'gapIn'  ? 'block' : 'none';
+    document.getElementById('gapViewOut').style.display = which === 'gapOut' ? 'block' : 'none';
+    document.getElementById('gapTabIn').classList.toggle('active', which === 'gapIn');
+    document.getElementById('gapTabOut').classList.toggle('active', which === 'gapOut');
   }
 
   // ===== DATA WIP CUTTING KULIT =====
