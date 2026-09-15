@@ -302,6 +302,24 @@
     .wip-item-qty { display: flex; align-items: baseline; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #E8E8E6; }
     .wip-item-qty-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
     .wip-item-qty-value { font-size: 18px; font-weight: 700; color: #0EA5E9; font-variant-numeric: tabular-nums; }
+
+    /* Grup Operator (WIP Proses Operator) untuk operator dengan >1 OPCK — bisa expand/collapse */
+    .wip-group { background: white; border: 1px solid #E0E2E0; border-radius: 12px; overflow: hidden; }
+    .wip-group-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 12px 14px; cursor: pointer; user-select: none;
+    }
+    .wip-group-header-left { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #0EA5E9; }
+    .wip-group-count {
+      font-size: 10px; font-weight: 700; color: #075985; background: rgba(14,165,233,0.12);
+      padding: 3px 9px; border-radius: 99px; white-space: nowrap;
+    }
+    .wip-group-chevron { font-size: 14px; color: #999; transition: transform 0.2s; }
+    .wip-group.open .wip-group-chevron { transform: rotate(180deg); }
+    .wip-group-body { display: none; flex-direction: column; gap: 8px; padding: 0 10px 10px; }
+    .wip-group.open .wip-group-body { display: flex; }
+    .wip-group-body .wip-item { border-color: #E8E8E6; }
+
     .wip-filter { display: flex; gap: 8px; margin-bottom: 12px; }
     .wip-filter-input {
       flex: 1; padding: 9px 12px; border-radius: 10px;
@@ -903,9 +921,18 @@
         <button type="button" class="wip-toggle-btn" id="gapTabOut" onclick="showGapView('gapOut')">GAP OUT</button>
       </div>
 
-      <!-- FILTER SPO -->
+      <!-- FILTER SPO & STATUS PROBLEM (dropdown) -->
       <div class="wip-filter">
-        <input type="text" class="wip-filter-input" id="gapFilterSpo" placeholder="Filter SPO..." oninput="applyGapFilter()">
+        <select class="wip-filter-input" id="gapFilterSpo" onchange="applyGapFilter()">
+          <option value="">— Semua SPO —</option>
+        </select>
+        <select class="wip-filter-input" id="gapFilterStatus" onchange="applyGapFilter()">
+          <option value="">— Semua Status —</option>
+          <option value="AMAN">AMAN</option>
+          <option value="PRIORITAS">PRIORITAS</option>
+          <option value="URGENT">URGENT</option>
+          <option value="BIG PROBLEM">BIG PROBLEM</option>
+        </select>
       </div>
 
       <!-- GAP IN VIEW -->
@@ -2810,7 +2837,8 @@
   var gapData = { gapIn: [], gapOut: [] };
 
   function initGapCuttingPage() {
-    document.getElementById('gapFilterSpo').value = '';
+    document.getElementById('gapFilterSpo').innerHTML = '<option value="">— Semua SPO —</option>';
+    document.getElementById('gapFilterStatus').value = '';
     showGapView('gapIn');
     loadGapCuttingData();
   }
@@ -2826,9 +2854,27 @@
       gapData.gapIn  = data.gapIn  || [];
       gapData.gapOut = data.gapOut || [];
       setGapStatus('ok', gapData.gapIn.length + gapData.gapOut.length);
+      populateGapSpoFilter();
       renderGapTable('gapIn');
       renderGapTable('gapOut');
     });
+  }
+
+  function populateGapSpoFilter() {
+    var sel = document.getElementById('gapFilterSpo');
+    var seen = {};
+    var list = [];
+    gapData.gapIn.concat(gapData.gapOut).forEach(function(r) {
+      if (seen[r.spo]) return;
+      seen[r.spo] = true;
+      list.push(r.spo);
+    });
+    list.sort();
+    var prev = sel.value;
+    sel.innerHTML = '<option value="">— Semua SPO —</option>' + list.map(function(s) {
+      return '<option value="' + _escWip(s) + '">' + _escWip(s) + '</option>';
+    }).join('');
+    if (list.indexOf(prev) >= 0) sel.value = prev;
   }
 
   function setGapStatus(state, count) {
@@ -2854,19 +2900,30 @@
     renderGapTable('gapOut');
   }
 
-  function _gapBadgeClass(statusProblem) {
+  function _gapStatusCategory(statusProblem) {
     var s = (statusProblem || '').toUpperCase();
-    if (s.indexOf('BIG PROBLEM') >= 0) return 'gap-badge-bigproblem';
-    if (s.indexOf('URGENT') >= 0) return 'gap-badge-urgent';
-    if (s.indexOf('PRIORITAS') >= 0) return 'gap-badge-prioritas';
-    if (s.indexOf('AMAN') >= 0) return 'gap-badge-aman';
+    if (s.indexOf('BIG PROBLEM') >= 0) return 'BIG PROBLEM';
+    if (s.indexOf('URGENT') >= 0) return 'URGENT';
+    if (s.indexOf('PRIORITAS') >= 0) return 'PRIORITAS';
+    if (s.indexOf('AMAN') >= 0) return 'AMAN';
+    return 'LAINNYA';
+  }
+
+  function _gapBadgeClass(statusProblem) {
+    var cat = _gapStatusCategory(statusProblem);
+    if (cat === 'BIG PROBLEM') return 'gap-badge-bigproblem';
+    if (cat === 'URGENT') return 'gap-badge-urgent';
+    if (cat === 'PRIORITAS') return 'gap-badge-prioritas';
+    if (cat === 'AMAN') return 'gap-badge-aman';
     return 'gap-badge-default';
   }
 
   function renderGapTable(which) {
-    var f = (document.getElementById('gapFilterSpo').value || '').toLowerCase().trim();
+    var fSpo    = document.getElementById('gapFilterSpo').value;
+    var fStatus = document.getElementById('gapFilterStatus').value;
     var rows = gapData[which].filter(function(r) {
-      if (f && r.spo.toLowerCase().indexOf(f) < 0) return false;
+      if (fSpo && r.spo !== fSpo) return false;
+      if (fStatus && _gapStatusCategory(r.statusProblem) !== fStatus) return false;
       return true;
     });
     var container = document.getElementById(which === 'gapIn' ? 'gapInList' : 'gapOutList');
@@ -2969,6 +3026,54 @@
     renderWipTable('prosesOperator');
   }
 
+  function _wipItemCardHTML(which, r, cfg) {
+    var operatorLine = which === 'prosesOperator'
+      ? '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + '</div>'
+        + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>'
+      : '';
+    var qtyValue = which === 'prosesOperator' ? r.balance : r.wip;
+    return '<div class="wip-item">'
+      + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+      + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+      + operatorLine
+      + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(qtyValue) + '</span></div>'
+      + '</div>';
+  }
+
+  // Operator dengan >1 OPCK dikelompokkan jadi satu kartu yang bisa expand/collapse.
+  // Operator dengan cuma 1 OPCK tetap tampil sebagai kartu biasa (tidak perlu dibungkus grup).
+  var wipGroupOpenState = {};
+
+  function renderProsesOperatorGrouped(rows, cfg) {
+    var groups = {};
+    var order = [];
+    rows.forEach(function(r) {
+      if (!groups[r.operator]) { groups[r.operator] = []; order.push(r.operator); }
+      groups[r.operator].push(r);
+    });
+
+    return order.map(function(opName) {
+      var items = groups[opName];
+      if (items.length === 1) {
+        return _wipItemCardHTML('prosesOperator', items[0], cfg);
+      }
+      var isOpen = !!wipGroupOpenState[opName];
+      return '<div class="wip-group' + (isOpen ? ' open' : '') + '" data-operator="' + _escWip(opName) + '">'
+        + '<div class="wip-group-header" onclick="toggleWipOperatorGroup(this.parentElement)">'
+        + '<span class="wip-group-header-left"><i class="ti ti-user" style="font-size:13px"></i>' + _escWip(opName) + '</span>'
+        + '<span style="display:flex;align-items:center;gap:6px"><span class="wip-group-count">' + items.length + ' OPCK</span><i class="ti ti-chevron-down wip-group-chevron"></i></span>'
+        + '</div>'
+        + '<div class="wip-group-body">' + items.map(function(r) { return _wipItemCardHTML('prosesOperator', r, cfg); }).join('') + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function toggleWipOperatorGroup(el) {
+    var opName = el.getAttribute('data-operator');
+    var isOpen = el.classList.toggle('open');
+    wipGroupOpenState[opName] = isOpen;
+  }
+
   function renderWipTable(which) {
     var f = getWipFilterValues();
     var rows = wipData[which].filter(function(r) {
@@ -2983,19 +3088,13 @@
       container.innerHTML = '<div class="wip-empty">Tidak ada data</div>';
       return;
     }
-    container.innerHTML = rows.map(function(r) {
-      var operatorLine = which === 'prosesOperator'
-        ? '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + '</div>'
-          + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>'
-        : '';
-      var qtyValue = which === 'prosesOperator' ? r.balance : r.wip;
-      return '<div class="wip-item">'
-        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
-        + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
-        + operatorLine
-        + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(qtyValue) + '</span></div>'
-        + '</div>';
-    }).join('');
+
+    if (which === 'prosesOperator') {
+      container.innerHTML = renderProsesOperatorGrouped(rows, cfg);
+      return;
+    }
+
+    container.innerHTML = rows.map(function(r) { return _wipItemCardHTML(which, r, cfg); }).join('');
   }
 
   // Hide/unhide antar tampilan WIP Rak / WIP Proses / WIP Proses Operator (bukan menu bar/navigasi halaman)
