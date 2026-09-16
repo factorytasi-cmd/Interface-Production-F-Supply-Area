@@ -329,6 +329,7 @@
     }
     .wip-filter-input:focus { border-color: #0EA5E9; }
     .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
+    .load-time-note { font-size: 10px; color: #aaa; text-align: right; margin: 3px 0 10px; min-height: 12px; }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -677,6 +678,7 @@
         <label class="field-label" style="margin-bottom:0">Data SPO &amp; Size</label>
         <span id="spoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
+      <div class="load-time-note" id="spoLoadTime"></div>
 
       <!-- SPO GROUPS -->
       <div id="groupsContainer"></div>
@@ -758,6 +760,7 @@
         <label class="field-label" style="margin-bottom:0">Data SPO &amp; Size (dari Form Penerimaan Kulit)</label>
         <span id="rkSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,88,12,0.12);color:#9A3E0A;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
+      <div class="load-time-note" id="rkSpoLoadTime"></div>
 
       <!-- SPO GROUPS -->
       <div id="rkGroupsContainer"></div>
@@ -839,6 +842,7 @@
         <label class="field-label" style="margin-bottom:0">Data (dari Form Keluar Kulit Dari Rak)</label>
         <span id="ofStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(29,158,117,0.12);color:#0A5C42;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
+      <div class="load-time-note" id="ofLoadTime"></div>
 
       <!-- SPO GROUPS -->
       <div id="ofGroupsContainer"></div>
@@ -914,6 +918,7 @@
         <label class="field-label" style="margin-bottom:0">Data (dari GAP IN/OUT Cut. Kulit)</label>
         <span id="gapStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(225,29,72,0.12);color:#9F1239;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
+      <div class="load-time-note" id="gapLoadTime"></div>
 
       <!-- TOGGLE (hide/unhide, bukan menu bar) -->
       <div class="wip-toggle">
@@ -1008,6 +1013,7 @@
         <label class="field-label" style="margin-bottom:0">Data (dari WIP RAK &amp; WIP PROSES)</label>
         <span id="wipStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
+      <div class="load-time-note" id="wipLoadTime"></div>
 
       <!-- TOGGLE (hide/unhide, bukan menu bar) -->
       <div class="wip-toggle">
@@ -1379,6 +1385,15 @@
     document.body.appendChild(s);
   }
 
+  // Tampilkan berapa lama satu pemuatan data (jsonp) benar-benar memakan waktu, supaya keluhan
+  // "lama memuat data" bisa dibahas dengan angka aktual yang dialami user, bukan cuma dugaan.
+  function _showLoadTime(elId, ms) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var sec = (ms / 1000).toFixed(1);
+    el.textContent = 'Waktu memuat: ' + sec + ' detik';
+  }
+
   // ---- PAGE NAVIGATION ----
   function goTo(pageId) {
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
@@ -1425,8 +1440,11 @@
   // ---- LOAD MASTER DATA via JSONP ----
   function loadMasterData() {
     setSPOStatus("loading");
+    document.getElementById('spoLoadTime').textContent = '';
+    var t0 = Date.now();
     var url = GAS_URL + "?type=in_kulit_master";
     jsonp(url, function(err, data) {
+      _showLoadTime('spoLoadTime', Date.now() - t0);
       if (err || !data || data.status !== "ok") {
         setSPOStatus("error");
         showToast("Gagal memuat data SPO", "error");
@@ -1766,8 +1784,11 @@
   // ---- LOAD MASTER DATA (Operator + Riwayat Penerimaan) via JSONP ----
   function loadRakMasterData() {
     setRakSPOStatus('loading');
+    document.getElementById('rkSpoLoadTime').textContent = '';
+    var t0 = Date.now();
     var url = GAS_URL + '?type=rak_master';
     jsonp(url, function(err, data) {
+      _showLoadTime('rkSpoLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setRakSPOStatus('error');
         return;
@@ -2273,8 +2294,11 @@
   // ---- LOAD MASTER DATA via JSONP ----
   function loadOutMasterData() {
     setOfStatus('loading');
+    document.getElementById('ofLoadTime').textContent = '';
+    var t0 = Date.now();
     var url = GAS_URL + '?type=out_pola_master';
     jsonp(url, function(err, data) {
+      _showLoadTime('ofLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setOfStatus('error');
         return;
@@ -2845,8 +2869,11 @@
 
   function loadGapCuttingData() {
     setGapStatus('loading');
+    document.getElementById('gapLoadTime').textContent = '';
+    var t0 = Date.now();
     var url = GAS_URL + '?type=gap_cutting_data';
     jsonp(url, function(err, data) {
+      _showLoadTime('gapLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setGapStatus('error');
         return;
@@ -2970,8 +2997,11 @@
 
   function loadWipCuttingData() {
     setWipStatus('loading');
+    document.getElementById('wipLoadTime').textContent = '';
+    var t0 = Date.now();
     var url = GAS_URL + '?type=wip_cutting_data';
     jsonp(url, function(err, data) {
+      _showLoadTime('wipLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setWipStatus('error');
         return;
