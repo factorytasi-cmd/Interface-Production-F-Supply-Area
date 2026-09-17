@@ -1,0 +1,3703 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0A1A1D">
+  <title>LITRA-ASI — Supply Area</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0A1A1D;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 420px;
+      background: #0A1A1D;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 0.5px solid rgba(255,255,255,0.08);
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* HEADER */
+    .header-zone { background: #0A1A1D; padding: 16px 22px 28px; }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.5px;
+    }
+
+    .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
+
+    .logo-box {
+      width: 44px; height: 44px; border-radius: 14px;
+      background: linear-gradient(135deg, #378ADD, #1D9E75);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 800; color: white; flex-shrink: 0;
+    }
+
+    .logo-text { font-size: 26px; font-weight: 700; color: white; letter-spacing: 1.5px; }
+
+    .tagline { text-align: center; font-size: 9px; color: #5DCAA5; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
+
+    .subtitle { text-align: center; font-size: 10px; color: rgba(255,255,255,0.28); margin-bottom: 18px; line-height: 1.4; }
+
+    .date-pill { display: flex; justify-content: center; }
+    .date-pill span {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 99px; padding: 6px 16px; font-size: 11px; color: rgba(255,255,255,0.5);
+    }
+
+    .area-label { text-align: center; margin-top: 4px; }
+    .area-label-text { font-size: 22px; font-weight: 700; color: white; letter-spacing: 3px; text-transform: uppercase; line-height: 1.2; }
+    .area-divider { width: 40px; height: 2px; background: linear-gradient(90deg,#378ADD,#1D9E75); border-radius: 99px; margin: 8px auto 0; }
+
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.07); border: 0.5px solid rgba(255,255,255,0.13);
+      border-radius: 99px; padding: 7px 14px; font-size: 12px; color: rgba(255,255,255,0.6);
+      cursor: pointer; margin-top: 14px; width: fit-content; transition: background 0.15s;
+    }
+    .back-btn:active { background: rgba(255,255,255,0.12); }
+
+    /* CONTENT */
+    .content-zone { background: #F0F2F1; padding: 24px 18px; }
+    .section-lbl { font-size: 10px; color: #999; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+
+    .cards { display: flex; flex-direction: column; gap: 14px; }
+
+    .card {
+      border-radius: 20px; overflow: hidden; text-decoration: none;
+      display: block; cursor: pointer;
+      transition: transform 0.12s, opacity 0.12s; -webkit-touch-callout: none;
+    }
+    .card:active { transform: scale(0.97); opacity: 0.9; }
+
+    .card-issue   { background: rgba(55,138,221,0.1);  border: 0.5px solid rgba(55,138,221,0.22); }
+    .card-cutting { background: rgba(155,109,220,0.1); border: 0.5px solid rgba(155,109,220,0.22); }
+    .card-in      { background: rgba(234,179,8,0.1);   border: 0.5px solid rgba(234,179,8,0.28); }
+    .card-rak     { background: rgba(234,88,12,0.1);   border: 0.5px solid rgba(234,88,12,0.25); }
+    .card-out     { background: rgba(29,158,117,0.1);  border: 0.5px solid rgba(29,158,117,0.22); }
+    .card-gap     { background: rgba(225,29,72,0.1);   border: 0.5px solid rgba(225,29,72,0.25); }
+    .card-wip     { background: rgba(14,165,233,0.1);  border: 0.5px solid rgba(14,165,233,0.25); }
+
+    .card-inner { padding: 20px; }
+    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+
+    .card-badge { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
+    .badge-issue   { background: rgba(55,138,221,0.15);  color: #134E8A; }
+    .badge-cutting { background: rgba(155,109,220,0.15); color: #4A1D8A; }
+    .badge-in      { background: rgba(234,179,8,0.15);   color: #7A5700; }
+    .badge-rak     { background: rgba(234,88,12,0.15);   color: #9A3E0A; }
+    .badge-out     { background: rgba(29,158,117,0.15);  color: #0A5C42; }
+    .badge-gap     { background: rgba(225,29,72,0.15);   color: #9F1239; }
+    .badge-wip     { background: rgba(14,165,233,0.15);  color: #075985; }
+
+    .icon-issue   { background: rgba(55,138,221,0.15); }
+    .icon-cutting { background: rgba(155,109,220,0.15); }
+    .icon-in      { background: rgba(234,179,8,0.15); }
+    .icon-rak     { background: rgba(234,88,12,0.15); }
+    .icon-out     { background: rgba(29,158,117,0.15); }
+    .icon-gap     { background: rgba(225,29,72,0.15); }
+    .icon-wip     { background: rgba(14,165,233,0.15); }
+
+    .card-icon-wrap { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+    .card-title { font-size: 22px; font-weight: 600; color: #111; margin-bottom: 6px; letter-spacing: -0.3px; }
+    .card-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 18px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .card-hint { font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 4px; }
+    .card-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px; border-radius: 99px; font-size: 12px; font-weight: 500; border: 1.5px solid; }
+    .btn-issue   { background: rgba(55,138,221,0.1);  color: #134E8A; border-color: rgba(55,138,221,0.3); }
+    .btn-cutting { background: rgba(155,109,220,0.1); color: #4A1D8A; border-color: rgba(155,109,220,0.3); }
+    .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
+    .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
+    .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
+    .btn-gap     { background: rgba(225,29,72,0.1);   color: #9F1239; border-color: rgba(225,29,72,0.32); }
+    .btn-wip     { background: rgba(14,165,233,0.1);  color: #075985; border-color: rgba(14,165,233,0.32); }
+
+    /* FOOTER */
+    .footer-zone { background: #0A1A1D; padding: 16px 18px 28px; }
+    .live-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .live-txt { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+    /* ===== FORM PAGE ===== */
+    .form-zone { background: #F0F2F1; padding: 20px 18px 30px; }
+
+    .form-header-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(234,179,8,0.12); border: 0.5px solid rgba(234,179,8,0.3);
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 20px;
+    }
+    .form-header-pill i { color: #EAB308; font-size: 20px; flex-shrink: 0; }
+    .form-header-pill-txt { font-size: 13px; font-weight: 600; color: #7A5700; }
+    .form-header-pill-sub { font-size: 11px; color: #999; margin-top: 1px; }
+
+    .field-group { margin-bottom: 14px; }
+    .field-label { font-size: 10px; font-weight: 600; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+
+    .field-input, .field-select {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1.5px solid #E0E2E0; background: white;
+      font-size: 14px; color: #111; outline: none;
+      font-family: inherit; appearance: none; -webkit-appearance: none;
+      transition: border-color 0.15s;
+    }
+    .field-input:focus, .field-select:focus { border-color: #EAB308; }
+    .field-input[readonly] { background: #F8F8F6; color: #555; }
+
+    .style-display {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1.5px solid #E0E2E0; background: #F8F8F6;
+      font-size: 14px; color: #555; min-height: 44px;
+      display: flex; align-items: center;
+    }
+    .style-display.filled { color: #111; background: white; border-color: #EAB308; font-weight: 500; }
+
+    /* ROWS TABLE */
+    .rows-section { margin-top: 4px; }
+    .rows-label {
+      font-size: 10px; font-weight: 600; color: #888;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .row-card {
+      background: white; border-radius: 14px;
+      border: 1.5px solid #E8E8E6; padding: 14px;
+      margin-bottom: 10px; position: relative;
+    }
+
+    .row-num {
+      position: absolute; top: -8px; left: 12px;
+      background: #EAB308; color: white;
+      font-size: 9px; font-weight: 700; letter-spacing: 1px;
+      padding: 2px 8px; border-radius: 99px;
+    }
+
+    .row-delete {
+      position: absolute; top: 10px; right: 10px;
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(220,53,69,0.08); border: 1px solid rgba(220,53,69,0.2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #DC3545; font-size: 14px;
+    }
+    .row-delete:active { background: rgba(220,53,69,0.18); }
+
+    .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .row-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+    .row-field { }
+    .row-field-label { font-size: 9px; font-weight: 600; color: #aaa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    .row-field-input, .row-field-select {
+      width: 100%; padding: 9px 10px; border-radius: 9px;
+      border: 1.5px solid #E8E8E6; background: #FAFAFA;
+      font-size: 13px; color: #111; outline: none;
+      font-family: inherit; appearance: none; -webkit-appearance: none;
+      transition: border-color 0.15s;
+    }
+    .row-field-input:focus, .row-field-select:focus { border-color: #EAB308; background: white; }
+
+    .btn-add-row {
+      width: 100%; padding: 12px; border-radius: 12px;
+      border: 2px dashed rgba(234,179,8,0.4); background: rgba(234,179,8,0.05);
+      color: #B8860B; font-size: 13px; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.15s, border-color 0.15s; margin-top: 4px;
+    }
+    .btn-add-row:active { background: rgba(234,179,8,0.12); border-color: rgba(234,179,8,0.7); }
+
+    /* SPO GROUPS */
+    .spo-group {
+      background: #FAFAF8; border-radius: 16px;
+      border: 1.5px solid #E8E8E6; padding: 14px;
+      margin-bottom: 14px; position: relative;
+    }
+    .spo-group-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .spo-group-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #B8860B; background: rgba(234,179,8,0.12); padding: 3px 10px; border-radius: 99px;
+    }
+    .spo-group-delete {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(220,53,69,0.08); border: 1px solid rgba(220,53,69,0.2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #DC3545; font-size: 14px;
+    }
+    .spo-group-delete:active { background: rgba(220,53,69,0.18); }
+
+    .btn-add-group {
+      width: 100%; padding: 13px; border-radius: 12px;
+      border: 2px solid #EAB308; background: rgba(234,179,8,0.08);
+      color: #7A5700; font-size: 13px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.15s; margin: 4px 0 18px;
+    }
+    .btn-add-group:active { background: rgba(234,179,8,0.18); }
+
+    /* SPO AUTOCOMPLETE */
+    .spo-ac-wrap { position: relative; }
+    .spo-ac-drop {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: white; border-radius: 12px; border: 1.5px solid #E0E2E0;
+      z-index: 100; max-height: 200px; overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: none;
+    }
+    .spo-ac-drop.open { display: block; }
+    .spo-ac-item { padding: 11px 14px; cursor: pointer; font-size: 13px; color: #111; border-bottom: .5px solid #F0F0EE; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .spo-ac-item:last-child { border-bottom: none; }
+    .spo-ac-item:active { background: #FBF6E5; }
+    .spo-ac-item mark { background: none; color: #B8860B; font-weight: 700; }
+    .spo-ac-spo { font-weight: 700; white-space: nowrap; }
+    .spo-ac-style { font-size: 11px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55%; }
+    .spo-ac-empty { padding: 12px 14px; font-size: 13px; color: #999; text-align: center; }
+
+    /* WIP TOGGLE (Hide/Unhide, bukan menu bar) */
+    .wip-toggle { display: flex; gap: 6px; margin-bottom: 16px; }
+    .wip-toggle-btn {
+      flex: 1; padding: 10px 4px; border-radius: 12px;
+      border: 1.5px solid #E0E2E0; background: white;
+      color: #666; font-size: 11.5px; font-weight: 600; line-height: 1.3;
+      cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .wip-toggle-btn.active {
+      background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+      color: white; border-color: transparent;
+    }
+    .wip-list { display: flex; flex-direction: column; gap: 8px; }
+    .wip-item { background: white; border: 1px solid #E0E2E0; border-radius: 12px; padding: 12px 14px; }
+    .wip-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .wip-item-spo { font-size: 14px; font-weight: 700; color: #111; }
+    .wip-item-size {
+      font-size: 11px; font-weight: 600; color: #075985;
+      background: rgba(14,165,233,0.12); padding: 2px 8px; border-radius: 99px; white-space: nowrap; flex-shrink: 0;
+    }
+    .wip-item-style { font-size: 12px; color: #666; line-height: 1.4; margin-bottom: 8px; word-break: break-word; }
+    .wip-item-operator { font-size: 11px; color: #0EA5E9; font-weight: 600; margin-bottom: 2px; margin-top: -4px; display: flex; align-items: center; gap: 4px; }
+    .wip-item-meta { font-size: 10.5px; color: #999; margin-bottom: 8px; }
+    .wip-item-qty { display: flex; align-items: baseline; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #E8E8E6; }
+    .wip-item-qty-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .wip-item-qty-value { font-size: 18px; font-weight: 700; color: #0EA5E9; font-variant-numeric: tabular-nums; }
+
+    /* Grup Operator (WIP Proses Operator) untuk operator dengan >1 OPCK — bisa expand/collapse */
+    .wip-group { background: white; border: 1px solid #E0E2E0; border-radius: 12px; overflow: hidden; }
+    .wip-group-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 12px 14px; cursor: pointer; user-select: none;
+    }
+    .wip-group-header-left { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #0EA5E9; }
+    .wip-group-count {
+      font-size: 10px; font-weight: 700; color: #075985; background: rgba(14,165,233,0.12);
+      padding: 3px 9px; border-radius: 99px; white-space: nowrap;
+    }
+    .wip-group-chevron { font-size: 14px; color: #999; transition: transform 0.2s; }
+    .wip-group.open .wip-group-chevron { transform: rotate(180deg); }
+    .wip-group-body { display: none; flex-direction: column; gap: 8px; padding: 0 10px 10px; }
+    .wip-group.open .wip-group-body { display: flex; }
+    .wip-group-body .wip-item { border-color: #E8E8E6; }
+
+    .wip-filter { display: flex; gap: 8px; margin-bottom: 12px; }
+    .wip-filter-input {
+      flex: 1; padding: 9px 12px; border-radius: 10px;
+      border: 1.5px solid #E0E2E0; background: white;
+      font-size: 12px; color: #111; font-family: inherit; outline: none;
+      transition: border-color 0.15s;
+    }
+    .wip-filter-input:focus { border-color: #0EA5E9; }
+    .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
+    .load-time-note { font-size: 10px; color: #aaa; text-align: right; margin: 3px 0 10px; min-height: 12px; }
+    .load-error-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      background: rgba(220,53,69,0.08); border: 1px solid rgba(220,53,69,0.25);
+      border-radius: 10px; padding: 8px 10px; margin: 3px 0 10px; font-size: 11px; color: #7D1B1B; line-height: 1.4;
+    }
+    .retry-btn {
+      flex-shrink: 0; padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(220,53,69,0.4);
+      background: white; color: #DC3545; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; gap: 4px; white-space: nowrap;
+    }
+    .retry-btn:active { background: rgba(220,53,69,0.12); }
+
+    /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
+    #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
+    #page-gap-cutting .wip-filter-input:focus { border-color: #E11D48; }
+
+    .gap-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+    .gap-badge-aman       { background: rgba(29,158,117,0.15); color: #0A5C42; }
+    .gap-badge-prioritas  { background: rgba(234,179,8,0.15);  color: #7A5700; }
+    .gap-badge-urgent     { background: rgba(234,88,12,0.15);  color: #9A3E0A; }
+    .gap-badge-bigproblem { background: rgba(220,38,38,0.15);  color: #991B1B; }
+    .gap-badge-default    { background: rgba(148,163,184,0.15); color: #475569; }
+
+    .divider { height: 1px; background: #E8E8E6; margin: 18px 0; }
+
+    .btn-submit {
+      width: 100%; padding: 15px; border-radius: 14px;
+      background: linear-gradient(135deg, #EAB308, #D97706);
+      color: white; font-size: 15px; font-weight: 600;
+      border: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; gap: 8px; transition: opacity 0.15s;
+      box-shadow: 0 4px 16px rgba(234,179,8,0.3);
+    }
+    .btn-submit:active { opacity: 0.85; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1a1a1a; color: white; padding: 12px 20px;
+      border-radius: 12px; font-size: 13px; font-weight: 500;
+      z-index: 999; opacity: 0; transition: opacity 0.3s;
+      white-space: nowrap; max-width: 90vw;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #0A5C42; }
+    .toast.error { background: #7D1B1B; }
+
+    /* LOADING OVERLAY */
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center; z-index: 998;
+    }
+    .loading-overlay.show { display: flex; }
+    .loading-box {
+      background: white; border-radius: 16px; padding: 24px 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid #f0f0f0;
+      border-top-color: #EAB308; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-txt { font-size: 13px; color: #555; font-weight: 500; }
+
+    /* SETUP NOTICE */
+    .setup-notice {
+      background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.3);
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;
+      font-size: 12px; color: #7A5700; line-height: 1.5;
+    }
+    .setup-notice strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.5px; }
+
+    @media (max-width: 420px) {
+      body { padding: 0; align-items: flex-start; }
+      .phone { border-radius: 0; min-height: 100vh; border: none; }
+      .header-zone { padding-top: env(safe-area-inset-top, 20px); }
+      .footer-zone { padding-bottom: env(safe-area-inset-bottom, 28px); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <div class="loading-txt">Mengirim data...</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="phone">
+
+  <!-- ==================== PAGE 1: SUPPLY AREA ==================== -->
+  <div class="page active" id="page-home">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text">SUPPLY AREA</div>
+      <div class="area-divider"></div>
+    </div>
+
+    <div class="content-zone">
+      <div class="section-lbl">Input Data Produksi</div>
+      <div class="cards">
+
+        <div class="card card-cutting" onclick="goTo('page-cutting')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-cutting">Section</span>
+              <div class="card-icon-wrap icon-cutting">
+                <i class="ti ti-scissors" style="font-size:20px;color:#9B6DDC"></i>
+              </div>
+            </div>
+            <div class="card-title">Cutting Kulit Section</div>
+            <div class="card-desc">Input data penerimaan kulit dan pengeluaran pola dari cutting kulit</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 2 menu tersedia</span>
+              <span class="card-btn btn-cutting">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-issue" onclick="goTo('page-daily-issue')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-issue">Harian</span>
+              <div class="card-icon-wrap icon-issue">
+                <i class="ti ti-alert-triangle" style="font-size:20px;color:#378ADD"></i>
+              </div>
+            </div>
+            <div class="card-title">Daily Issue</div>
+            <div class="card-desc">Rekam kendala dan issue dari leader line produksi setiap shift</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-file-description" style="font-size:13px"></i> Input tiap shift</span>
+              <span class="card-btn btn-issue">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 2: CUTTING KULIT ==================== -->
+  <div class="page" id="page-cutting">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-home')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:18px;letter-spacing:2px">CUTTING KULIT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#9B6DDC,#C084FC)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT SECTION</div>
+    </div>
+
+    <div class="content-zone">
+      <div class="section-lbl">Pilih Menu Input</div>
+      <div class="cards">
+
+        <div class="card card-in" onclick="goTo('page-form-in')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-in">Penerimaan</span>
+              <div class="card-icon-wrap icon-in">
+                <i class="ti ti-package-import" style="font-size:20px;color:#EAB308"></i>
+              </div>
+            </div>
+            <div class="card-title">In Kulit dari Gudang</div>
+            <div class="card-desc">Catat penerimaan bahan kulit dari gudang ke area cutting kulit</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-inbox" style="font-size:13px"></i> Input per penerimaan</span>
+              <span class="card-btn btn-in">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-rak" onclick="goTo('page-form-rak')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-rak">Proses</span>
+              <div class="card-icon-wrap icon-rak">
+                <i class="ti ti-transfer" style="font-size:20px;color:#EA580C"></i>
+              </div>
+            </div>
+            <div class="card-title">Rak ke Proses</div>
+            <div class="card-desc">Catat perpindahan kulit dari rak penyimpanan ke proses produksi</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-arrow-right-circle" style="font-size:13px"></i> Input per perpindahan</span>
+              <span class="card-btn btn-rak">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-out" onclick="goTo('page-form-out')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-out">Pengeluaran</span>
+              <div class="card-icon-wrap icon-out">
+                <i class="ti ti-package-export" style="font-size:20px;color:#1D9E75"></i>
+              </div>
+            </div>
+            <div class="card-title">Out Pola dari Cutting Kulit</div>
+            <div class="card-desc">Catat pengeluaran pola hasil cutting kulit ke line produksi</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per pengeluaran</span>
+              <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-gap" onclick="goTo('page-gap-cutting')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-gap">Monitoring</span>
+              <div class="card-icon-wrap icon-gap">
+                <i class="ti ti-alert-triangle" style="font-size:20px;color:#E11D48"></i>
+              </div>
+            </div>
+            <div class="card-title">Data GAP IN/OUT Cutting Kulit</div>
+            <div class="card-desc">Lihat data GAP IN dan GAP OUT cutting kulit</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-eye" style="font-size:13px"></i> Tampilan data</span>
+              <span class="card-btn btn-gap">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-wip" onclick="goTo('page-wip-cutting')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-wip">Monitoring</span>
+              <div class="card-icon-wrap icon-wip">
+                <i class="ti ti-chart-bar" style="font-size:20px;color:#0EA5E9"></i>
+              </div>
+            </div>
+            <div class="card-title">Data WIP Cutting Kulit</div>
+            <div class="card-desc">Lihat data WIP Rak dan WIP Proses cutting kulit</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-eye" style="font-size:13px"></i> Tampilan data</span>
+              <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3: FORM IN KULIT ==================== -->
+  <div class="page" id="page-form-in">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">IN KULIT DARI GUDANG</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#EAB308,#D97706)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › IN KULIT</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill">
+        <i class="ti ti-package-import"></i>
+        <div>
+          <div class="form-header-pill-txt">Penerimaan Kulit dari Gudang</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="fTanggal">
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data SPO &amp; Size</label>
+        <span id="spoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="spoLoadTime"></div>
+      <div class="load-error-row" id="spoErrorRow" style="display:none">
+        <span id="spoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="groupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addGroup()">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="btnSubmit" onclick="submitForm()">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 4: RAK KE PROSES ==================== -->
+  <div class="page" id="page-form-rak">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">RAK KE PROSES</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#EA580C,#F97316)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › RAK KE PROSES</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(234,88,12,0.12);border-color:rgba(234,88,12,0.3)">
+        <i class="ti ti-transfer" style="color:#EA580C"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#9A3E0A">Rak ke Proses</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="rkTanggal">
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data SPO &amp; Size (dari Form Penerimaan Kulit)</label>
+        <span id="rkSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,88,12,0.12);color:#9A3E0A;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="rkSpoLoadTime"></div>
+      <div class="load-error-row" id="rkSpoErrorRow" style="display:none">
+        <span id="rkSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadRakMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="rkGroupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addRakGroup()" style="border-color:#EA580C;background:rgba(234,88,12,0.08);color:#9A3E0A">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="rkBtnSubmit" onclick="submitRakForm()" style="background:linear-gradient(135deg,#EA580C,#F97316);box-shadow:0 4px 16px rgba(234,88,12,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 5: OUT POLA ==================== -->
+  <div class="page" id="page-form-out">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">OUT POLA</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#1D9E75,#34D399)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › OUT POLA</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(29,158,117,0.12);border-color:rgba(29,158,117,0.3)">
+        <i class="ti ti-package-export" style="color:#1D9E75"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#0A5C42">Out Pola dari Cutting Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="ofTanggal">
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari Form Keluar Kulit Dari Rak)</label>
+        <span id="ofStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(29,158,117,0.12);color:#0A5C42;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="ofLoadTime"></div>
+      <div class="load-error-row" id="ofErrorRow" style="display:none">
+        <span id="ofErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadOutMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="ofGroupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addOfGroup()" style="border-color:#1D9E75;background:rgba(29,158,117,0.08);color:#0A5C42">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="ofBtnSubmit" onclick="submitOutForm()" style="background:linear-gradient(135deg,#1D9E75,#34D399);box-shadow:0 4px 16px rgba(29,158,117,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 6: DATA GAP IN/OUT CUTTING KULIT ==================== -->
+  <div class="page" id="page-gap-cutting">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">DATA GAP IN/OUT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#E11D48,#FB7185)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › DATA GAP</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(225,29,72,0.12);border-color:rgba(225,29,72,0.3)">
+        <i class="ti ti-alert-triangle" style="color:#E11D48"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#9F1239">Data GAP IN/OUT Cutting Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari GAP IN/OUT Cut. Kulit)</label>
+        <span id="gapStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(225,29,72,0.12);color:#9F1239;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="gapLoadTime"></div>
+      <div class="load-error-row" id="gapErrorRow" style="display:none">
+        <span id="gapErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadGapCuttingData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="gapTabIn" onclick="showGapView('gapIn')">GAP IN</button>
+        <button type="button" class="wip-toggle-btn" id="gapTabOut" onclick="showGapView('gapOut')">GAP OUT</button>
+      </div>
+
+      <!-- FILTER SPO & STATUS PROBLEM (dropdown) -->
+      <div class="wip-filter">
+        <select class="wip-filter-input" id="gapFilterSpo" onchange="applyGapFilter()">
+          <option value="">— Semua SPO —</option>
+        </select>
+        <select class="wip-filter-input" id="gapFilterStatus" onchange="applyGapFilter()">
+          <option value="">— Semua Status —</option>
+          <option value="AMAN">AMAN</option>
+          <option value="PRIORITAS">PRIORITAS</option>
+          <option value="URGENT">URGENT</option>
+          <option value="BIG PROBLEM">BIG PROBLEM</option>
+        </select>
+      </div>
+
+      <!-- GAP IN VIEW -->
+      <div id="gapViewIn" class="wip-view">
+        <div class="wip-list" id="gapInList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- GAP OUT VIEW -->
+      <div id="gapViewOut" class="wip-view" style="display:none">
+        <div class="wip-list" id="gapOutList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 7: DATA WIP CUTTING KULIT ==================== -->
+  <div class="page" id="page-wip-cutting">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">DATA WIP CUTTING KULIT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › DATA WIP</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(14,165,233,0.12);border-color:rgba(14,165,233,0.3)">
+        <i class="ti ti-chart-bar" style="color:#0EA5E9"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#075985">Data WIP Cutting Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari WIP RAK &amp; WIP PROSES)</label>
+        <span id="wipStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="wipLoadTime"></div>
+      <div class="load-error-row" id="wipErrorRow" style="display:none">
+        <span id="wipErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadWipCuttingData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="wipTabRak" onclick="showWipView('rak')">WIP Rak</button>
+        <button type="button" class="wip-toggle-btn" id="wipTabProses" onclick="showWipView('proses')">WIP Proses</button>
+        <button type="button" class="wip-toggle-btn" id="wipTabProsesOperator" onclick="showWipView('prosesOperator')">WIP Proses Operator</button>
+      </div>
+
+      <!-- FILTER SPO & SIZE (berlaku untuk tampilan yang sedang aktif) -->
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="wipFilterSpo" placeholder="Filter SPO..." oninput="applyWipFilter()">
+        <input type="text" class="wip-filter-input" id="wipFilterSize" placeholder="Filter Size..." oninput="applyWipFilter()">
+      </div>
+
+      <!-- WIP RAK VIEW -->
+      <div id="wipViewRak" class="wip-view">
+        <div class="wip-list" id="wipRakList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP PROSES VIEW -->
+      <div id="wipViewProses" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipProsesList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP PROSES OPERATOR VIEW -->
+      <div id="wipViewProsesOperator" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipProsesOperatorList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 8: DAILY ISSUE ==================== -->
+  <div class="page" id="page-daily-issue">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-home')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:18px;letter-spacing:2px">DAILY ISSUE</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#378ADD,#1D9E75)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px;margin-bottom:4px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › DAILY ISSUE PRODUKSI</div>
+    </div>
+
+    <!-- STATUS BANNER -->
+    <div class="di-status-banner" id="di-status-banner">
+      <div class="banner-dot"></div>
+      <span id="di-banner-text"></span>
+    </div>
+
+    <div class="di-content">
+
+      <!-- KONFIGURASI -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">⚙️ Konfigurasi</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-cfg-field">
+            <label>Anthropic API Key</label>
+            <input type="password" id="di-apikey" placeholder="sk-ant-api03-..." />
+          </div>
+          <div class="di-cfg-field">
+            <label>Google Apps Script URL</label>
+            <input type="text" id="di-gasurl" placeholder="https://script.google.com/macros/s/..." />
+          </div>
+          <p style="font-size:11px;color:#aaa;margin-top:6px">Isi sekali, tersimpan di perangkat ini.</p>
+        </div>
+      </div>
+
+      <!-- SPO & STYLE -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">SPO &amp; Style</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-field">
+            <div class="di-field-label"><i class="ti ti-file-text"></i> SPO / Order</div>
+            <div class="di-ac-wrap">
+              <input type="text" id="di-spo-input" class="di-field-input" placeholder="Ketik nomor SPO..." autocomplete="off" />
+              <div class="di-ac-drop" id="di-spo-dropdown"></div>
+            </div>
+          </div>
+          <div class="di-field">
+            <div class="di-field-label"><i class="ti ti-tag"></i> Style</div>
+            <div class="di-field-filled" id="di-style-display">
+              <i class="ti ti-info-circle" style="color:#999;font-size:14px"></i>
+              <span id="di-style-text" style="color:#999;font-style:italic;font-size:13px">Terisi otomatis saat SPO dipilih</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REKAM AUDIO -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">🎙️ Rekam Audio</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-rec-center">
+            <div class="di-wave" id="di-wave">
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+              <div class="di-wave-bar"></div><div class="di-wave-bar"></div><div class="di-wave-bar"></div>
+            </div>
+            <div class="di-rec-timer" id="di-timer">00:00</div>
+            <button class="di-rec-ring" id="di-rec-btn" onclick="diToggleRecord()">
+              <span class="di-rec-icon" id="di-rec-icon">🎙️</span>
+            </button>
+            <div class="di-rec-status" id="di-rec-status">Tekan untuk mulai merekam</div>
+          </div>
+          <audio id="di-audio-player" controls style="display:none;width:100%;margin-top:10px;border-radius:10px"></audio>
+          <div style="display:flex;align-items:center;gap:8px;margin:14px 0 8px">
+            <div style="flex:1;height:1px;background:#E5E7E6"></div>
+            <span style="font-size:11px;color:#aaa;white-space:nowrap">Transkripsi</span>
+            <div style="flex:1;height:1px;background:#E5E7E6"></div>
+          </div>
+          <textarea class="di-textarea" id="di-transkrip" placeholder='Hasil transkripsi muncul di sini, atau ketik manual...'></textarea>
+          <div id="di-status-bar" style="font-size:12px;color:#999;min-height:22px;margin-top:8px"></div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="di-btn-secondary" onclick="diClearAll()">
+              <i class="ti ti-trash" style="font-size:15px"></i> Bersihkan
+            </button>
+            <button class="di-btn-primary" onclick="diParseWithAI()" id="di-btn-parse">
+              <i class="ti ti-robot" style="font-size:16px"></i> Parsing AI
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="di-card" id="di-preview-card" style="display:none">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">📋 Preview Data</span>
+        </div>
+        <div class="di-card-body">
+          <div id="di-preview-area"><div class="di-empty-state">Belum ada data.</div></div>
+        </div>
+      </div>
+
+      <!-- FOTO -->
+      <div class="di-card">
+        <div class="di-card-header">
+          <div class="card-step-dot"></div>
+          <span class="di-card-title">📷 Foto Pendukung</span>
+        </div>
+        <div class="di-card-body">
+          <div class="di-field-label" style="margin-bottom:10px"><i class="ti ti-camera"></i> Upload Foto (Maks. 3 foto)</div>
+          <div class="di-photo-grid">
+            <div class="di-photo-slot" id="di-slot-0" onclick="diTriggerPhoto(0)">
+              <div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div>
+              <div style="font-size:10px;color:#BBB">Foto 1</div>
+            </div>
+            <div class="di-photo-slot" id="di-slot-1" onclick="diTriggerPhoto(1)">
+              <div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div>
+              <div style="font-size:10px;color:#BBB">Foto 2</div>
+            </div>
+            <div class="di-photo-slot" id="di-slot-2" onclick="diTriggerPhoto(2)">
+              <div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div>
+              <div style="font-size:10px;color:#BBB">Foto 3</div>
+            </div>
+          </div>
+          <div id="di-photo-btn-row" style="display:none;gap:8px;margin-top:10px">
+            <button class="di-btn-secondary" onclick="diTriggerCamera()"><i class="ti ti-camera" style="font-size:15px"></i> Kamera</button>
+            <button class="di-btn-secondary" onclick="diTriggerGallery()"><i class="ti ti-photo" style="font-size:15px"></i> Galeri</button>
+            <button class="di-btn-secondary" style="flex:none;padding:13px 14px" onclick="diTutupSlotPicker()"><i class="ti ti-x" style="font-size:15px"></i></button>
+          </div>
+          <div style="font-size:11px;color:#999;margin-top:6px;text-align:right" id="di-photo-count">0 / 3 foto</div>
+          <input type="file" id="di-photo-camera" accept="image/*" capture="environment" style="display:none" onchange="diOnPhotoSelected(event)">
+          <input type="file" id="di-photo-gallery" accept="image/*" style="display:none" onchange="diOnPhotoSelected(event)">
+        </div>
+      </div>
+
+      <!-- CONFIRM DIALOG -->
+      <div class="di-confirm-overlay" id="di-confirm-overlay">
+        <div class="di-confirm-sheet">
+          <h3>⚠️ Tidak Ada Foto</h3>
+          <p>Tidak ada foto yang dilampirkan.<br>Lanjutkan kirim laporan tanpa foto?</p>
+          <div style="display:flex;gap:10px">
+            <button class="di-confirm-cancel" onclick="diTutupKonfirmasi()">Batal</button>
+            <button class="di-confirm-ok" onclick="diLanjutKirimTanpaFoto()">Ya, Kirim Tanpa Foto</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <button class="di-btn-submit" id="di-btn-kirim" onclick="diKirimKeSheet()" disabled>
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim ke Google Sheet
+      </button>
+
+    </div>
+
+    <div class="footer-zone" style="margin-top:0">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+<style>
+/* ===== DAILY ISSUE STYLES ===== */
+.di-status-banner{margin:0 18px 12px;border-radius:14px;padding:11px 14px;display:none;align-items:center;gap:10px;font-size:12px;font-weight:500}
+.di-status-banner.show{display:flex}
+.di-status-banner.info{background:rgba(55,138,221,0.1);border:.5px solid rgba(55,138,221,0.25);color:#378ADD}
+.di-status-banner.done{background:rgba(29,158,117,0.1);border:.5px solid rgba(29,158,117,0.25);color:#1D9E75}
+.di-status-banner.failed{background:rgba(220,53,69,0.08);border:.5px solid rgba(220,53,69,0.25);color:#dc3545}
+.banner-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.di-status-banner.info .banner-dot{background:#378ADD}
+.di-status-banner.done .banner-dot{background:#1D9E75}
+.di-status-banner.failed .banner-dot{background:#dc3545}
+
+.di-content{background:#F0F2F1;padding:20px 18px 28px}
+.di-card{background:white;border-radius:20px;border:.5px solid rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden}
+.di-card-header{background:rgba(55,138,221,0.07);padding:14px 18px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid rgba(55,138,221,0.12)}
+.di-card-title{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#134E8A}
+.di-card-body{padding:18px}
+
+.di-field{margin-bottom:14px}
+.di-field:last-child{margin-bottom:0}
+.di-field-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.di-field-label i{color:#378ADD;font-size:13px}
+.di-field-input{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #E5E7E6;font-size:14px;color:#111;background:#FAFAFA;outline:none;font-family:inherit;appearance:none}
+.di-field-input:focus{border-color:#378ADD;background:white}
+.di-field-filled{background:#F0F6FB;border:1.5px solid rgba(55,138,221,0.3);border-radius:12px;padding:11px 14px;font-size:14px;color:#134E8A;font-weight:500;display:flex;align-items:center;gap:6px;min-height:44px}
+.di-textarea{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #E5E7E6;font-size:14px;color:#111;background:#FAFAFA;outline:none;font-family:inherit;resize:none;min-height:90px;line-height:1.5}
+.di-textarea:focus{border-color:#378ADD;background:white}
+
+.di-ac-wrap{position:relative}
+.di-ac-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;background:white;border-radius:14px;border:1.5px solid #E5E7E6;z-index:100;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:none}
+.di-ac-drop.open{display:block}
+.di-ac-item{padding:11px 14px;cursor:pointer;font-size:13px;color:#111;border-bottom:.5px solid #F0F2F1;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.di-ac-item:last-child{border-bottom:none}
+.di-ac-item:active{background:#F0F6FB}
+.di-ac-item mark{background:none;color:#378ADD;font-weight:700}
+.di-ac-spo{font-weight:700;white-space:nowrap}
+.di-ac-style{font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+.di-ac-empty{padding:12px 14px;font-size:13px;color:#999;text-align:center}
+
+.di-rec-center{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0}
+.di-rec-ring{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:rgba(55,138,221,0.1);transition:transform .1s;position:relative}
+.di-rec-ring.recording{background:#dc3545;animation:direcpulse 1.4s infinite}
+.di-rec-ring.done{background:rgba(55,138,221,0.15)}
+.di-rec-ring:active{transform:scale(0.95)}
+@keyframes direcpulse{0%,100%{box-shadow:0 0 0 0 rgba(220,53,69,0.4)}50%{box-shadow:0 0 0 14px rgba(220,53,69,0)}}
+.di-rec-icon{font-size:30px}
+.di-rec-timer{font-size:26px;font-weight:300;color:#111;font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.di-rec-status{font-size:12px;color:#999;text-align:center}
+.di-wave{display:flex;align-items:center;gap:3px;height:28px}
+.di-wave-bar{width:3px;border-radius:2px;background:#378ADD;height:4px;transition:height .07s}
+
+.di-cfg-field{margin-bottom:10px}
+.di-cfg-field label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:6px;display:block}
+.di-cfg-field input{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #E5E7E6;font-size:13px;color:#111;background:#FAFAFA;outline:none;font-family:inherit}
+.di-cfg-field input:focus{border-color:#378ADD;background:white}
+
+.di-btn-primary{flex:1;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#378ADD,#1D9E75);color:white;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
+.di-btn-secondary{flex:1;padding:13px;border-radius:14px;border:1.5px solid #E5E7E6;background:white;color:#555;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
+.di-btn-secondary:active{background:#F0F2F1}
+.di-btn-submit{width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#378ADD,#1D9E75);color:white;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;font-family:inherit;margin-top:4px}
+.di-btn-submit:disabled{opacity:.45;cursor:not-allowed}
+.di-btn-submit:active{opacity:.85}
+
+.di-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.di-photo-slot{aspect-ratio:1;border-radius:12px;border:1.5px dashed #D0D0D0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#FAFAFA;overflow:hidden;position:relative;transition:border-color .15s}
+.di-photo-slot:hover{border-color:#378ADD}
+.di-photo-slot.filled{border:none}
+.di-photo-slot img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.di-photo-remove{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:white;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.di-preview-wrap{overflow-x:auto;border-radius:12px;border:1px solid #E5E7E6}
+.di-preview-wrap table{width:100%;border-collapse:collapse;font-size:12px;min-width:580px}
+.di-preview-wrap th{background:#F0F2F1;padding:8px 10px;text-align:left;font-weight:600;color:#666;white-space:nowrap;border-bottom:1px solid #E5E7E6}
+.di-preview-wrap td{padding:8px 10px;border-bottom:.5px solid #F0F2F1;color:#111;vertical-align:top}
+.di-preview-wrap tr:last-child td{border-bottom:none}
+.di-badge{background:rgba(55,138,221,0.1);color:#134E8A;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.di-empty-state{text-align:center;padding:20px;color:#aaa;font-size:13px}
+
+.di-confirm-overlay{display:none;position:fixed;inset:0;background:rgba(10,26,29,0.7);z-index:600;align-items:flex-end;justify-content:center}
+.di-confirm-overlay.show{display:flex}
+.di-confirm-sheet{background:white;border-radius:24px 24px 0 0;padding:24px 20px 36px;width:100%;max-width:420px}
+.di-confirm-sheet h3{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+.di-confirm-sheet p{font-size:13px;color:#666;text-align:center;line-height:1.5;margin-bottom:20px}
+.di-confirm-cancel{flex:1;padding:13px;border-radius:14px;border:1.5px solid #E5E7E6;background:white;color:#555;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+.di-confirm-ok{flex:1;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#378ADD,#1D9E75);color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* LOADING DI */
+.di-loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,26,29,0.75);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.di-loading-overlay.show{display:flex}
+.di-spinner{width:40px;height:40px;border:3px solid rgba(55,138,221,0.2);border-top-color:#378ADD;border-radius:50%;animation:spin .8s linear infinite}
+.di-loading-text{color:white;font-size:13px;opacity:.7}
+</style>
+
+<!-- DI LOADING -->
+<div class="di-loading-overlay" id="di-loading">
+  <div class="di-spinner"></div>
+  <div class="di-loading-text" id="di-loading-text">Memuat...</div>
+</div>
+<script>
+  // ============================================================
+  //  CONFIG — GANTI URL INI DENGAN URL APPS SCRIPT ANDA
+  // ============================================================
+  // ============================================================
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbw_kH-P1RyaPXJmrNR3Ow3YzieKQRNIsEWQgmASxTUJIRBc5RJaV-mgPqxcj-nAsJ8/exec';
+  // ============================================================
+
+  var masterData = { spo: [] };
+
+  // ---- JSONP HELPER (sama persis dengan Output Per Jam) ----
+  var JSONP_TIMEOUT_MS = 40000; // kalau 40 detik belum ada respons sama sekali, anggap macet/timeout
+
+  function jsonp(url, callback) {
+    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    var settled = false;
+
+    var timeoutId = setTimeout(function() {
+      if (settled) return;
+      settled = true;
+      delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+      var timeoutErr = new Error('Timeout');
+      timeoutErr.isTimeout = true;
+      callback(timeoutErr, null);
+    }, JSONP_TIMEOUT_MS);
+
+    window[cbName] = function(data) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      callback(null, data);
+      delete window[cbName];
+      var el = document.getElementById(cbName);
+      if (el) el.parentNode.removeChild(el);
+    };
+    var s = document.createElement('script');
+    s.id = cbName;
+    s.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+    s.onerror = function() {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      var netErr = new Error('Gagal');
+      netErr.isNetwork = true;
+      callback(netErr, null);
+      delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+    };
+    document.body.appendChild(s);
+  }
+
+  // Terjemahkan kegagalan jadi pesan yang bisa dipahami user — bedakan penyebabnya, bukan cuma "gagal".
+  function _dataLoadErrorMessage(err, data) {
+    if (err) {
+      if (err.isTimeout) return 'Waktu habis (' + (JSONP_TIMEOUT_MS/1000) + ' detik) — server kemungkinan sedang lambat. Coba lagi.';
+      return 'Gagal terhubung ke server — cek koneksi internet lalu coba lagi.';
+    }
+    if (data && data.status === 'error' && data.message) {
+      return 'Server menolak: ' + data.message;
+    }
+    return 'Gagal memuat data. Coba lagi.';
+  }
+
+  function _showLoadError(prefix, err, data) {
+    var row = document.getElementById(prefix + 'ErrorRow');
+    var msg = document.getElementById(prefix + 'ErrorMsg');
+    if (!row || !msg) return;
+    msg.textContent = _dataLoadErrorMessage(err, data);
+    row.style.display = 'flex';
+  }
+
+  function _hideLoadError(prefix) {
+    var row = document.getElementById(prefix + 'ErrorRow');
+    if (row) row.style.display = 'none';
+  }
+
+  // Tampilkan berapa lama satu pemuatan data (jsonp) benar-benar memakan waktu, supaya keluhan
+  // "lama memuat data" bisa dibahas dengan angka aktual yang dialami user, bukan cuma dugaan.
+  function _showLoadTime(elId, ms) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    var sec = (ms / 1000).toFixed(1);
+    el.textContent = 'Waktu memuat: ' + sec + ' detik';
+  }
+
+  // ---- PAGE NAVIGATION ----
+  function goTo(pageId) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById(pageId).classList.add('active');
+    window.scrollTo(0, 0);
+    if (pageId === "page-form-in") initForm();
+    if (pageId === "page-form-rak") initRakForm();
+    if (pageId === "page-form-out") initOutForm();
+    if (pageId === "page-gap-cutting") initGapCuttingPage();
+    if (pageId === "page-wip-cutting") initWipCuttingPage();
+    if (pageId === "page-daily-issue") initDailyIssue();
+  }
+
+  // ---- CLOCK ----
+  function update() {
+    var now = new Date();
+    var hh = now.getHours().toString().padStart(2,'0');
+    var mm = now.getMinutes().toString().padStart(2,'0');
+    document.querySelectorAll('.waktu-el').forEach(function(el) { el.textContent = hh+':'+mm; });
+    var days   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    document.querySelectorAll('.tgl-el').forEach(function(el) {
+      el.textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+    });
+  }
+  update();
+  setInterval(update, 30000);
+
+  // ---- FORM INIT ----
+  function initForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('fTanggal').value = yyyy+'-'+mm+'-'+dd;
+    document.getElementById('groupsContainer').innerHTML = '';
+    groupCount = 0;
+    rowCount = 0;
+    groupsData = {};
+    addGroup();
+    loadMasterData();
+  }
+
+  // ---- LOAD MASTER DATA via JSONP ----
+  function loadMasterData() {
+    setSPOStatus("loading");
+    document.getElementById('spoLoadTime').textContent = '';
+    _hideLoadError('spo');
+    var t0 = Date.now();
+    var url = GAS_URL + "?type=in_kulit_master";
+    jsonp(url, function(err, data) {
+      _showLoadTime('spoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== "ok") {
+        setSPOStatus("error");
+        _showLoadError('spo', err, data);
+        showToast("Gagal memuat data SPO", "error");
+        return;
+      }
+      masterData.spo = data.spo || [];
+      setSPOStatus("ok", masterData.spo.length);
+    });
+  }
+
+  function setSPOStatus(state, count) {
+    var el = document.getElementById("spoStatus");
+    if (state === "loading") {
+      el.textContent = "⏳ Memuat...";
+      el.style.background = "rgba(234,179,8,0.15)";
+      el.style.color = "#7A5700";
+    } else if (state === "ok") {
+      el.textContent = "✓ " + count + " SPO tersedia";
+      el.style.background = "rgba(29,158,117,0.15)";
+      el.style.color = "#0A5C42";
+    } else if (state === "error") {
+      el.textContent = "✕ Gagal memuat (isi manual tetap bisa)";
+      el.style.background = "rgba(220,53,69,0.15)";
+      el.style.color = "#7D1B1B";
+    }
+  }
+
+  function findSPOEntry(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterData.spo.length; i++) {
+      if (masterData.spo[i].spo.toLowerCase() === s) return masterData.spo[i];
+    }
+    return null;
+  }
+
+  function updateSizeOptions(sel, sizes) {
+    var prev = sel.value;
+    sel.innerHTML = '<option value="">— Pilih Size —</option>';
+    sizes.forEach(function(s) {
+      var opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      if (s === prev) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  // ---- SPO GROUPS ----
+  var groupCount = 0;
+  var groupsData = {};
+
+  function addGroup() {
+    groupCount++;
+    var gid = groupCount;
+    groupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('groupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input spo-input" id="spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="row-badge-' + gid + '" style="background:rgba(234,179,8,0.15);color:#7A5700;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupSPOInput(gid);
+    addRow(gid);
+    updateGroupDeleteButtons();
+  }
+
+  function updateGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#groupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteGroup(gid) {
+    var el = document.getElementById('group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete groupsData[gid];
+    updateGroupDeleteButtons();
+  }
+
+  // ---- SPO AUTOCOMPLETE (manual entry + suggestion) ----
+  function setupSPOInput(gid) {
+    var input = document.getElementById('spo-input-' + gid);
+    var drop  = document.getElementById('spo-drop-' + gid);
+
+    input.oninput = function() {
+      groupsData[gid].spo = input.value.trim();
+      renderSPODrop(gid, input.value);
+      matchSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderSPODrop(gid, query) {
+    var drop = document.getElementById('spo-drop-' + gid);
+    if (!masterData.spo.length) { drop.classList.remove('open'); return; }
+    var q = query.toLowerCase().trim();
+    var filtered = q
+      ? masterData.spo.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
+      : masterData.spo;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihSPO(gid, spo, style) {
+    groupsData[gid].spo = spo;
+    groupsData[gid].style = style;
+    document.getElementById('spo-input-' + gid).value = spo;
+    document.getElementById('spo-drop-' + gid).classList.remove('open');
+    var disp = document.getElementById('style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    var found = findSPOEntry(spo);
+    document.querySelectorAll('#rows-container-' + gid + ' .size-select').forEach(function(sel) {
+      updateSizeOptions(sel, found ? found.sizes : []);
+    });
+  }
+
+  function matchSPOStyle(gid, typedSpo) {
+    var found = findSPOEntry(typedSpo);
+    var disp = document.getElementById('style-display-' + gid);
+    if (found) {
+      groupsData[gid].style = found.style;
+      disp.textContent = found.style;
+      disp.className = 'style-display filled';
+      document.querySelectorAll('#rows-container-' + gid + ' .size-select').forEach(function(sel) {
+        updateSizeOptions(sel, found.sizes);
+      });
+    } else {
+      groupsData[gid].style = '';
+      disp.textContent = 'Pilih atau ketik SPO';
+      disp.className = 'style-display';
+    }
+  }
+
+  // ---- ROWS (SIZE) ----
+  var rowCount = 0;
+
+  function addRow(gid) {
+    rowCount++;
+    var rid = rowCount;
+    var container = document.getElementById('rows-container-' + gid);
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'row-' + rid;
+
+    var found = findSPOEntry(groupsData[gid] ? groupsData[gid].spo : '');
+    var sizes = found ? found.sizes : [];
+    var sizeOpts = sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<select class="row-field-select size-select"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input opck-input" placeholder="Nomor OPCK"></div>'
+      + '<div class="row-field"><span class="row-field-label">SF Tab</span><input type="number" class="row-field-input sftab-input" placeholder="0" min="0"></div>'
+      + '</div>'
+      + '<div class="row-grid" style="margin-top:8px">'
+      + '<div class="row-field"><span class="row-field-label">No. Barcode</span><input type="text" class="row-field-input barcode-input" placeholder="Nomor Barcode"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input qty-input" placeholder="0" min="0"></div>'
+      + '</div>'
+      + '<div class="row-grid" style="margin-top:8px">'
+      + '<div class="row-field"><span class="row-field-label">SF Kulit</span>'
+      + '<input type="number" class="row-field-input sfkulit-input" placeholder="0" min="0" step="0.01"></div>'
+      + '<div class="row-field"><span class="row-field-label">Berat Awal (kg)</span><input type="number" class="row-field-input berat-input" placeholder="0.00" min="0" step="0.01"></div></div></div>';
+
+    container.appendChild(div);
+    updateRowBadge(gid);
+  }
+
+  function deleteRow(gid, rid) {
+    var container = document.getElementById('rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateRowBadge(gid);
+  }
+
+  function updateRowBadge(gid) {
+    var container = document.getElementById('rows-container-' + gid);
+    var badge = document.getElementById('row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  // ---- COLLECT DATA ----
+  function collectData() {
+    var tanggal = document.getElementById('fTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+
+    var groups = document.querySelectorAll('#groupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('group-', '');
+      var spo = document.getElementById('spo-input-' + gid).value.trim();
+      var style = groupsData[gid] ? groupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var size    = card.querySelector('.size-select').value;
+        var opck    = card.querySelector('.opck-input').value.trim();
+        var sftab   = card.querySelector('.sftab-input').value;
+        var barcode = card.querySelector('.barcode-input').value.trim();
+        var qty     = card.querySelector('.qty-input').value;
+        var sfkulit = card.querySelector('.sfkulit-input').value;
+        var berat   = card.querySelector('.berat-input').value;
+        if (!size || !opck || !barcode) { errorMsg = 'Size, No. OPCK, dan No. Barcode wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, size:size, opck:opck, sftab:sftab, barcode:barcode, qty:qty, sfkulit:sfkulit, berat:berat });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
+  }
+
+  // ---- SUBMIT via JSONP (sama persis pola Output Per Jam) ----
+  function submitForm() {
+    var data = collectData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+
+    var payload = {
+      tanggal: data.tanggal,
+      rows:    data.rows
+    };
+
+    var url = GAS_URL + '?type=save_in_kulit&payload=' + encodeURIComponent(JSON.stringify(payload));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        // Cache lokal: langsung "lampirkan" baris yang baru disimpan ke dropdown Rak ke Proses,
+        // tanpa perlu reload data — supaya kalau user langsung pindah ke menu itu, datanya sudah ada.
+        data.rows.forEach(function(row) {
+          masterDataRak.receipts.push({ spo: row.spo, style: row.style, opck: row.opck, size: row.size, barcode: row.barcode, qty: row.qty });
+        });
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ===== RAK KE PROSES =====
+  // Sumber data SPO/Style/Size/No.OPCK/Barcode/Qty: sheet "Form Penerimaan Kulit" (bukan DATA MASTER WIP)
+  var masterDataRak = { operators: [], receipts: [] };
+  var rakGroupCount = 0;
+  var rakRowCount   = 0;
+  var rakGroupsData = {};
+
+  function initRakForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('rkTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetRakForm();
+    loadRakMasterData();
+  }
+
+  function resetRakForm() {
+    document.getElementById('rkGroupsContainer').innerHTML = '';
+    rakGroupCount = 0;
+    rakGroupsData = {};
+    addRakGroup();
+  }
+
+  // ---- LOAD MASTER DATA (Operator + Riwayat Penerimaan) via JSONP ----
+  function loadRakMasterData() {
+    setRakSPOStatus('loading');
+    document.getElementById('rkSpoLoadTime').textContent = '';
+    _hideLoadError('rkSpo');
+    var t0 = Date.now();
+    var url = GAS_URL + '?type=rak_master';
+    jsonp(url, function(err, data) {
+      _showLoadTime('rkSpoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setRakSPOStatus('error');
+        _showLoadError('rkSpo', err, data);
+        return;
+      }
+      masterDataRak.operators = data.operators || [];
+      masterDataRak.receipts  = data.receipts  || [];
+      setRakSPOStatus('ok', distinctRakSPOs('').length);
+    });
+  }
+
+  function setRakSPOStatus(state, count) {
+    var el = document.getElementById('rkSpoStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(234,88,12,0.12)';
+      el.style.color = '#9A3E0A';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  // ---- HELPER: baca riwayat penerimaan (masterDataRak.receipts) ----
+  function distinctRakSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataRak.receipts.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  function rakStyleForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterDataRak.receipts.length; i++) {
+      if (masterDataRak.receipts[i].spo.toLowerCase() === s) return masterDataRak.receipts[i].style;
+    }
+    return null;
+  }
+
+  function rakSizesForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    var seen = {};
+    var out = [];
+    masterDataRak.receipts.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (seen[r.size]) return;
+      seen[r.size] = true;
+      out.push(r.size);
+    });
+    return out;
+  }
+
+  function rakReceiptsFor(spo, size, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var q = (query || '').toLowerCase().trim();
+    return masterDataRak.receipts.filter(function(r) {
+      if (r.spo.toLowerCase() !== s) return false;
+      if (size && r.size !== size) return false;
+      if (q && r.opck.toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  // ---- SPO GROUPS ----
+  function addRakGroup() {
+    rakGroupCount++;
+    var gid = rakGroupCount;
+    rakGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('rkGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'rk-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteRakGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="rk-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="rk-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="rk-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="rk-row-badge-' + gid + '" style="background:rgba(234,88,12,0.15);color:#9A3E0A;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="rk-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addRakRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupRakSPOInput(gid);
+    addRakRow(gid);
+    updateRakGroupDeleteButtons();
+  }
+
+  function updateRakGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#rkGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteRakGroup(gid) {
+    var el = document.getElementById('rk-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete rakGroupsData[gid];
+    updateRakGroupDeleteButtons();
+  }
+
+  // ---- SPO (manual + suggest, dari riwayat Form Penerimaan Kulit) ----
+  function setupRakSPOInput(gid) {
+    var input = document.getElementById('rk-spo-input-' + gid);
+    var drop  = document.getElementById('rk-spo-drop-' + gid);
+
+    input.oninput = function() {
+      rakGroupsData[gid].spo = input.value.trim();
+      renderRakGroupSPODrop(gid, input.value);
+      matchRakGroupSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderRakGroupSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihRakGroupSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderRakGroupSPODrop(gid, query) {
+    var drop = document.getElementById('rk-spo-drop-' + gid);
+    if (!masterDataRak.receipts.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctRakSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRakGroupSPO(gid, spo, style) {
+    document.getElementById('rk-spo-input-' + gid).value = spo;
+    document.getElementById('rk-spo-drop-' + gid).classList.remove('open');
+    applyRakGroupSPO(gid, spo, style);
+  }
+
+  function matchRakGroupSPOStyle(gid, typedSpo) {
+    var style = rakStyleForSPO(typedSpo);
+    if (style) {
+      applyRakGroupSPO(gid, typedSpo.trim(), style);
+    } else {
+      rakGroupsData[gid].spo = typedSpo.trim();
+      rakGroupsData[gid].style = '';
+      document.getElementById('rk-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('rk-style-display-' + gid).className = 'style-display';
+      document.querySelectorAll('#rk-rows-container-' + gid + ' .rk-size-select').forEach(function(sel) {
+        sel.innerHTML = '<option value="">— Pilih SPO dahulu —</option>';
+      });
+    }
+  }
+
+  function applyRakGroupSPO(gid, spo, style) {
+    rakGroupsData[gid].spo = spo;
+    rakGroupsData[gid].style = style;
+    var disp = document.getElementById('rk-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+
+    var sizes = rakSizesForSPO(spo);
+    document.querySelectorAll('#rk-rows-container-' + gid + ' .rk-size-select').forEach(function(sel) {
+      var prev = sel.value;
+      sel.innerHTML = '<option value="">— Pilih Size —</option>' + sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+      if (sizes.indexOf(prev) >= 0) sel.value = prev;
+    });
+    // SPO berubah -> No. OPCK / Barcode / Qty di semua baris grup ini sudah tidak relevan
+    document.querySelectorAll('#rk-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      card.querySelector('.rk-opck-input').value = '';
+      card.querySelector('.rk-barcode-input').value = '';
+      card.querySelector('.rk-qty-input').value = '';
+    });
+  }
+
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addRakRow(gid) {
+    rakRowCount++;
+    var rid = rakRowCount;
+    var container = document.getElementById('rk-rows-container-' + gid);
+
+    var spo = rakGroupsData[gid] ? rakGroupsData[gid].spo : '';
+    var sizes = rakSizesForSPO(spo);
+    var sizeOpts = sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'rk-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteRakRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<select class="row-field-select rk-size-select" onchange="onRakSizeChange(\''+rid+'\')"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. OPCK</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input rk-opck-input" id="rk-opck-input-'+rid+'" placeholder="Ketik / pilih No. OPCK...">'
+      + '<div class="spo-ac-drop rk-opck-drop" id="rk-opck-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">No. Barcode</span><input type="text" class="row-field-input rk-barcode-input" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="text" class="row-field-input rk-qty-input" readonly placeholder="Otomatis"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Operator</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input rk-operator-input" id="rk-operator-input-'+rid+'" placeholder="Ketik nama operator...">'
+      + '<div class="spo-ac-drop rk-operator-drop" id="rk-operator-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input rk-absen-input" readonly placeholder="Otomatis">'
+      + '</div></div>';
+
+    container.appendChild(div);
+    setupRakOPCKInput(gid, rid);
+    setupRakOperatorInput(rid);
+    updateRakRowBadge(gid);
+  }
+
+  function deleteRakRow(gid, rid) {
+    var container = document.getElementById('rk-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('rk-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateRakRowBadge(gid);
+  }
+
+  function updateRakRowBadge(gid) {
+    var container = document.getElementById('rk-rows-container-' + gid);
+    var badge = document.getElementById('rk-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  function onRakSizeChange(rid) {
+    var row = document.getElementById('rk-row-' + rid);
+    if (!row) return;
+    row.querySelector('.rk-opck-input').value = '';
+    row.querySelector('.rk-barcode-input').value = '';
+    row.querySelector('.rk-qty-input').value = '';
+  }
+
+  // ---- NO. OPCK per baris (manual + suggest, dari riwayat Form Penerimaan Kulit) ----
+  function setupRakOPCKInput(gid, rid) {
+    var input = document.getElementById('rk-opck-input-' + rid);
+    var drop  = document.getElementById('rk-opck-drop-' + rid);
+
+    input.oninput = function() {
+      var row = document.getElementById('rk-row-' + rid);
+      row.querySelector('.rk-barcode-input').value = '';
+      row.querySelector('.rk-qty-input').value = '';
+      renderRakOPCKDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderRakOPCKDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-opck]');
+      if (!item) return;
+      pilihRakOPCK(rid, item.getAttribute('data-opck'), item.getAttribute('data-barcode'), item.getAttribute('data-qty'), item.getAttribute('data-size'));
+    });
+  }
+
+  function renderRakOPCKDrop(gid, rid, query) {
+    var drop = document.getElementById('rk-opck-drop-' + rid);
+    var spo  = rakGroupsData[gid] ? rakGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var row = document.getElementById('rk-row-' + rid);
+    var size = row.querySelector('.rk-size-select').value;
+    var q = (query || '').toLowerCase().trim();
+    var show = rakReceiptsFor(spo, size, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var opckHL = q ? r.opck.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.opck;
+      return '<div class="spo-ac-item" data-opck="' + r.opck + '" data-barcode="' + r.barcode + '" data-qty="' + r.qty + '" data-size="' + r.size + '">'
+        + '<span class="spo-ac-spo">' + opckHL + '</span>'
+        + '<span class="spo-ac-style">' + r.size + ' · Qty ' + r.qty + '</span>'
+        + '</div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRakOPCK(rid, opck, barcode, qty, size) {
+    var row = document.getElementById('rk-row-' + rid);
+    document.getElementById('rk-opck-input-' + rid).value = opck;
+    document.getElementById('rk-opck-drop-' + rid).classList.remove('open');
+    row.querySelector('.rk-barcode-input').value = barcode;
+    row.querySelector('.rk-qty-input').value = qty;
+    var sizeSel = row.querySelector('.rk-size-select');
+    if (!sizeSel.value && size) sizeSel.value = size;
+  }
+
+  // ---- OPERATOR per baris (manual + suggest, dari DATA MASTER OPERATOR) ----
+  function setupRakOperatorInput(rid) {
+    var input = document.getElementById('rk-operator-input-' + rid);
+    var drop  = document.getElementById('rk-operator-drop-' + rid);
+
+    input.oninput = function() {
+      var row = document.getElementById('rk-row-' + rid);
+      row.querySelector('.rk-absen-input').value = '';
+      renderRakOperatorDrop(rid, input.value);
+    };
+    input.onfocus = function() { renderRakOperatorDrop(rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-nama]');
+      if (!item) return;
+      pilihRakOperator(rid, item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderRakOperatorDrop(rid, query) {
+    var drop = document.getElementById('rk-operator-drop-' + rid);
+    if (!masterDataRak.operators.length) { drop.classList.remove('open'); return; }
+    var q = query.toLowerCase().trim();
+    var filtered = q
+      ? masterDataRak.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
+      : masterDataRak.operators;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var namaHL = q ? o.nama.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o.nama;
+      return '<div class="spo-ac-item" data-nama="' + o.nama + '" data-absen="' + o.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + o.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRakOperator(rid, nama, absen) {
+    var row = document.getElementById('rk-row-' + rid);
+    document.getElementById('rk-operator-input-' + rid).value = nama;
+    document.getElementById('rk-operator-drop-' + rid).classList.remove('open');
+    row.querySelector('.rk-absen-input').value = absen;
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectRakData() {
+    var tanggal = document.getElementById('rkTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+
+    var groups = document.querySelectorAll('#rkGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('rk-group-', '');
+      var spo = document.getElementById('rk-spo-input-' + gid).value.trim();
+      var style = rakGroupsData[gid] ? rakGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var size     = card.querySelector('.rk-size-select').value;
+        var opck     = card.querySelector('.rk-opck-input').value.trim();
+        var barcode  = card.querySelector('.rk-barcode-input').value;
+        var qty      = card.querySelector('.rk-qty-input').value;
+        var operator = card.querySelector('.rk-operator-input').value.trim();
+        var absen    = card.querySelector('.rk-absen-input').value;
+        if (!size)     { errorMsg = 'Size wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (!opck)     { errorMsg = 'No. OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!barcode || !qty) { errorMsg = 'Pilih No. OPCK dari daftar saran agar Barcode & Qty terisi (SPO ' + spo + ')'; return; }
+        if (!operator) { errorMsg = 'Operator wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!absen)    { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, size:size, opck:opck, barcode:barcode, qty:qty, operator:operator, absen:absen });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
+  }
+
+  function submitRakForm() {
+    var data = collectRakData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_URL + '?type=save_rak_proses&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        // Cache lokal: baris yang baru disimpan langsung "lampirkan" ke dropdown Out Pola...
+        data.rows.forEach(function(row) {
+          masterDataOut.records.push({ spo: row.spo, style: row.style, opck: row.opck, barcode: row.barcode, size: row.size, absen: row.absen, operator: row.operator });
+        });
+        // ...dan No. OPCK yang baru saja dipindah ke rak dibuang dari cache Rak ke Proses sendiri,
+        // supaya tidak bisa dipilih dobel kalau user langsung isi Rak ke Proses lagi di sesi yang sama.
+        masterDataRak.receipts = masterDataRak.receipts.filter(function(r) {
+          return !data.rows.some(function(row) {
+            return r.spo.toLowerCase() === row.spo.toLowerCase() && String(r.opck).trim() === String(row.opck).trim();
+          });
+        });
+        resetRakForm();
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ===== OUT POLA DARI CUTTING KULIT =====
+  // Sumber data SPO/Style/Operator/No.Absen/Size/No.Barcode/No.OPCK: sheet "Form Keluar Kulit Dari Rak"
+  var masterDataOut = { records: [], usedBarcodes: {} };
+
+  var ofGroupCount = 0;
+  var ofRowCount   = 0;
+  var ofGroupsData = {};
+
+  function initOutForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('ofTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetOutForm();
+    loadOutMasterData();
+  }
+
+  function resetOutForm() {
+    document.getElementById('ofGroupsContainer').innerHTML = '';
+    ofGroupCount = 0;
+    ofGroupsData = {};
+    addOfGroup();
+  }
+
+  // ---- LOAD MASTER DATA via JSONP ----
+  function loadOutMasterData() {
+    setOfStatus('loading');
+    document.getElementById('ofLoadTime').textContent = '';
+    _hideLoadError('of');
+    var t0 = Date.now();
+    var url = GAS_URL + '?type=out_pola_master';
+    jsonp(url, function(err, data) {
+      _showLoadTime('ofLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setOfStatus('error');
+        _showLoadError('of', err, data);
+        return;
+      }
+      masterDataOut.records = data.records || [];
+      masterDataOut.usedBarcodes = {};
+      (data.usedBarcodes || []).forEach(function(key) { masterDataOut.usedBarcodes[key] = true; });
+      setOfStatus('ok', distinctOutSPOs('').length);
+    });
+  }
+
+  function setOfStatus(state, count) {
+    var el = document.getElementById('ofStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(29,158,117,0.12)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  // ---- HELPER: baca riwayat "Form Keluar Kulit Dari Rak" (masterDataOut.records) ----
+  function distinctOutSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  function outStyleForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterDataOut.records.length; i++) {
+      if (masterDataOut.records[i].spo.toLowerCase() === s) return masterDataOut.records[i].style;
+    }
+    return null;
+  }
+
+  function distinctOutOperators(spo, query) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return [];
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (seen[r.operator]) return;
+      if (q && r.operator.toLowerCase().indexOf(q) < 0) return;
+      seen[r.operator] = true;
+      out.push({ operator: r.operator, absen: r.absen });
+    });
+    return out;
+  }
+
+  function distinctOutSizes(spo, operator, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var o = (operator || '').trim().toLowerCase();
+    if (!s || !o) return [];
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (r.operator.toLowerCase() !== o) return;
+      if (seen[r.size]) return;
+      if (q && r.size.toLowerCase().indexOf(q) < 0) return;
+      seen[r.size] = true;
+      out.push(r.size);
+    });
+    return out;
+  }
+
+  // "445-448" -> ["445","446","447","448"]; "445" (tanpa range) -> ["445"]
+  function parseBarcodeRange(rangeStr) {
+    var s = (rangeStr || '').trim();
+    if (!s) return [];
+    var parts = s.split('-');
+    if (parts.length === 2) {
+      var startStr = parts[0].trim();
+      var endStr   = parts[1].trim();
+      var start = parseInt(startStr, 10);
+      var end   = parseInt(endStr, 10);
+      if (!isNaN(start) && !isNaN(end) && end >= start) {
+        var width = startStr.length;
+        var out = [];
+        for (var n = start; n <= end; n++) out.push(String(n).padStart(width, '0'));
+        return out;
+      }
+    }
+    return [s];
+  }
+
+  // Google Sheets membuang leading zero dari string angka murni begitu ditulis ke sel (mis. "009"
+  // jadi 9). Normalisasi ke bentuk angka polos di sisi ini juga supaya tetap match dengan key
+  // usedBarcodes yang dibuat backend dari nilai yang sudah kena efek itu.
+  function _normNum(s) {
+    s = (s == null ? '' : s).toString().trim();
+    return /^\d+$/.test(s) ? String(parseInt(s, 10)) : s;
+  }
+
+  function outBarcodesFor(spo, operator, size) {
+    var s = (spo || '').trim().toLowerCase();
+    var o = (operator || '').trim().toLowerCase();
+    if (!s || !o || !size) return [];
+    var seen = {};
+    var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (r.operator.toLowerCase() !== o) return;
+      if (r.size !== size) return;
+      parseBarcodeRange(r.barcode).forEach(function(num) {
+        if (seen[num]) return;
+        // Nomor barcode ini sudah pernah disubmit lewat Out Pola sebelumnya -> jangan tampilkan lagi
+        if (masterDataOut.usedBarcodes[r.spo + '|' + _normNum(r.opck) + '|' + _normNum(num)]) return;
+        seen[num] = true;
+        out.push({ barcode: num, opck: r.opck });
+      });
+    });
+    return out;
+  }
+
+  // ---- SPO GROUPS ----
+  function addOfGroup() {
+    ofGroupCount++;
+    var gid = ofGroupCount;
+    ofGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('ofGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'of-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteOfGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="of-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="of-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="of-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="of-row-badge-' + gid + '" style="background:rgba(29,158,117,0.15);color:#0A5C42;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="of-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addOfRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupOfSPOInput(gid);
+    addOfRow(gid);
+    updateOfGroupDeleteButtons();
+  }
+
+  function updateOfGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#ofGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteOfGroup(gid) {
+    var el = document.getElementById('of-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete ofGroupsData[gid];
+    updateOfGroupDeleteButtons();
+  }
+
+  // ---- CASCADE RESET (per baris) ----
+  function resetOfRowFromSize(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    row.querySelector('.of-opck-input').value = '';
+    refreshOfBarcodeOptions(rid);
+  }
+
+  function resetOfRowFromOperator(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    row.querySelector('.of-size-input').value = '';
+    resetOfRowFromSize(rid);
+  }
+
+  // SPO grup berubah -> semua baris size di grup ini sudah tidak relevan
+  function resetOfGroupRows(gid) {
+    document.querySelectorAll('#of-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      var rid = card.id.replace('of-row-', '');
+      card.querySelector('.of-operator-input').value = '';
+      card.querySelector('.of-absen-input').value = '';
+      resetOfRowFromOperator(rid);
+    });
+  }
+
+  function refreshOfBarcodeOptions(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    var gid = row.closest('.spo-group').id.replace('of-group-', '');
+    var sel = row.querySelector('.of-barcode-select');
+    var spo = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
+    var operator = row.querySelector('.of-operator-input').value.trim();
+    var size = row.querySelector('.of-size-input').value.trim();
+    if (!spo || !operator || !size) {
+      sel.innerHTML = '<option value="">— Pilih Operator &amp; Size dahulu —</option>';
+      return;
+    }
+    var list = outBarcodesFor(spo, operator, size);
+    if (list.length === 0) {
+      sel.innerHTML = '<option value="">— Tidak ada No. Barcode —</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">— Pilih No. Barcode —</option>' + list.map(function(b) {
+      return '<option value="' + b.barcode + '" data-opck="' + b.opck + '">' + b.barcode + '</option>';
+    }).join('');
+  }
+
+  function onOfBarcodeChange(rid) {
+    var row = document.getElementById('of-row-' + rid);
+    var sel = row.querySelector('.of-barcode-select');
+    var opt = sel.options[sel.selectedIndex];
+    row.querySelector('.of-opck-input').value = opt ? (opt.getAttribute('data-opck') || '') : '';
+  }
+
+  // ---- SPO per grup (manual + suggest) ----
+  function setupOfSPOInput(gid) {
+    var input = document.getElementById('of-spo-input-' + gid);
+    var drop  = document.getElementById('of-spo-drop-' + gid);
+
+    input.oninput = function() {
+      renderOfSPODrop(gid, input.value);
+      matchOfSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderOfSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihOfSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderOfSPODrop(gid, query) {
+    var drop = document.getElementById('of-spo-drop-' + gid);
+    if (!masterDataOut.records.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfSPO(gid, spo, style) {
+    document.getElementById('of-spo-input-' + gid).value = spo;
+    document.getElementById('of-spo-drop-' + gid).classList.remove('open');
+    applyOfSPO(gid, spo, style);
+  }
+
+  function matchOfSPOStyle(gid, typedSpo) {
+    var style = outStyleForSPO(typedSpo);
+    if (style) {
+      applyOfSPO(gid, typedSpo.trim(), style);
+    } else {
+      ofGroupsData[gid].spo = typedSpo.trim();
+      ofGroupsData[gid].style = '';
+      document.getElementById('of-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('of-style-display-' + gid).className = 'style-display';
+      resetOfGroupRows(gid);
+    }
+  }
+
+  function applyOfSPO(gid, spo, style) {
+    ofGroupsData[gid].spo = spo;
+    ofGroupsData[gid].style = style;
+    var disp = document.getElementById('of-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    resetOfGroupRows(gid);
+  }
+
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addOfRow(gid) {
+    ofRowCount++;
+    var rid = ofRowCount;
+    var container = document.getElementById('of-rows-container-' + gid);
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'of-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteOfRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Operator</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input of-operator-input" id="of-operator-input-'+rid+'" placeholder="Ketik nama operator...">'
+      + '<div class="spo-ac-drop of-operator-drop" id="of-operator-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input of-absen-input" readonly placeholder="Otomatis">'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input of-size-input" id="of-size-input-'+rid+'" placeholder="Ketik / pilih Size...">'
+      + '<div class="spo-ac-drop of-size-drop" id="of-size-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. Barcode</span>'
+      + '<select class="row-field-select of-barcode-select" onchange="onOfBarcodeChange(\''+rid+'\')"><option value="">— Pilih Operator &amp; Size dahulu —</option></select>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input of-opck-input" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input of-qty-input" placeholder="0" min="0"></div>'
+      + '</div></div>';
+
+    container.appendChild(div);
+    setupOfOperatorInput(rid);
+    setupOfSizeInput(rid);
+    updateOfRowBadge(gid);
+  }
+
+  function deleteOfRow(gid, rid) {
+    var container = document.getElementById('of-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('of-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateOfRowBadge(gid);
+  }
+
+  function updateOfRowBadge(gid) {
+    var container = document.getElementById('of-rows-container-' + gid);
+    var badge = document.getElementById('of-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  // ---- OPERATOR per baris (manual + suggest, difilter oleh SPO grup) ----
+  function setupOfOperatorInput(rid) {
+    var input = document.getElementById('of-operator-input-' + rid);
+    var drop  = document.getElementById('of-operator-drop-' + rid);
+    var row   = document.getElementById('of-row-' + rid);
+
+    input.oninput = function() {
+      row.querySelector('.of-absen-input').value = '';
+      resetOfRowFromOperator(rid);
+      renderOfOperatorDrop(rid, input.value);
+    };
+    input.onfocus = function() { renderOfOperatorDrop(rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-operator]');
+      if (!item) return;
+      pilihOfOperator(rid, item.getAttribute('data-operator'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderOfOperatorDrop(rid, query) {
+    var drop = document.getElementById('of-operator-drop-' + rid);
+    var row  = document.getElementById('of-row-' + rid);
+    var gid  = row.closest('.spo-group').id.replace('of-group-', '');
+    var spo  = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutOperators(spo, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var namaHL = q ? item.operator.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.operator;
+      return '<div class="spo-ac-item" data-operator="' + item.operator + '" data-absen="' + item.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + item.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfOperator(rid, operator, absen) {
+    var row = document.getElementById('of-row-' + rid);
+    document.getElementById('of-operator-input-' + rid).value = operator;
+    document.getElementById('of-operator-drop-' + rid).classList.remove('open');
+    row.querySelector('.of-absen-input').value = absen;
+    resetOfRowFromOperator(rid);
+  }
+
+  // ---- SIZE per baris (manual + suggest, difilter oleh SPO grup + Operator baris) ----
+  function setupOfSizeInput(rid) {
+    var input = document.getElementById('of-size-input-' + rid);
+    var drop  = document.getElementById('of-size-drop-' + rid);
+
+    input.oninput = function() {
+      resetOfRowFromSize(rid);
+      renderOfSizeDrop(rid, input.value);
+    };
+    input.onfocus = function() { renderOfSizeDrop(rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-size]');
+      if (!item) return;
+      pilihOfSize(rid, item.getAttribute('data-size'));
+    });
+  }
+
+  function renderOfSizeDrop(rid, query) {
+    var drop = document.getElementById('of-size-drop-' + rid);
+    var row  = document.getElementById('of-row-' + rid);
+    var gid  = row.closest('.spo-group').id.replace('of-group-', '');
+    var spo  = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
+    var operator = row.querySelector('.of-operator-input').value.trim();
+    if (!spo || !operator) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih SPO &amp; Operator dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutSizes(spo, operator, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(s) {
+      var sHL = q ? s.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : s;
+      return '<div class="spo-ac-item" data-size="' + s + '"><span class="spo-ac-spo">' + sHL + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfSize(rid, size) {
+    document.getElementById('of-size-input-' + rid).value = size;
+    document.getElementById('of-size-drop-' + rid).classList.remove('open');
+    resetOfRowFromSize(rid);
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectOutData() {
+    var tanggal = document.getElementById('ofTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+
+    var groups = document.querySelectorAll('#ofGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('of-group-', '');
+      var spo = document.getElementById('of-spo-input-' + gid).value.trim();
+      var style = ofGroupsData[gid] ? ofGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var operator = card.querySelector('.of-operator-input').value.trim();
+        var absen    = card.querySelector('.of-absen-input').value;
+        var size     = card.querySelector('.of-size-input').value.trim();
+        var barcode  = card.querySelector('.of-barcode-select').value;
+        var opck     = card.querySelector('.of-opck-input').value;
+        var qty      = card.querySelector('.of-qty-input').value;
+
+        if (!operator) { errorMsg = 'Operator wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!absen)    { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ')'; return; }
+        if (!size)     { errorMsg = 'Size wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!barcode)  { errorMsg = 'No. Barcode wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (!opck)     { errorMsg = 'No. OPCK tidak terisi — pilih ulang No. Barcode (SPO ' + spo + ')'; return; }
+        if (!qty)      { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+
+        allRows.push({ spo:spo, style:style, operator:operator, absen:absen, size:size, barcode:barcode, opck:opck, qty:qty });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
+  }
+
+  function submitOutForm() {
+    var data = collectOutData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_URL + '?type=save_output_pola&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        // Cache lokal: nomor barcode yang baru saja disubmit langsung ditandai "sudah dipakai",
+        // supaya tidak muncul lagi di dropdown kalau user langsung isi Out Pola lagi di sesi yang sama.
+        data.rows.forEach(function(row) {
+          masterDataOut.usedBarcodes[row.spo + '|' + _normNum(row.opck) + '|' + _normNum(row.barcode)] = true;
+        });
+        resetOutForm();
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ===== DATA GAP IN/OUT CUTTING KULIT =====
+  // Tampilan read-only, sumber data: spreadsheet terpisah, sheet "GAP IN Cut. Kulit" & "GAP OUT Cut. Kulit".
+  // Toggle antar tampilan pakai hide/unhide (bukan navigasi halaman/menu bar), sama seperti Data WIP.
+  var gapData = { gapIn: [], gapOut: [] };
+
+  function initGapCuttingPage() {
+    document.getElementById('gapFilterSpo').innerHTML = '<option value="">— Semua SPO —</option>';
+    document.getElementById('gapFilterStatus').value = '';
+    showGapView('gapIn');
+    loadGapCuttingData();
+  }
+
+  function loadGapCuttingData() {
+    setGapStatus('loading');
+    document.getElementById('gapLoadTime').textContent = '';
+    _hideLoadError('gap');
+    var t0 = Date.now();
+    var url = GAS_URL + '?type=gap_cutting_data';
+    jsonp(url, function(err, data) {
+      _showLoadTime('gapLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setGapStatus('error');
+        _showLoadError('gap', err, data);
+        return;
+      }
+      gapData.gapIn  = data.gapIn  || [];
+      gapData.gapOut = data.gapOut || [];
+      setGapStatus('ok', gapData.gapIn.length + gapData.gapOut.length);
+      populateGapSpoFilter();
+      renderGapTable('gapIn');
+      renderGapTable('gapOut');
+    });
+  }
+
+  function populateGapSpoFilter() {
+    var sel = document.getElementById('gapFilterSpo');
+    var seen = {};
+    var list = [];
+    gapData.gapIn.concat(gapData.gapOut).forEach(function(r) {
+      if (seen[r.spo]) return;
+      seen[r.spo] = true;
+      list.push(r.spo);
+    });
+    list.sort();
+    var prev = sel.value;
+    sel.innerHTML = '<option value="">— Semua SPO —</option>' + list.map(function(s) {
+      return '<option value="' + _escWip(s) + '">' + _escWip(s) + '</option>';
+    }).join('');
+    if (list.indexOf(prev) >= 0) sel.value = prev;
+  }
+
+  function setGapStatus(state, count) {
+    var el = document.getElementById('gapStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(225,29,72,0.12)';
+      el.style.color = '#9F1239';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  function applyGapFilter() {
+    renderGapTable('gapIn');
+    renderGapTable('gapOut');
+  }
+
+  function _gapStatusCategory(statusProblem) {
+    var s = (statusProblem || '').toUpperCase();
+    if (s.indexOf('BIG PROBLEM') >= 0) return 'BIG PROBLEM';
+    if (s.indexOf('URGENT') >= 0) return 'URGENT';
+    if (s.indexOf('PRIORITAS') >= 0) return 'PRIORITAS';
+    if (s.indexOf('AMAN') >= 0) return 'AMAN';
+    return 'LAINNYA';
+  }
+
+  function _gapBadgeClass(statusProblem) {
+    var cat = _gapStatusCategory(statusProblem);
+    if (cat === 'BIG PROBLEM') return 'gap-badge-bigproblem';
+    if (cat === 'URGENT') return 'gap-badge-urgent';
+    if (cat === 'PRIORITAS') return 'gap-badge-prioritas';
+    if (cat === 'AMAN') return 'gap-badge-aman';
+    return 'gap-badge-default';
+  }
+
+  function renderGapTable(which) {
+    var fSpo    = document.getElementById('gapFilterSpo').value;
+    var fStatus = document.getElementById('gapFilterStatus').value;
+    var rows = gapData[which].filter(function(r) {
+      if (fSpo && r.spo !== fSpo) return false;
+      if (fStatus && _gapStatusCategory(r.statusProblem) !== fStatus) return false;
+      return true;
+    });
+    var container = document.getElementById(which === 'gapIn' ? 'gapInList' : 'gapOutList');
+    if (!container) return;
+    if (!rows.length) {
+      container.innerHTML = '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+    container.innerHTML = rows.map(function(r) {
+      var qtyColor = (parseFloat(r.minQty) < 0) ? '#DC2626' : '#0EA5E9';
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="gap-badge ' + _gapBadgeClass(r.statusProblem) + '">' + _escWip(r.statusProblem || '-') + '</span></div>'
+        + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+        + '<div class="wip-item-meta">' + _escWip(r.status) + ' · Kode ' + _escWip(r.kode) + ' · ' + _escWip(r.ket) + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">Min Qty</span><span class="wip-item-qty-value" style="color:' + qtyColor + '">' + _escWip(r.minQty) + '</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Hide/unhide antar tampilan GAP IN / GAP OUT (bukan menu bar/navigasi halaman)
+  function showGapView(which) {
+    document.getElementById('gapViewIn').style.display  = which === 'gapIn'  ? 'block' : 'none';
+    document.getElementById('gapViewOut').style.display = which === 'gapOut' ? 'block' : 'none';
+    document.getElementById('gapTabIn').classList.toggle('active', which === 'gapIn');
+    document.getElementById('gapTabOut').classList.toggle('active', which === 'gapOut');
+  }
+
+  // ===== DATA WIP CUTTING KULIT =====
+  // Tampilan read-only, sumber data: sheet "WIP RAK" & "WIP PROSES".
+  // Toggle antar tampilan pakai hide/unhide (bukan navigasi halaman/menu bar).
+  var wipData = { rak: [], proses: [], prosesOperator: [] };
+  var WIP_VIEW_CONFIG = {
+    rak:            { containerId: 'wipRakList',            qtyLabel: 'WIP Rak' },
+    proses:         { containerId: 'wipProsesList',         qtyLabel: 'WIP Proses' },
+    prosesOperator: { containerId: 'wipProsesOperatorList', qtyLabel: 'Balance' }
+  };
+
+  function initWipCuttingPage() {
+    document.getElementById('wipFilterSpo').value = '';
+    document.getElementById('wipFilterSize').value = '';
+    showWipView('rak');
+    loadWipCuttingData();
+  }
+
+  function loadWipCuttingData() {
+    setWipStatus('loading');
+    document.getElementById('wipLoadTime').textContent = '';
+    _hideLoadError('wip');
+    var t0 = Date.now();
+    var url = GAS_URL + '?type=wip_cutting_data';
+    jsonp(url, function(err, data) {
+      _showLoadTime('wipLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setWipStatus('error');
+        _showLoadError('wip', err, data);
+        return;
+      }
+      wipData.rak            = data.rak            || [];
+      wipData.proses         = data.proses          || [];
+      wipData.prosesOperator = data.prosesOperator  || [];
+      setWipStatus('ok', wipData.rak.length + wipData.proses.length + wipData.prosesOperator.length);
+      renderWipTable('rak');
+      renderWipTable('proses');
+      renderWipTable('prosesOperator');
+    });
+  }
+
+  function setWipStatus(state, count) {
+    var el = document.getElementById('wipStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(14,165,233,0.12)';
+      el.style.color = '#075985';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  function _escWip(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
+    });
+  }
+
+  function getWipFilterValues() {
+    var spoEl  = document.getElementById('wipFilterSpo');
+    var sizeEl = document.getElementById('wipFilterSize');
+    return {
+      spo:  (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
+      size: (sizeEl ? sizeEl.value : '').toLowerCase().trim()
+    };
+  }
+
+  // Filter SPO & Size berlaku untuk ketiga tampilan sekaligus (tetap ikut saat toggle tab)
+  function applyWipFilter() {
+    renderWipTable('rak');
+    renderWipTable('proses');
+    renderWipTable('prosesOperator');
+  }
+
+  function _wipItemCardHTML(which, r, cfg) {
+    var operatorLine = which === 'prosesOperator'
+      ? '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + '</div>'
+        + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>'
+      : '';
+    var qtyValue = which === 'prosesOperator' ? r.balance : r.wip;
+    return '<div class="wip-item">'
+      + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+      + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+      + operatorLine
+      + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(qtyValue) + '</span></div>'
+      + '</div>';
+  }
+
+  // Operator dengan >1 OPCK dikelompokkan jadi satu kartu yang bisa expand/collapse.
+  // Operator dengan cuma 1 OPCK tetap tampil sebagai kartu biasa (tidak perlu dibungkus grup).
+  var wipGroupOpenState = {};
+
+  function renderProsesOperatorGrouped(rows, cfg) {
+    var groups = {};
+    var order = [];
+    rows.forEach(function(r) {
+      if (!groups[r.operator]) { groups[r.operator] = []; order.push(r.operator); }
+      groups[r.operator].push(r);
+    });
+
+    return order.map(function(opName) {
+      var items = groups[opName];
+      if (items.length === 1) {
+        return _wipItemCardHTML('prosesOperator', items[0], cfg);
+      }
+      var isOpen = !!wipGroupOpenState[opName];
+      return '<div class="wip-group' + (isOpen ? ' open' : '') + '" data-operator="' + _escWip(opName) + '">'
+        + '<div class="wip-group-header" onclick="toggleWipOperatorGroup(this.parentElement)">'
+        + '<span class="wip-group-header-left"><i class="ti ti-user" style="font-size:13px"></i>' + _escWip(opName) + '</span>'
+        + '<span style="display:flex;align-items:center;gap:6px"><span class="wip-group-count">' + items.length + ' OPCK</span><i class="ti ti-chevron-down wip-group-chevron"></i></span>'
+        + '</div>'
+        + '<div class="wip-group-body">' + items.map(function(r) { return _wipItemCardHTML('prosesOperator', r, cfg); }).join('') + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function toggleWipOperatorGroup(el) {
+    var opName = el.getAttribute('data-operator');
+    var isOpen = el.classList.toggle('open');
+    wipGroupOpenState[opName] = isOpen;
+  }
+
+  function renderWipTable(which) {
+    var f = getWipFilterValues();
+    var rows = wipData[which].filter(function(r) {
+      if (f.spo  && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
+      if (f.size && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      return true;
+    });
+    var cfg = WIP_VIEW_CONFIG[which];
+    var container = document.getElementById(cfg.containerId);
+    if (!container) return;
+    if (!rows.length) {
+      container.innerHTML = '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+
+    if (which === 'prosesOperator') {
+      container.innerHTML = renderProsesOperatorGrouped(rows, cfg);
+      return;
+    }
+
+    container.innerHTML = rows.map(function(r) { return _wipItemCardHTML(which, r, cfg); }).join('');
+  }
+
+  // Hide/unhide antar tampilan WIP Rak / WIP Proses / WIP Proses Operator (bukan menu bar/navigasi halaman)
+  function showWipView(which) {
+    document.getElementById('wipViewRak').style.display            = which === 'rak'            ? 'block' : 'none';
+    document.getElementById('wipViewProses').style.display         = which === 'proses'         ? 'block' : 'none';
+    document.getElementById('wipViewProsesOperator').style.display = which === 'prosesOperator' ? 'block' : 'none';
+    document.getElementById('wipTabRak').classList.toggle('active', which === 'rak');
+    document.getElementById('wipTabProses').classList.toggle('active', which === 'proses');
+    document.getElementById('wipTabProsesOperator').classList.toggle('active', which === 'prosesOperator');
+  }
+
+  // ---- UI HELPERS ----
+  function showLoading(show) {
+    document.getElementById('loadingOverlay').classList.toggle('show', show);
+  }
+
+  function showToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (type || '');
+    setTimeout(function() { t.className = 'toast'; }, 3000);
+  }
+
+  // ===== DAILY ISSUE LOGIC =====
+  var DI_APIKEY_KEY = 'dip_apikey';
+  var DI_GASURL_KEY = 'dip_gasurl';
+  var DI_CACHE_KEY  = 'litra_daily_issue_db';
+  var DI_CACHE_TTL  = 60 * 60 * 1000;
+
+  var diMasterItems   = [];
+  var diSelectedSPO   = '';
+  var diSelectedStyle = '';
+  var diParsedRows    = [];
+  var diPhotos        = [null, null, null];
+  var diActiveSlot    = 0;
+  var diMediaRec = null, diChunks = [], diRecInterval = null, diRecSecs = 0, diIsRec = false;
+  var diWaveInterval = null, diRecognition = null, diLiveText = '';
+  var diFilteredItems = [];
+
+  var CLOUDINARY_CLOUD  = 'd79iwwwf';
+  var CLOUDINARY_PRESET = 'litra_asi';
+
+  // Init Daily Issue saat halaman dibuka
+  function initDailyIssue() {
+    var ak = localStorage.getItem(DI_APIKEY_KEY);
+    var gu = localStorage.getItem(DI_GASURL_KEY);
+    if (ak) document.getElementById('di-apikey').value = ak;
+    if (gu) document.getElementById('di-gasurl').value = gu;
+
+    document.getElementById('di-apikey').onchange = function(e) {
+      localStorage.setItem(DI_APIKEY_KEY, e.target.value.trim());
+    };
+    document.getElementById('di-gasurl').onchange = function(e) {
+      localStorage.setItem(DI_GASURL_KEY, e.target.value.trim());
+    };
+
+    diSetupSPOInput();
+    diLoadMasterList();
+  }
+
+  // ---- BANNER ----
+  function diSetBanner(type, msg) {
+    var b = document.getElementById('di-status-banner');
+    b.className = 'di-status-banner';
+    if (!type) { b.style.display = 'none'; return; }
+    b.classList.add('show', type);
+    document.getElementById('di-banner-text').textContent = msg;
+  }
+
+  // ---- LOAD MASTER ----
+  function diLoadMasterList() {
+    var gasUrl = localStorage.getItem(DI_GASURL_KEY);
+    if (!gasUrl) { diSetBanner('info', 'Isi API Key & Script URL di Konfigurasi'); return; }
+    try {
+      var raw = localStorage.getItem(DI_CACHE_KEY);
+      if (raw) {
+        var cache = JSON.parse(raw);
+        if (Date.now() - cache.ts < DI_CACHE_TTL) {
+          diMasterItems = cache.items;
+          diSetBanner('done', '✓ ' + diMasterItems.length + ' SPO-Style siap');
+          setTimeout(function() { diSetBanner('',''); }, 3000);
+          diFetchAndCache(false, gasUrl);
+          return;
+        }
+      }
+    } catch(e) {}
+    diFetchAndCache(true, gasUrl);
+  }
+
+  function diFetchAndCache(showLoader, gasUrl) {
+    if (showLoader) diShowLoading('Memuat master list...');
+    var cbName = 'diCb_' + Date.now();
+    var timer;
+    var script = document.createElement('script');
+
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      diMasterItems = data.items || [];
+      localStorage.setItem(DI_CACHE_KEY, JSON.stringify({ ts: Date.now(), items: diMasterItems }));
+      if (showLoader) {
+        diHideLoading();
+        diSetBanner('done', '✓ ' + diMasterItems.length + ' SPO-Style loaded');
+        setTimeout(function() { diSetBanner('',''); }, 4000);
+      }
+    };
+
+    timer = setTimeout(function() {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (showLoader) {
+        diHideLoading();
+        diSetBanner('failed', 'Gagal load master list. Cek koneksi.');
+      }
+    }, 15000);
+
+    script.src = gasUrl + '?callback=' + cbName + '&t=' + Date.now();
+    script.onerror = function() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (showLoader) { diHideLoading(); diSetBanner('failed', 'Gagal load master list.'); }
+    };
+    document.body.appendChild(script);
+  }
+
+  // ---- SPO AUTOCOMPLETE ----
+  function diSetupSPOInput() {
+    var input = document.getElementById('di-spo-input');
+    var drop  = document.getElementById('di-spo-dropdown');
+    input.oninput = function() { diRenderSPODrop(input.value); };
+    input.onfocus = function() { diRenderSPODrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-idx]');
+      if (!item) return;
+      var idx = parseInt(item.getAttribute('data-idx'));
+      var d = diFilteredItems[idx];
+      if (d) diPilihSPO(d.spo, d.style);
+    });
+  }
+
+  function diRenderSPODrop(query) {
+    var drop = document.getElementById('di-spo-dropdown');
+    if (!diMasterItems.length) return;
+    var q = query.toLowerCase().trim();
+    diFilteredItems = q
+      ? diMasterItems.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
+      : diMasterItems;
+    var show = diFilteredItems.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="di-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open'); return;
+    }
+    drop.innerHTML = show.map(function(item, idx) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="di-ac-item" data-idx="' + idx + '"><span class="di-ac-spo">' + spoHL + '</span><span class="di-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function diPilihSPO(spo, style) {
+    diSelectedSPO   = spo;
+    diSelectedStyle = style;
+    document.getElementById('di-spo-input').value = spo;
+    document.getElementById('di-spo-dropdown').classList.remove('open');
+    var st = document.getElementById('di-style-text');
+    st.textContent  = style;
+    st.style.color  = '#134E8A';
+    st.style.fontStyle = 'normal';
+  }
+
+  // ---- WAVE ----
+  var diBars = null;
+  function diAnimWave(on) {
+    clearInterval(diWaveInterval);
+    if (!diBars) diBars = document.querySelectorAll('.di-wave-bar');
+    if (on) {
+      diWaveInterval = setInterval(function() {
+        diBars.forEach(function(b) { b.style.height = (4 + Math.random() * 24) + 'px'; });
+      }, 80);
+    } else {
+      var h = [4,8,14,20,24,20,14,8,4,8,16,22,16,10,4];
+      diBars.forEach(function(b, i) { b.style.height = (h[i] || 6) + 'px'; });
+    }
+  }
+
+  function diFmt2(n) { return String(n).padStart(2,'0'); }
+  function diFmtTime(s) { return diFmt2(Math.floor(s/60)) + ':' + diFmt2(s%60); }
+  function diGetTodayFormatted() {
+    var d = new Date();
+    return String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0') + '/' + d.getFullYear();
+  }
+
+  // ---- RECORD ----
+  function diToggleRecord() {
+    if (!diIsRec) {
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+        diChunks = []; diRecSecs = 0;
+        diMediaRec = new MediaRecorder(stream);
+        diMediaRec.ondataavailable = function(e) { diChunks.push(e.data); };
+        diMediaRec.onstop = function() {
+          stream.getTracks().forEach(function(t) { t.stop(); });
+          var blob = new Blob(diChunks, {type:'audio/webm'});
+          var ap = document.getElementById('di-audio-player');
+          ap.src = URL.createObjectURL(blob);
+          ap.style.display = 'block';
+          document.getElementById('di-rec-btn').className = 'di-rec-ring done';
+          document.getElementById('di-rec-icon').textContent = '✅';
+          document.getElementById('di-rec-status').textContent = 'Rekaman selesai. Dengarkan atau lanjut parsing.';
+          diAnimWave(false);
+        };
+        diMediaRec.start(); diIsRec = true;
+        document.getElementById('di-rec-btn').className = 'di-rec-ring recording';
+        document.getElementById('di-rec-icon').textContent = '⏹️';
+        document.getElementById('di-rec-status').textContent = 'Sedang merekam… tekan lagi untuk berhenti';
+        diAnimWave(true);
+        diRecInterval = setInterval(function() { diRecSecs++; document.getElementById('di-timer').textContent = diFmtTime(diRecSecs); }, 1000);
+        diStartLiveSpeech();
+      }).catch(function() { diShowToast('Izin mikrofon ditolak', 'error'); });
+    } else {
+      diMediaRec.stop(); diIsRec = false;
+      clearInterval(diRecInterval);
+      diStopLiveSpeech();
+    }
+  }
+
+  function diStartLiveSpeech() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { diSetStatus('Gunakan mic keyboard untuk transkripsi.'); return; }
+    diRecognition = new SR();
+    diRecognition.lang = 'id-ID';
+    diRecognition.continuous = true;
+    diRecognition.interimResults = true;
+    diLiveText = '';
+    diRecognition.onresult = function(e) {
+      var interim = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) diLiveText += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
+      }
+      document.getElementById('di-transkrip').value = diLiveText + interim;
+    };
+    diRecognition.onerror = function() {};
+    diRecognition.start();
+    diSetStatus('🔴 Merekam dan mentranskripsi…');
+  }
+
+  function diStopLiveSpeech() {
+    if (diRecognition) { try { diRecognition.stop(); } catch(e){} }
+    diSetStatus('Transkripsi selesai. Periksa teks lalu tekan Parsing AI.');
+  }
+
+  // ---- AI PARSING ----
+  function diParseWithAI() {
+    var apiKey    = document.getElementById('di-apikey').value.trim();
+    var transkrip = document.getElementById('di-transkrip').value.trim();
+    if (!apiKey)    { diShowToast('Isi API Key dulu di Konfigurasi', 'error'); return; }
+    if (!transkrip) { diShowToast('Transkripsi kosong', 'error'); return; }
+    if (!diSelectedSPO) { diShowToast('Pilih SPO terlebih dahulu', 'error'); return; }
+
+    document.getElementById('di-btn-parse').disabled = true;
+    diShowLoading('AI sedang menganalisis…');
+
+    var today  = diGetTodayFormatted();
+    var prompt = 'Kamu adalah sistem ekstraksi data untuk laporan produksi pabrik sepatu/garmen.\n\nDari transkripsi audio berikut, ekstrak data dan kembalikan HANYA JSON array (tanpa penjelasan, tanpa markdown).\n\nPENTING: SPO dan Style sudah dipilih sebelumnya, gunakan nilai ini dan JANGAN ubah:\n- spo: "' + diSelectedSPO + '"\n- style: "' + diSelectedStyle + '"\n\nAturan ekstraksi:\n- Jika ada beberapa size, buat SATU objek per size\n- Tanggal hari ini: ' + today + '\n- Jika ada field yang tidak disebutkan, isi dengan "-"\n- qty harus angka saja\n- "pic" adalah nama leader/supervisor yang melapor\n- "operator" adalah nama operator\n- "divisi" adalah divisi/bagian produksi\n\nKATEGORI — pilih SATU: Material Defect, Sewing Defect, Cutting Method Issue, Capacity Issue, Warehouse Escape, Cutting Defect, Consumption\n\nFormat JSON:\n[{"tanggal":"...","divisi":"...","pic":"...","style":"' + diSelectedStyle + '","issue":"...","size":"...","qty":"...","kategori":"...","operator":"...","spo":"' + diSelectedSPO + '"}]\n\nTranskripsi:\n"' + transkrip + '"';
+
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user', content:prompt}]})
+    }).then(function(res) { return res.json(); }).then(function(data) {
+      if (data.error) throw new Error(data.error.message);
+      var clean = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+      diParsedRows = JSON.parse(clean);
+      diHideLoading();
+      diRenderPreview(diParsedRows);
+      document.getElementById('di-preview-card').style.display = 'block';
+      document.getElementById('di-btn-kirim').disabled = false;
+      diSetStatus('✅ Parsing selesai! Periksa preview lalu kirim.');
+      diShowToast('Parsing berhasil!', 'success');
+      diSetBanner('done', '✓ Parsing selesai — ' + diParsedRows.length + ' baris data');
+      document.getElementById('di-preview-card').scrollIntoView({behavior:'smooth'});
+    }).catch(function(e) {
+      diHideLoading();
+      diSetStatus('❌ Gagal parsing: ' + e.message);
+      diShowToast('Gagal parsing AI', 'error');
+      diSetBanner('failed', 'Parsing gagal: ' + e.message);
+    }).finally(function() {
+      document.getElementById('di-btn-parse').disabled = false;
+    });
+  }
+
+  // ---- PREVIEW ----
+  function diRenderPreview(rows) {
+    if (!rows.length) return;
+    var html = '<div class="di-preview-wrap"><table><thead><tr>';
+    ['Tanggal','Divisi','PIC','Style','Issue','Size','Qty','Kategori','Operator','SPO'].forEach(function(c) { html += '<th>' + c + '</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr><td>' + r.tanggal + '</td><td>' + r.divisi + '</td><td>' + r.pic + '</td><td>' + r.style + '</td><td>' + r.issue + '</td><td>' + r.size + '</td><td>' + r.qty + '</td><td><span class="di-badge">' + r.kategori + '</span></td><td>' + r.operator + '</td><td>' + r.spo + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    document.getElementById('di-preview-area').innerHTML = html;
+  }
+
+  // ---- KIRIM ----
+  function diKirimKeSheet() {
+    var gasUrl = document.getElementById('di-gasurl').value.trim();
+    if (!gasUrl)            { diShowToast('Isi Script URL dulu', 'error'); return; }
+    if (!diParsedRows.length) { diShowToast('Tidak ada data', 'error'); return; }
+    var adaFoto = diPhotos.some(function(p) { return p !== null; });
+    if (!adaFoto) {
+      document.getElementById('di-confirm-overlay').classList.add('show');
+      return;
+    }
+    document.getElementById('di-btn-kirim').disabled = true;
+    diUploadPhotos().then(function(fotoObj) {
+      diEksekusiKirim(fotoObj);
+    }).catch(function(e) {
+      diHideLoading();
+      diSetBanner('failed', e.message);
+      diShowToast('Gagal upload foto', 'error');
+      document.getElementById('di-btn-kirim').disabled = false;
+    });
+  }
+
+  function diEksekusiKirim(fotoUrls) {
+    var gasUrl = document.getElementById('di-gasurl').value.trim();
+    document.getElementById('di-btn-kirim').disabled = true;
+    diShowLoading('Mengirim ke Google Sheet…');
+    diSetBanner('info', 'Mengirim ' + diParsedRows.length + ' baris data...');
+    var rowsWithFoto = diParsedRows.map(function(r) {
+      return Object.assign({}, r, { foto1: fotoUrls.foto1||'', foto2: fotoUrls.foto2||'', foto3: fotoUrls.foto3||'' });
+    });
+    fetch(gasUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({rows: rowsWithFoto})
+    }).then(function() {
+      diHideLoading();
+      diSetBanner('done', '✓ ' + diParsedRows.length + ' data berhasil terkirim!');
+      diShowToast('✓ Data berhasil masuk ke Sheet!', 'success');
+      diParsedRows = [];
+      setTimeout(function() { diClearAll(); diSetBanner('',''); }, 3000);
+    }).catch(function(e) {
+      diHideLoading();
+      diSetBanner('failed', 'Gagal kirim: ' + e.message);
+      diShowToast('Gagal kirim ke Sheet', 'error');
+      document.getElementById('di-btn-kirim').disabled = false;
+    });
+  }
+
+  // ---- FOTO ----
+  function diTriggerPhoto(slot) {
+    if (diPhotos[slot] !== null) return;
+    diActiveSlot = slot;
+    var btnRow = document.getElementById('di-photo-btn-row');
+    btnRow.style.display = 'flex';
+  }
+  function diTutupSlotPicker() { document.getElementById('di-photo-btn-row').style.display = 'none'; }
+  function diTriggerCamera() { var i = document.getElementById('di-photo-camera'); i.value=''; i.click(); }
+  function diTriggerGallery() { var i = document.getElementById('di-photo-gallery'); i.value=''; i.click(); }
+
+  function diOnPhotoSelected(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { diShowToast('Ukuran foto maksimal 10MB', 'error'); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var base64Full = ev.target.result;
+      diPhotos[diActiveSlot] = { file:file, base64:base64Full.split(',')[1], mimeType:file.type, preview:base64Full };
+      diRenderPhotoSlot(diActiveSlot);
+      diUpdatePhotoCount();
+      diTutupSlotPicker();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function diRenderPhotoSlot(idx) {
+    var slot = document.getElementById('di-slot-' + idx);
+    var p = diPhotos[idx];
+    if (p) {
+      slot.classList.add('filled');
+      slot.innerHTML = '<img src="' + p.preview + '" alt="foto ' + (idx+1) + '"><button class="di-photo-remove" onclick="diRemovePhoto(event,' + idx + ')">✕</button>';
+      slot.onclick = null;
+    } else {
+      slot.classList.remove('filled');
+      slot.innerHTML = '<div style="font-size:24px;color:#CCC;margin-bottom:4px">＋</div><div style="font-size:10px;color:#BBB">Foto ' + (idx+1) + '</div>';
+      slot.onclick = (function(i) { return function() { diTriggerPhoto(i); }; })(idx);
+    }
+  }
+
+  function diRemovePhoto(e, idx) {
+    e.stopPropagation();
+    diPhotos[idx] = null;
+    diRenderPhotoSlot(idx);
+    diUpdatePhotoCount();
+    diTutupSlotPicker();
+  }
+
+  function diUpdatePhotoCount() {
+    var count = diPhotos.filter(function(p) { return p !== null; }).length;
+    document.getElementById('di-photo-count').textContent = count + ' / 3 foto';
+  }
+
+  function diUploadPhotos() {
+    var filled = diPhotos.filter(function(p) { return p !== null; });
+    var urls = [];
+    var i = 0;
+    function next() {
+      if (i >= filled.length) return Promise.resolve({ foto1: urls[0]||'', foto2: urls[1]||'', foto3: urls[2]||'' });
+      var p = filled[i];
+      diShowLoading('Mengupload foto ' + (i+1) + ' dari ' + filled.length + '…');
+      return diUploadToCloudinary(p).then(function(url) {
+        urls.push(url); i++;
+        return next();
+      });
+    }
+    return next();
+  }
+
+  function diUploadToCloudinary(photo) {
+    var formData = new FormData();
+    formData.append('file', 'data:' + photo.mimeType + ';base64,' + photo.base64);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', 'daily_issue_produksi');
+    return fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', {
+      method: 'POST', body: formData
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      if (data.secure_url) return data.secure_url;
+      throw new Error(data.error ? data.error.message : 'Upload gagal');
+    });
+  }
+
+  function diTutupKonfirmasi() { document.getElementById('di-confirm-overlay').classList.remove('show'); }
+  function diLanjutKirimTanpaFoto() { diTutupKonfirmasi(); diEksekusiKirim({foto1:'',foto2:'',foto3:''}); }
+
+  // ---- CLEAR ----
+  function diClearAll() {
+    document.getElementById('di-transkrip').value = '';
+    document.getElementById('di-timer').textContent = '00:00';
+    document.getElementById('di-rec-btn').className = 'di-rec-ring';
+    document.getElementById('di-rec-icon').textContent = '🎙️';
+    document.getElementById('di-rec-status').textContent = 'Tekan untuk mulai merekam';
+    document.getElementById('di-audio-player').style.display = 'none';
+    document.getElementById('di-audio-player').src = '';
+    document.getElementById('di-preview-card').style.display = 'none';
+    document.getElementById('di-preview-area').innerHTML = '<div class="di-empty-state">Belum ada data.</div>';
+    document.getElementById('di-btn-kirim').disabled = true;
+    document.getElementById('di-spo-input').value = '';
+    document.getElementById('di-spo-dropdown').classList.remove('open');
+    var st = document.getElementById('di-style-text');
+    st.textContent = 'Terisi otomatis saat SPO dipilih';
+    st.style.color = '#999'; st.style.fontStyle = 'italic';
+    diSetStatus('');
+    diAnimWave(false);
+    diRecSecs = 0; diParsedRows = [];
+    diSelectedSPO = ''; diSelectedStyle = '';
+    diPhotos = [null, null, null];
+    [0,1,2].forEach(function(i) { diRenderPhotoSlot(i); });
+    diUpdatePhotoCount();
+  }
+
+  // ---- UTILS ----
+  function diSetStatus(msg) { document.getElementById('di-status-bar').textContent = msg; }
+  function diShowLoading(t) { document.getElementById('di-loading-text').textContent = t; document.getElementById('di-loading').classList.add('show'); }
+  function diHideLoading()  { document.getElementById('di-loading').classList.remove('show'); }
+  function diShowToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (type || '');
+    setTimeout(function() { t.className = 'toast'; }, 3500);
+  }
+</script>
+</body>
+</html>
