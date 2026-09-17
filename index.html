@@ -330,6 +330,17 @@
     .wip-filter-input:focus { border-color: #0EA5E9; }
     .wip-empty { text-align: center; padding: 24px; color: #aaa; font-size: 13px; }
     .load-time-note { font-size: 10px; color: #aaa; text-align: right; margin: 3px 0 10px; min-height: 12px; }
+    .load-error-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      background: rgba(220,53,69,0.08); border: 1px solid rgba(220,53,69,0.25);
+      border-radius: 10px; padding: 8px 10px; margin: 3px 0 10px; font-size: 11px; color: #7D1B1B; line-height: 1.4;
+    }
+    .retry-btn {
+      flex-shrink: 0; padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(220,53,69,0.4);
+      background: white; color: #DC3545; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; gap: 4px; white-space: nowrap;
+    }
+    .retry-btn:active { background: rgba(220,53,69,0.12); }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -679,6 +690,10 @@
         <span id="spoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
       <div class="load-time-note" id="spoLoadTime"></div>
+      <div class="load-error-row" id="spoErrorRow" style="display:none">
+        <span id="spoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
 
       <!-- SPO GROUPS -->
       <div id="groupsContainer"></div>
@@ -761,6 +776,10 @@
         <span id="rkSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,88,12,0.12);color:#9A3E0A;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
       <div class="load-time-note" id="rkSpoLoadTime"></div>
+      <div class="load-error-row" id="rkSpoErrorRow" style="display:none">
+        <span id="rkSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadRakMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
 
       <!-- SPO GROUPS -->
       <div id="rkGroupsContainer"></div>
@@ -843,6 +862,10 @@
         <span id="ofStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(29,158,117,0.12);color:#0A5C42;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
       <div class="load-time-note" id="ofLoadTime"></div>
+      <div class="load-error-row" id="ofErrorRow" style="display:none">
+        <span id="ofErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadOutMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
 
       <!-- SPO GROUPS -->
       <div id="ofGroupsContainer"></div>
@@ -919,6 +942,10 @@
         <span id="gapStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(225,29,72,0.12);color:#9F1239;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
       <div class="load-time-note" id="gapLoadTime"></div>
+      <div class="load-error-row" id="gapErrorRow" style="display:none">
+        <span id="gapErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadGapCuttingData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
 
       <!-- TOGGLE (hide/unhide, bukan menu bar) -->
       <div class="wip-toggle">
@@ -1014,6 +1041,10 @@
         <span id="wipStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
       </div>
       <div class="load-time-note" id="wipLoadTime"></div>
+      <div class="load-error-row" id="wipErrorRow" style="display:none">
+        <span id="wipErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadWipCuttingData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
 
       <!-- TOGGLE (hide/unhide, bukan menu bar) -->
       <div class="wip-toggle">
@@ -1366,9 +1397,26 @@
   var masterData = { spo: [] };
 
   // ---- JSONP HELPER (sama persis dengan Output Per Jam) ----
+  var JSONP_TIMEOUT_MS = 40000; // kalau 40 detik belum ada respons sama sekali, anggap macet/timeout
+
   function jsonp(url, callback) {
     var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    var settled = false;
+
+    var timeoutId = setTimeout(function() {
+      if (settled) return;
+      settled = true;
+      delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+      var timeoutErr = new Error('Timeout');
+      timeoutErr.isTimeout = true;
+      callback(timeoutErr, null);
+    }, JSONP_TIMEOUT_MS);
+
     window[cbName] = function(data) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
       callback(null, data);
       delete window[cbName];
       var el = document.getElementById(cbName);
@@ -1378,11 +1426,41 @@
     s.id = cbName;
     s.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
     s.onerror = function() {
-      callback(new Error('Gagal'), null);
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      var netErr = new Error('Gagal');
+      netErr.isNetwork = true;
+      callback(netErr, null);
       delete window[cbName];
       if (s.parentNode) s.parentNode.removeChild(s);
     };
     document.body.appendChild(s);
+  }
+
+  // Terjemahkan kegagalan jadi pesan yang bisa dipahami user — bedakan penyebabnya, bukan cuma "gagal".
+  function _dataLoadErrorMessage(err, data) {
+    if (err) {
+      if (err.isTimeout) return 'Waktu habis (' + (JSONP_TIMEOUT_MS/1000) + ' detik) — server kemungkinan sedang lambat. Coba lagi.';
+      return 'Gagal terhubung ke server — cek koneksi internet lalu coba lagi.';
+    }
+    if (data && data.status === 'error' && data.message) {
+      return 'Server menolak: ' + data.message;
+    }
+    return 'Gagal memuat data. Coba lagi.';
+  }
+
+  function _showLoadError(prefix, err, data) {
+    var row = document.getElementById(prefix + 'ErrorRow');
+    var msg = document.getElementById(prefix + 'ErrorMsg');
+    if (!row || !msg) return;
+    msg.textContent = _dataLoadErrorMessage(err, data);
+    row.style.display = 'flex';
+  }
+
+  function _hideLoadError(prefix) {
+    var row = document.getElementById(prefix + 'ErrorRow');
+    if (row) row.style.display = 'none';
   }
 
   // Tampilkan berapa lama satu pemuatan data (jsonp) benar-benar memakan waktu, supaya keluhan
@@ -1441,12 +1519,14 @@
   function loadMasterData() {
     setSPOStatus("loading");
     document.getElementById('spoLoadTime').textContent = '';
+    _hideLoadError('spo');
     var t0 = Date.now();
     var url = GAS_URL + "?type=in_kulit_master";
     jsonp(url, function(err, data) {
       _showLoadTime('spoLoadTime', Date.now() - t0);
       if (err || !data || data.status !== "ok") {
         setSPOStatus("error");
+        _showLoadError('spo', err, data);
         showToast("Gagal memuat data SPO", "error");
         return;
       }
@@ -1785,12 +1865,14 @@
   function loadRakMasterData() {
     setRakSPOStatus('loading');
     document.getElementById('rkSpoLoadTime').textContent = '';
+    _hideLoadError('rkSpo');
     var t0 = Date.now();
     var url = GAS_URL + '?type=rak_master';
     jsonp(url, function(err, data) {
       _showLoadTime('rkSpoLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setRakSPOStatus('error');
+        _showLoadError('rkSpo', err, data);
         return;
       }
       masterDataRak.operators = data.operators || [];
@@ -2295,12 +2377,14 @@
   function loadOutMasterData() {
     setOfStatus('loading');
     document.getElementById('ofLoadTime').textContent = '';
+    _hideLoadError('of');
     var t0 = Date.now();
     var url = GAS_URL + '?type=out_pola_master';
     jsonp(url, function(err, data) {
       _showLoadTime('ofLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setOfStatus('error');
+        _showLoadError('of', err, data);
         return;
       }
       masterDataOut.records = data.records || [];
@@ -2870,12 +2954,14 @@
   function loadGapCuttingData() {
     setGapStatus('loading');
     document.getElementById('gapLoadTime').textContent = '';
+    _hideLoadError('gap');
     var t0 = Date.now();
     var url = GAS_URL + '?type=gap_cutting_data';
     jsonp(url, function(err, data) {
       _showLoadTime('gapLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setGapStatus('error');
+        _showLoadError('gap', err, data);
         return;
       }
       gapData.gapIn  = data.gapIn  || [];
@@ -2998,12 +3084,14 @@
   function loadWipCuttingData() {
     setWipStatus('loading');
     document.getElementById('wipLoadTime').textContent = '';
+    _hideLoadError('wip');
     var t0 = Date.now();
     var url = GAS_URL + '?type=wip_cutting_data';
     jsonp(url, function(err, data) {
       _showLoadTime('wipLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setWipStatus('error');
+        _showLoadError('wip', err, data);
         return;
       }
       wipData.rak            = data.rak            || [];
