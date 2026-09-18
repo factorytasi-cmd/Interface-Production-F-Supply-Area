@@ -1821,7 +1821,7 @@
     jsonp(url, function(err, result) {
       showLoading(false);
       if (err) {
-        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
         return;
       }
       if (result && result.status === 'ok') {
@@ -2325,7 +2325,7 @@
     jsonp(url, function(err, result) {
       showLoading(false);
       if (err) {
-        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
         return;
       }
       if (result && result.status === 'ok') {
@@ -2922,7 +2922,7 @@
     jsonp(url, function(err, result) {
       showLoading(false);
       if (err) {
-        showToast('Gagal mengirim. Cek koneksi.', 'error');
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
         return;
       }
       if (result && result.status === 'ok') {
@@ -3234,7 +3234,8 @@
     var t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast show ' + (type || '');
-    setTimeout(function() { t.className = 'toast'; }, 3000);
+    var duration = type === 'error' ? 5000 : 3000;
+    setTimeout(function() { t.className = 'toast'; }, duration);
   }
 
   // ===== DAILY ISSUE LOGIC =====
