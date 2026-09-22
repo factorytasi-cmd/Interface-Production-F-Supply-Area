@@ -350,7 +350,24 @@
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .btn-today:active { background: #F3F4F3; }
-    .today-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .today-list { margin-top: 10px; }
+    .today-tablewrap {
+      border: 1px solid #E0E2E0; border-radius: 12px; overflow-x: auto;
+      background: white; -webkit-overflow-scrolling: touch;
+    }
+    .today-table { border-collapse: collapse; width: 100%; font-size: 11.5px; white-space: nowrap; }
+    .today-table th, .today-table td { padding: 8px 9px; text-align: left; border-bottom: 1px solid #E8E8E6; }
+    .today-table tr:last-child td { border-bottom: none; }
+    .today-table th {
+      font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase;
+      letter-spacing: 0.02em; background: rgba(0,0,0,0.02);
+    }
+    .today-table tr.dup td { background: rgba(220,53,69,0.08); color: #7D1B1B; font-weight: 600; }
+    .today-dup-badge {
+      display: inline-block; margin-left: 5px; padding: 1px 6px; border-radius: 99px;
+      background: #DC3545; color: white; font-size: 9.5px; font-weight: 700; vertical-align: 1px;
+    }
+    .today-scroll-hint { font-size: 10.5px; color: #999; margin-top: 5px; }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -723,6 +740,7 @@
       <button type="button" class="btn-today" onclick="loadTodayInKulit()">
         <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
       </button>
+      <div class="load-time-note" id="fTodayLoadTime"></div>
       <div id="fTodayList" class="today-list"></div>
 
     </div>
@@ -814,6 +832,7 @@
       <button type="button" class="btn-today" onclick="loadTodayRakProses()">
         <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
       </button>
+      <div class="load-time-note" id="rkTodayLoadTime"></div>
       <div id="rkTodayList" class="today-list"></div>
 
     </div>
@@ -905,6 +924,7 @@
       <button type="button" class="btn-today" onclick="loadTodayOutPola()">
         <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
       </button>
+      <div class="load-time-note" id="ofTodayLoadTime"></div>
       <div id="ofTodayList" class="today-list"></div>
 
     </div>
@@ -3285,37 +3305,59 @@
     });
   }
 
-  function _renderTodayList(containerId, rows) {
+  function _renderTodayList(containerId, rows, showOperator) {
     var el = document.getElementById(containerId);
     if (!rows || !rows.length) {
       el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk hari ini.</div>';
       return;
     }
-    el.innerHTML = rows.map(function(r) {
-      return '<div class="wip-item">'
-        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escToday(r.spo) + '</span><span class="wip-item-size">' + _escToday(r.size) + '</span></div>'
-        + '<div class="wip-item-style">' + _escToday(r.style) + '</div>'
-        + '<div class="wip-item-meta">No. OPCK ' + _escToday(r.opck) + ' · No. Barcode ' + _escToday(r.barcode) + ' · Qty ' + _escToday(r.qty) + '</div>'
-        + (r.status ? '<div class="wip-item-operator"><i class="ti ti-badge" style="font-size:12px"></i>' + _escToday(r.status) + '</div>' : '')
-        + '</div>';
-    }).join('');
+    // Baris dianggap "duplikat" kalau SPO + Size + No. OPCK + No. Barcode sama persis —
+    // dipakai buat cek cepat apakah sempat kecatat dobel (misal gara-gara kirim ulang saat "gagal kirim").
+    var counts = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.opck, r.barcode].join('|');
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    var cols = ['SPO', 'Size', 'No. OPCK', 'No. Barcode', 'Qty'];
+    if (showOperator) cols.push('Nama Operator');
+    var html = '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.opck, r.barcode].join('|');
+      var dupCount = counts[key];
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.opck) + '</td>'
+        + '<td>' + _escToday(r.barcode) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>';
+      if (showOperator) html += '<td>' + _escToday(r.operator) + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
   }
 
-  function _loadTodayList(type, containerId) {
+  function _loadTodayList(type, containerId, timeElId, showOperator) {
     var el = document.getElementById(containerId);
     el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById(timeElId).textContent = '';
+    var t0 = Date.now();
     jsonp(GAS_URL + '?type=' + type, function(err, data) {
+      _showLoadTime(timeElId, Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
         return;
       }
-      _renderTodayList(containerId, data.rows);
+      _renderTodayList(containerId, data.rows, showOperator);
     });
   }
 
-  function loadTodayInKulit()   { _loadTodayList('today_in_kulit', 'fTodayList'); }
-  function loadTodayRakProses() { _loadTodayList('today_rak_proses', 'rkTodayList'); }
-  function loadTodayOutPola()   { _loadTodayList('today_out_pola', 'ofTodayList'); }
+  function loadTodayInKulit()   { _loadTodayList('today_in_kulit', 'fTodayList', 'fTodayLoadTime', false); }
+  function loadTodayRakProses() { _loadTodayList('today_rak_proses', 'rkTodayList', 'rkTodayLoadTime', true); }
+  function loadTodayOutPola()   { _loadTodayList('today_out_pola', 'ofTodayList', 'ofTodayLoadTime', true); }
 
   // ===== DAILY ISSUE LOGIC =====
   var DI_APIKEY_KEY = 'dip_apikey';
