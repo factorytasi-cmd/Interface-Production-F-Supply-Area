@@ -342,6 +342,16 @@
     }
     .retry-btn:active { background: rgba(220,53,69,0.12); }
 
+    /* Tombol "Cek Data Terkirim Hari Ini" — netral, beda dari tombol Kirim yang berwarna */
+    .btn-today {
+      width: 100%; padding: 11px; border-radius: 12px; margin-top: 10px;
+      border: 1.5px solid #D8DAD8; background: white; color: #444;
+      font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-today:active { background: #F3F4F3; }
+    .today-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
     #page-gap-cutting .wip-filter-input:focus { border-color: #E11D48; }
@@ -692,7 +702,7 @@
       <div class="load-time-note" id="spoLoadTime"></div>
       <div class="load-error-row" id="spoErrorRow" style="display:none">
         <span id="spoErrorMsg"></span>
-        <button type="button" class="retry-btn" onclick="loadMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+        <button type="button" class="retry-btn" onclick="loadMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
       </div>
 
       <!-- SPO GROUPS -->
@@ -709,6 +719,11 @@
         <i class="ti ti-send" style="font-size:18px"></i>
         Kirim
       </button>
+
+      <button type="button" class="btn-today" onclick="loadTodayInKulit()">
+        <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
+      </button>
+      <div id="fTodayList" class="today-list"></div>
 
     </div>
 
@@ -778,7 +793,7 @@
       <div class="load-time-note" id="rkSpoLoadTime"></div>
       <div class="load-error-row" id="rkSpoErrorRow" style="display:none">
         <span id="rkSpoErrorMsg"></span>
-        <button type="button" class="retry-btn" onclick="loadRakMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+        <button type="button" class="retry-btn" onclick="loadRakMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
       </div>
 
       <!-- SPO GROUPS -->
@@ -795,6 +810,11 @@
         <i class="ti ti-send" style="font-size:18px"></i>
         Kirim
       </button>
+
+      <button type="button" class="btn-today" onclick="loadTodayRakProses()">
+        <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
+      </button>
+      <div id="rkTodayList" class="today-list"></div>
 
     </div>
 
@@ -864,7 +884,7 @@
       <div class="load-time-note" id="ofLoadTime"></div>
       <div class="load-error-row" id="ofErrorRow" style="display:none">
         <span id="ofErrorMsg"></span>
-        <button type="button" class="retry-btn" onclick="loadOutMasterData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+        <button type="button" class="retry-btn" onclick="loadOutMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
       </div>
 
       <!-- SPO GROUPS -->
@@ -881,6 +901,11 @@
         <i class="ti ti-send" style="font-size:18px"></i>
         Kirim
       </button>
+
+      <button type="button" class="btn-today" onclick="loadTodayOutPola()">
+        <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
+      </button>
+      <div id="ofTodayList" class="today-list"></div>
 
     </div>
 
@@ -1395,6 +1420,7 @@
   // ============================================================
 
   var masterData = { spo: [] };
+  var _spoLoadedOnce = false; // muat sekali per sesi — reload cuma kalau klik "Coba Lagi"
 
   // ---- JSONP HELPER (sama persis dengan Output Per Jam) ----
   var JSONP_TIMEOUT_MS = 40000; // kalau 40 detik belum ada respons sama sekali, anggap macet/timeout
@@ -1516,7 +1542,8 @@
   }
 
   // ---- LOAD MASTER DATA via JSONP ----
-  function loadMasterData() {
+  function loadMasterData(force) {
+    if (_spoLoadedOnce && !force) { setSPOStatus("ok", masterData.spo.length); return; }
     setSPOStatus("loading");
     document.getElementById('spoLoadTime').textContent = '';
     _hideLoadError('spo');
@@ -1531,6 +1558,7 @@
         return;
       }
       masterData.spo = data.spo || [];
+      _spoLoadedOnce = true;
       setSPOStatus("ok", masterData.spo.length);
     });
   }
@@ -1840,6 +1868,7 @@
   // ===== RAK KE PROSES =====
   // Sumber data SPO/Style/Size/No.OPCK/Barcode/Qty: sheet "Form Penerimaan Kulit" (bukan DATA MASTER WIP)
   var masterDataRak = { operators: [], receipts: [] };
+  var _rakLoadedOnce = false;
   var rakGroupCount = 0;
   var rakRowCount   = 0;
   var rakGroupsData = {};
@@ -1862,7 +1891,8 @@
   }
 
   // ---- LOAD MASTER DATA (Operator + Riwayat Penerimaan) via JSONP ----
-  function loadRakMasterData() {
+  function loadRakMasterData(force) {
+    if (_rakLoadedOnce && !force) { setRakSPOStatus('ok', distinctRakSPOs('').length); return; }
     setRakSPOStatus('loading');
     document.getElementById('rkSpoLoadTime').textContent = '';
     _hideLoadError('rkSpo');
@@ -1877,6 +1907,7 @@
       }
       masterDataRak.operators = data.operators || [];
       masterDataRak.receipts  = data.receipts  || [];
+      _rakLoadedOnce = true;
       setRakSPOStatus('ok', distinctRakSPOs('').length);
     });
   }
@@ -2351,6 +2382,7 @@
   // ===== OUT POLA DARI CUTTING KULIT =====
   // Sumber data SPO/Style/Operator/No.Absen/Size/No.Barcode/No.OPCK: sheet "Form Keluar Kulit Dari Rak"
   var masterDataOut = { records: [], usedBarcodes: {} };
+  var _outLoadedOnce = false;
 
   var ofGroupCount = 0;
   var ofRowCount   = 0;
@@ -2374,7 +2406,8 @@
   }
 
   // ---- LOAD MASTER DATA via JSONP ----
-  function loadOutMasterData() {
+  function loadOutMasterData(force) {
+    if (_outLoadedOnce && !force) { setOfStatus('ok', distinctOutSPOs('').length); return; }
     setOfStatus('loading');
     document.getElementById('ofLoadTime').textContent = '';
     _hideLoadError('of');
@@ -2390,6 +2423,7 @@
       masterDataOut.records = data.records || [];
       masterDataOut.usedBarcodes = {};
       (data.usedBarcodes || []).forEach(function(key) { masterDataOut.usedBarcodes[key] = true; });
+      _outLoadedOnce = true;
       setOfStatus('ok', distinctOutSPOs('').length);
     });
   }
@@ -2951,6 +2985,8 @@
     loadGapCuttingData();
   }
 
+  // GAP selalu dimuat ulang tiap buka menu (bukan cache sekali-per-sesi) — ini menu laporan/monitoring,
+  // datanya harus selalu real-time, beda dari 3 form input yang boleh pakai cache.
   function loadGapCuttingData() {
     setGapStatus('loading');
     document.getElementById('gapLoadTime').textContent = '';
@@ -3081,6 +3117,8 @@
     loadWipCuttingData();
   }
 
+  // WIP selalu dimuat ulang tiap buka menu (bukan cache sekali-per-sesi) — ini menu laporan/monitoring,
+  // datanya harus selalu real-time, beda dari 3 form input yang boleh pakai cache.
   function loadWipCuttingData() {
     setWipStatus('loading');
     document.getElementById('wipLoadTime').textContent = '';
@@ -3237,6 +3275,47 @@
     var duration = type === 'error' ? 5000 : 3000;
     setTimeout(function() { t.className = 'toast'; }, duration);
   }
+
+  // ===== CEK DATA TERKIRIM HARI INI (In Kulit / Rak ke Proses / Out Pola) =====
+  // Baca langsung dari sheet (tanpa cache) supaya user bisa pastikan submit yang sempat
+  // "gagal kirim" itu benar-benar tercetak atau tidak, tanpa perlu buka Google Sheets.
+  function _escToday(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
+    });
+  }
+
+  function _renderTodayList(containerId, rows) {
+    var el = document.getElementById(containerId);
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk hari ini.</div>';
+      return;
+    }
+    el.innerHTML = rows.map(function(r) {
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escToday(r.spo) + '</span><span class="wip-item-size">' + _escToday(r.size) + '</span></div>'
+        + '<div class="wip-item-style">' + _escToday(r.style) + '</div>'
+        + '<div class="wip-item-meta">No. OPCK ' + _escToday(r.opck) + ' · No. Barcode ' + _escToday(r.barcode) + ' · Qty ' + _escToday(r.qty) + '</div>'
+        + (r.status ? '<div class="wip-item-operator"><i class="ti ti-badge" style="font-size:12px"></i>' + _escToday(r.status) + '</div>' : '')
+        + '</div>';
+    }).join('');
+  }
+
+  function _loadTodayList(type, containerId) {
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    jsonp(GAS_URL + '?type=' + type, function(err, data) {
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderTodayList(containerId, data.rows);
+    });
+  }
+
+  function loadTodayInKulit()   { _loadTodayList('today_in_kulit', 'fTodayList'); }
+  function loadTodayRakProses() { _loadTodayList('today_rak_proses', 'rkTodayList'); }
+  function loadTodayOutPola()   { _loadTodayList('today_out_pola', 'ofTodayList'); }
 
   // ===== DAILY ISSUE LOGIC =====
   var DI_APIKEY_KEY = 'dip_apikey';
