@@ -378,6 +378,51 @@
       letter-spacing: 0.02em; background: rgba(0,0,0,0.02);
     }
     .pk-terima-check { width: 18px; height: 18px; accent-color: #B45309; }
+
+    /* Modal Surat Jalan (Penukaran Kulit) */
+    .sj-modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 999; align-items: center; justify-content: center; padding: 16px;
+    }
+    .sj-modal-overlay.show { display: flex; }
+    .sj-modal-sheet {
+      background: white; border-radius: 18px; padding: 20px; width: 100%; max-width: 360px;
+      max-height: 85vh; overflow-y: auto;
+    }
+    .sj-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 15px; font-weight: 700; color: #111; margin-bottom: 14px;
+    }
+    .sj-modal-close { background: none; border: none; font-size: 18px; color: #999; cursor: pointer; padding: 4px; }
+    .sj-skip-btn {
+      width: 100%; padding: 10px; margin-top: 8px; border-radius: 10px; border: 1.5px solid #E0E2E0;
+      background: white; color: #666; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .sj-preview-wrap { border: 1px solid #E0E2E0; border-radius: 10px; padding: 6px; background: #F7F7F5; }
+    .sj-preview-wrap img { width: 100%; border-radius: 6px; display: block; }
+
+    /* Lembar Surat Jalan itu sendiri — dirender off-screen persis ukuran A5 Landscape untuk di-capture jadi gambar */
+    .sj-sheet {
+      width: 210mm; height: 148mm; background: #fff; color: #111;
+      padding: 10mm 12mm; display: flex; flex-direction: column;
+      font-family: Arial, Helvetica, sans-serif; box-sizing: border-box;
+    }
+    .sj-company { font-size: 9pt; color: #555; letter-spacing: 0.5px; margin-bottom: 2mm; }
+    .sj-company b { color: #111; font-size: 11pt; letter-spacing: 1px; }
+    .sj-headline { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1.5pt solid #111; padding-bottom: 3mm; margin-bottom: 3mm; }
+    .sj-title { font-size: 19pt; font-weight: bold; letter-spacing: 2px; }
+    .sj-headline-right { text-align: right; font-size: 9.5pt; line-height: 1.6; }
+    .sj-meta-row { display: flex; justify-content: space-between; font-size: 9.5pt; line-height: 1.6; margin-bottom: 4mm; }
+    .sj-meta-label { color: #555; }
+    .sj-table { border-collapse: collapse; width: 100%; font-size: 8.3pt; flex: 1; }
+    .sj-table th, .sj-table td { border: 0.75pt solid #111; padding: 1.6mm 2mm; text-align: left; }
+    .sj-table th { background: #EFEFEF; font-weight: bold; white-space: nowrap; }
+    .sj-table td.num { text-align: right; }
+    .sj-table td.center { text-align: center; }
+    .sj-footer { display: flex; justify-content: flex-end; margin-top: 4mm; }
+    .sj-signblock { text-align: center; font-size: 9.5pt; width: 45mm; }
+    .sj-signspace { height: 16mm; }
+    .sj-signname { border-top: 0.75pt solid #111; padding-top: 1mm; }
     .today-list { margin-top: 10px; }
     .today-tablewrap {
       border: 1px solid #E0E2E0; border-radius: 12px; overflow-x: auto;
@@ -484,6 +529,52 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Modal Surat Jalan (Penukaran Kulit) -->
+<div class="sj-modal-overlay" id="sjModalOverlay">
+  <div class="sj-modal-sheet">
+    <div class="sj-modal-header">
+      <span>Buat Surat Jalan</span>
+      <button type="button" class="sj-modal-close" onclick="_pkCloseSuratJalanModal()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div id="sjFormStep">
+      <div class="field-group">
+        <label class="field-label">No. Surat Jalan</label>
+        <input type="text" class="field-input" id="sjNomorInput" placeholder="Contoh: SJ/PK/2026/09-0001">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Tujuan</label>
+        <input type="text" class="field-input" id="sjTujuanInput" placeholder="Contoh: PT. Mitra Kulit Sejahtera">
+      </div>
+      <button class="btn-submit" style="background:linear-gradient(135deg,#B45309,#D97706)" onclick="_pkBuildSuratJalanImage()">
+        <i class="ti ti-file-text" style="font-size:18px"></i> Buat Surat Jalan
+      </button>
+      <button type="button" class="sj-skip-btn" onclick="_pkCloseSuratJalanModal()">Lewati</button>
+    </div>
+
+    <div id="sjLoadingStep" style="display:none;text-align:center;padding:24px">
+      <div class="spinner" style="margin:0 auto 12px"></div>
+      <div style="font-size:12px;color:#666">Membuat gambar...</div>
+    </div>
+
+    <div id="sjPreviewStep" style="display:none">
+      <div class="sj-preview-wrap">
+        <img id="sjPreviewImg" alt="Preview Surat Jalan">
+      </div>
+      <button class="btn-submit" style="background:linear-gradient(135deg,#B45309,#D97706);margin-top:10px" onclick="_pkSaveSuratJalanImage()">
+        <i class="ti ti-download" style="font-size:18px"></i> Simpan Gambar
+      </button>
+      <button class="btn-submit" style="background:linear-gradient(135deg,#1D9E75,#34D399);margin-top:8px" onclick="_pkShareSuratJalanImage()">
+        <i class="ti ti-share" style="font-size:18px"></i> Bagikan Gambar
+      </button>
+      <button type="button" class="sj-skip-btn" onclick="_pkCloseSuratJalanModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lembar surat jalan dirender di sini (off-screen) supaya bisa di-capture jadi gambar oleh html2canvas -->
+<div id="sjSheetOffscreen" style="position:fixed;left:-9999px;top:0;"></div>
 
 <div class="phone">
 
@@ -3755,10 +3846,141 @@
       }
       if (result && result.status === 'ok') {
         showToast('✓ Data berhasil disimpan!', 'success');
+        _pkLastSubmittedData = { tanggal: data.tanggal, rows: data.rows };
         resetPkForm();
         loadWipPenukaran(true);
+        _pkOpenSuratJalanModal();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- SURAT JALAN (gambar A5 Landscape dari data yang baru dikirim) ----
+  var _pkLastSubmittedData = null; // { tanggal, rows } dari submit Penukaran Kulit terakhir yang sukses
+  var _pkSuratJalanDataUrl = null;
+
+  // html2canvas cuma dimuat kalau fitur ini benar-benar dipakai (bukan setiap buka aplikasi) —
+  // supaya tidak menambah beban muat halaman untuk yang tidak pakai fitur Surat Jalan.
+  function _loadHtml2Canvas(cb) {
+    if (window.html2canvas) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = cb;
+    s.onerror = function() {
+      document.getElementById('sjLoadingStep').style.display = 'none';
+      document.getElementById('sjFormStep').style.display = 'block';
+      showToast('Gagal memuat modul pembuat gambar. Cek koneksi internet.', 'error');
+    };
+    document.head.appendChild(s);
+  }
+
+  function _pkOpenSuratJalanModal() {
+    document.getElementById('sjNomorInput').value = '';
+    document.getElementById('sjTujuanInput').value = '';
+    document.getElementById('sjFormStep').style.display = 'block';
+    document.getElementById('sjLoadingStep').style.display = 'none';
+    document.getElementById('sjPreviewStep').style.display = 'none';
+    document.getElementById('sjModalOverlay').classList.add('show');
+  }
+
+  function _pkCloseSuratJalanModal() {
+    document.getElementById('sjModalOverlay').classList.remove('show');
+    document.getElementById('sjSheetOffscreen').innerHTML = '';
+    _pkSuratJalanDataUrl = null;
+  }
+
+  function _pkFormatTanggalLong(tanggalStr) {
+    var bulanList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    var parts = (tanggalStr || '').split('-');
+    if (parts.length !== 3) return tanggalStr || '';
+    var y = parts[0], m = parseInt(parts[1], 10), d = parseInt(parts[2], 10);
+    return d + ' ' + (bulanList[m - 1] || '') + ' ' + y;
+  }
+
+  function _pkBuildSuratJalanHTML(nomor, tujuan, tanggal, rows) {
+    var rowsHtml = rows.map(function(r, i) {
+      return '<tr>'
+        + '<td class="center">' + (i + 1) + '</td>'
+        + '<td>' + _escWip(r.spo) + '</td>'
+        + '<td>' + _escWip(r.style) + '</td>'
+        + '<td>' + _escWip(r.opck) + '</td>'
+        + '<td>' + _escWip(r.size) + '</td>'
+        + '<td class="num">' + _escWip(r.qty) + '</td>'
+        + '<td class="num">' + _escWip(r.sf) + '</td>'
+        + '<td class="num">' + _escWip(r.qtyLembar) + '</td>'
+        + '<td>' + _escWip(r.keterangan) + '</td>'
+        + '</tr>';
+    }).join('');
+    var minRows = 6;
+    for (var i = rows.length; i < minRows; i++) {
+      rowsHtml += '<tr><td class="center">' + (i + 1) + '</td><td colspan="8">&nbsp;</td></tr>';
+    }
+    return '<div class="sj-sheet">'
+      + '<div class="sj-company"><b>PT. ASI</b> — Cutting Kulit Section, Supply Area</div>'
+      + '<div class="sj-headline">'
+      + '<div class="sj-title">SURAT JALAN</div>'
+      + '<div class="sj-headline-right">Tanggal<br><b>' + _escWip(_pkFormatTanggalLong(tanggal)) + '</b></div>'
+      + '</div>'
+      + '<div class="sj-meta-row">'
+      + '<div><span class="sj-meta-label">No. Surat Jalan</span><br><b>' + _escWip(nomor) + '</b></div>'
+      + '<div style="text-align:right"><span class="sj-meta-label">Tujuan</span><br><b>' + _escWip(tujuan) + '</b></div>'
+      + '</div>'
+      + '<table class="sj-table"><thead><tr>'
+      + '<th>No</th><th>SPO</th><th>Style</th><th>OPCK</th><th>Size</th><th>Qty</th><th>SF</th><th>Qty Lembar</th><th>Keterangan</th>'
+      + '</tr></thead><tbody>' + rowsHtml + '</tbody></table>'
+      + '<div class="sj-footer">'
+      + '<div class="sj-signblock">Pengirim,<div class="sj-signspace"></div><div class="sj-signname">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</div></div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  function _pkBuildSuratJalanImage() {
+    if (!_pkLastSubmittedData) { showToast('Data tidak ditemukan, coba submit ulang', 'error'); return; }
+    var nomor = document.getElementById('sjNomorInput').value.trim();
+    var tujuan = document.getElementById('sjTujuanInput').value.trim();
+    if (!nomor) { showToast('⚠️ No. Surat Jalan harus diisi', 'error'); return; }
+    if (!tujuan) { showToast('⚠️ Tujuan harus diisi', 'error'); return; }
+
+    document.getElementById('sjFormStep').style.display = 'none';
+    document.getElementById('sjLoadingStep').style.display = 'block';
+
+    _loadHtml2Canvas(function() {
+      var offscreen = document.getElementById('sjSheetOffscreen');
+      offscreen.innerHTML = _pkBuildSuratJalanHTML(nomor, tujuan, _pkLastSubmittedData.tanggal, _pkLastSubmittedData.rows);
+      var sheetEl = offscreen.querySelector('.sj-sheet');
+      window.html2canvas(sheetEl, { scale: 3, backgroundColor: '#ffffff' }).then(function(canvas) {
+        _pkSuratJalanDataUrl = canvas.toDataURL('image/png');
+        document.getElementById('sjPreviewImg').src = _pkSuratJalanDataUrl;
+        document.getElementById('sjLoadingStep').style.display = 'none';
+        document.getElementById('sjPreviewStep').style.display = 'block';
+      }).catch(function() {
+        document.getElementById('sjLoadingStep').style.display = 'none';
+        document.getElementById('sjFormStep').style.display = 'block';
+        showToast('Gagal membuat gambar, coba lagi', 'error');
+      });
+    });
+  }
+
+  function _pkSaveSuratJalanImage() {
+    if (!_pkSuratJalanDataUrl) return;
+    var a = document.createElement('a');
+    a.href = _pkSuratJalanDataUrl;
+    a.download = 'Surat-Jalan-' + (_pkLastSubmittedData ? _pkLastSubmittedData.tanggal : 'penukaran') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('✓ Gambar disimpan', 'success');
+  }
+
+  function _pkShareSuratJalanImage() {
+    if (!_pkSuratJalanDataUrl) return;
+    fetch(_pkSuratJalanDataUrl).then(function(res) { return res.blob(); }).then(function(blob) {
+      var file = new File([blob], 'Surat-Jalan.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'Surat Jalan' }).catch(function() {});
+      } else {
+        showToast('Perangkat/browser ini tidak mendukung fitur bagikan langsung — pakai Simpan Gambar lalu bagikan manual', 'error');
       }
     });
   }
