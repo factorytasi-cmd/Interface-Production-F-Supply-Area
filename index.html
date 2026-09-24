@@ -99,6 +99,7 @@
     .card-rak     { background: rgba(234,88,12,0.1);   border: 0.5px solid rgba(234,88,12,0.25); }
     .card-out     { background: rgba(29,158,117,0.1);  border: 0.5px solid rgba(29,158,117,0.22); }
     .card-penukaran { background: rgba(180,83,9,0.1);  border: 0.5px solid rgba(180,83,9,0.25); }
+    .card-thickness { background: rgba(8,145,178,0.1); border: 0.5px solid rgba(8,145,178,0.25); }
     .card-gap     { background: rgba(225,29,72,0.1);   border: 0.5px solid rgba(225,29,72,0.25); }
     .card-wip     { background: rgba(14,165,233,0.1);  border: 0.5px solid rgba(14,165,233,0.25); }
 
@@ -112,6 +113,7 @@
     .badge-rak     { background: rgba(234,88,12,0.15);   color: #9A3E0A; }
     .badge-out     { background: rgba(29,158,117,0.15);  color: #0A5C42; }
     .badge-penukaran { background: rgba(180,83,9,0.15);  color: #7C2D12; }
+    .badge-thickness { background: rgba(8,145,178,0.15); color: #0E5A6E; }
     .badge-gap     { background: rgba(225,29,72,0.15);   color: #9F1239; }
     .badge-wip     { background: rgba(14,165,233,0.15);  color: #075985; }
 
@@ -121,6 +123,7 @@
     .icon-rak     { background: rgba(234,88,12,0.15); }
     .icon-out     { background: rgba(29,158,117,0.15); }
     .icon-penukaran { background: rgba(180,83,9,0.15); }
+    .icon-thickness { background: rgba(8,145,178,0.15); }
     .icon-gap     { background: rgba(225,29,72,0.15); }
     .icon-wip     { background: rgba(14,165,233,0.15); }
 
@@ -129,13 +132,14 @@
     .card-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 18px; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; }
     .card-hint { font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 4px; }
-    .card-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px; border-radius: 99px; font-size: 12px; font-weight: 500; border: 1.5px solid; }
+    .card-btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 11px; border-radius: 99px; font-size: 11px; font-weight: 500; border: 1.5px solid; }
     .btn-issue   { background: rgba(55,138,221,0.1);  color: #134E8A; border-color: rgba(55,138,221,0.3); }
     .btn-cutting { background: rgba(155,109,220,0.1); color: #4A1D8A; border-color: rgba(155,109,220,0.3); }
     .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
     .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
     .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
     .btn-penukaran { background: rgba(180,83,9,0.1);  color: #7C2D12; border-color: rgba(180,83,9,0.32); }
+    .btn-thickness { background: rgba(8,145,178,0.1); color: #0E5A6E; border-color: rgba(8,145,178,0.32); }
     .btn-gap     { background: rgba(225,29,72,0.1);   color: #9F1239; border-color: rgba(225,29,72,0.32); }
     .btn-wip     { background: rgba(14,165,233,0.1);  color: #075985; border-color: rgba(14,165,233,0.32); }
 
@@ -759,6 +763,23 @@
           </div>
         </div>
 
+        <div class="card card-thickness" onclick="goTo('page-thickness-check')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-thickness">Pengecekan</span>
+              <div class="card-icon-wrap icon-thickness">
+                <i class="ti ti-ruler-2" style="font-size:20px;color:#0891B2"></i>
+              </div>
+            </div>
+            <div class="card-title">Pengecekan Thickness</div>
+            <div class="card-desc">Catat hasil cek ketebalan kulit per OPCK</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input &amp; monitoring</span>
+              <span class="card-btn btn-thickness">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
         <div class="card card-gap" onclick="goTo('page-gap-cutting')">
           <div class="card-inner">
             <div class="card-top">
@@ -1213,6 +1234,113 @@
           <div class="wip-empty">Memuat data...</div>
         </div>
       </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: PENGECEKAN THICKNESS ==================== -->
+  <div class="page" id="page-thickness-check">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">PENGECEKAN THICKNESS</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0891B2,#22D3EE)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › PENGECEKAN THICKNESS</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(8,145,178,0.12);border-color:rgba(8,145,178,0.3)">
+        <i class="ti ti-ruler-2" style="color:#0891B2"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#0E5A6E">Pengecekan Thickness</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- CHECKER (dipilih sekali di awal, berlaku untuk semua baris yang diinput) -->
+      <div class="field-group">
+        <label class="field-label">Checker <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(pilih dulu sebelum isi data — berlaku untuk semua baris)</span></label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="tcCheckerInput" placeholder="Ketik nama checker..." autocomplete="off">
+          <div class="spo-ac-drop" id="tcCheckerDrop"></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">No. Absen</label>
+        <input type="text" class="field-input" id="tcAbsenDisplay" readonly placeholder="Otomatis dari Checker">
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="tcTanggal">
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data SPO &amp; Size (dari Form Penerimaan Kulit)</label>
+        <span id="tcSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(8,145,178,0.12);color:#0E5A6E;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="tcSpoLoadTime"></div>
+      <div class="load-error-row" id="tcSpoErrorRow" style="display:none">
+        <span id="tcSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadRakMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="tcGroupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addTcGroup()" style="border-color:#0891B2;background:rgba(8,145,178,0.08);color:#0E5A6E">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="tcBtnSubmit" onclick="submitThicknessForm()" style="background:linear-gradient(135deg,#0891B2,#22D3EE);box-shadow:0 4px 16px rgba(8,145,178,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Recap Cek Thickness OPCK</div>
+      <div class="today-tabs" id="tcTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('tcTodayTabs','tcTodayList',0,this,loadTodayThickness)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('tcTodayTabs','tcTodayList',1,this,loadTodayThickness)">Kemarin</button>
+      </div>
+      <div class="load-time-note" id="tcTodayLoadTime"></div>
+      <div id="tcTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -1822,6 +1950,7 @@
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
+    if (pageId === "page-thickness-check") initThicknessPage();
     if (pageId === "page-gap-cutting") initGapCuttingPage();
     if (pageId === "page-wip-cutting") initWipCuttingPage();
     if (pageId === "page-daily-issue") initDailyIssue();
@@ -2207,18 +2336,31 @@
   }
 
   // ---- LOAD MASTER DATA (Operator + Riwayat Penerimaan) via JSONP ----
+  // Dipakai bersama oleh halaman Rak ke Proses DAN Pengecekan Thickness (sumber datanya sama
+  // persis, dari "Master_List_Penerimaan Kulit" + "DATA MASTER OPERATOR") — mirror status/waktu-
+  // muat/error ke elemen kedua halaman sekaligus (elemen tc* boleh tidak ada, _mirrorEl2 aman
+  // kalau elemennya tidak ditemukan).
+  function _mirrorEl2(id, fn) {
+    var el = document.getElementById(id);
+    if (el) fn(el);
+  }
+
   function loadRakMasterData(force) {
     if (_rakLoadedOnce && !force) { setRakSPOStatus('ok', distinctRakSPOs('').length); return; }
     setRakSPOStatus('loading');
     document.getElementById('rkSpoLoadTime').textContent = '';
+    _mirrorEl2('tcSpoLoadTime', function(el) { el.textContent = ''; });
     _hideLoadError('rkSpo');
+    _hideLoadError('tcSpo');
     var t0 = Date.now();
     var url = GAS_URL + '?type=rak_master';
     jsonp(url, function(err, data) {
       _showLoadTime('rkSpoLoadTime', Date.now() - t0);
+      _mirrorEl2('tcSpoLoadTime', function() { _showLoadTime('tcSpoLoadTime', Date.now() - t0); });
       if (err || !data || data.status !== 'ok') {
         setRakSPOStatus('error');
         _showLoadError('rkSpo', err, data);
+        _mirrorEl2('tcSpoErrorRow', function() { _showLoadError('tcSpo', err, data); });
         return;
       }
       masterDataRak.operators = data.operators || [];
@@ -2229,21 +2371,22 @@
   }
 
   function setRakSPOStatus(state, count) {
-    var el = document.getElementById('rkSpoStatus');
-    if (!el) return;
-    if (state === 'loading') {
-      el.textContent = '⏳ Memuat...';
-      el.style.background = 'rgba(234,88,12,0.12)';
-      el.style.color = '#9A3E0A';
-    } else if (state === 'ok') {
-      el.textContent = '✓ ' + count + ' SPO tersedia';
-      el.style.background = 'rgba(29,158,117,0.15)';
-      el.style.color = '#0A5C42';
-    } else if (state === 'error') {
-      el.textContent = '✕ Gagal memuat data';
-      el.style.background = 'rgba(220,53,69,0.15)';
-      el.style.color = '#7D1B1B';
-    }
+    [document.getElementById('rkSpoStatus'), document.getElementById('tcSpoStatus')].forEach(function(el) {
+      if (!el) return;
+      if (state === 'loading') {
+        el.textContent = '⏳ Memuat...';
+        el.style.background = 'rgba(234,88,12,0.12)';
+        el.style.color = '#9A3E0A';
+      } else if (state === 'ok') {
+        el.textContent = '✓ ' + count + ' SPO tersedia';
+        el.style.background = 'rgba(29,158,117,0.15)';
+        el.style.color = '#0A5C42';
+      } else if (state === 'error') {
+        el.textContent = '✕ Gagal memuat data';
+        el.style.background = 'rgba(220,53,69,0.15)';
+        el.style.color = '#7D1B1B';
+      }
+    });
   }
 
   // ---- HELPER: baca riwayat penerimaan (masterDataRak.receipts) ----
@@ -4150,6 +4293,532 @@
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
+    });
+  }
+
+  // ===== PENGECEKAN THICKNESS =====
+  // Sumber SPO/Style/OPCK/Size: SAMA PERSIS dengan Rak ke Proses (endpoint rak_master, dari
+  // "Master_List_Penerimaan Kulit"), dipakai ulang langsung (masterDataRak, distinctRakSPOs,
+  // rakStyleForSPO, rakSizesForSPO, rakReceiptsFor). Checker/No.Absen JUGA dari rak_master
+  // (masterDataRak.operators, sama sumber dengan "DATA MASTER OPERATOR"), tapi dipilih SEKALI
+  // di atas form (bukan per baris) dan berlaku untuk semua baris yang diinput.
+  var TC_KETERANGAN_OPTIONS = ['Pass', 'Tebal', 'Tipis'];
+  var tcGroupCount = 0, tcRowCount = 0;
+  var tcGroupsData = {};
+  var tcChecker = '', tcAbsen = '';
+  var _tcDupRowsToDelete = [];
+  var _tcActiveDay = 0;
+
+  function initThicknessPage() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth() + 1).padStart(2, '0');
+    var dd   = String(today.getDate()).padStart(2, '0');
+    document.getElementById('tcTanggal').value = yyyy + '-' + mm + '-' + dd;
+    document.getElementById('tcCheckerInput').value = '';
+    document.getElementById('tcAbsenDisplay').value = '';
+    tcChecker = ''; tcAbsen = '';
+    setupTcCheckerInput();
+    resetTcForm();
+    loadRakMasterData();
+    _tcActiveDay = 0;
+    document.getElementById('tcTodayList').innerHTML = '<div class="wip-empty">Pilih tab di atas untuk memuat data.</div>';
+    Array.prototype.forEach.call(document.querySelectorAll('#tcTodayTabs .today-tab-btn'), function(b, i) {
+      b.classList.toggle('active', i === 0);
+    });
+  }
+
+  function resetTcForm() {
+    document.getElementById('tcGroupsContainer').innerHTML = '';
+    tcGroupCount = 0;
+    tcGroupsData = {};
+    addTcGroup();
+  }
+
+  // ---- CHECKER (manual + suggest, dari DATA MASTER OPERATOR lewat masterDataRak) — dipilih sekali ----
+  function setupTcCheckerInput() {
+    var input = document.getElementById('tcCheckerInput');
+    var drop  = document.getElementById('tcCheckerDrop');
+    if (input._wired) return;
+    input._wired = true;
+
+    input.oninput = function() {
+      tcChecker = ''; tcAbsen = '';
+      document.getElementById('tcAbsenDisplay').value = '';
+      renderTcCheckerDrop(input.value);
+    };
+    input.onfocus = function() { renderTcCheckerDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-nama]');
+      if (!item) return;
+      pilihTcChecker(item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderTcCheckerDrop(query) {
+    var drop = document.getElementById('tcCheckerDrop');
+    if (!masterDataRak.operators.length) { drop.classList.remove('open'); return; }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? masterDataRak.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
+      : masterDataRak.operators;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Checker tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var namaHL = q ? o.nama.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o.nama;
+      return '<div class="spo-ac-item" data-nama="' + o.nama + '" data-absen="' + o.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + o.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihTcChecker(nama, absen) {
+    document.getElementById('tcCheckerInput').value = nama;
+    document.getElementById('tcCheckerDrop').classList.remove('open');
+    document.getElementById('tcAbsenDisplay').value = absen;
+    tcChecker = nama;
+    tcAbsen = absen;
+  }
+
+  // ---- SPO GROUPS ----
+  function addTcGroup() {
+    tcGroupCount++;
+    var gid = tcGroupCount;
+    tcGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('tcGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'tc-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteTcGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="tc-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="tc-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="tc-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="tc-row-badge-' + gid + '" style="background:rgba(8,145,178,0.15);color:#0E5A6E;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="tc-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addTcRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupTcSPOInput(gid);
+    addTcRow(gid);
+    updateTcGroupDeleteButtons();
+  }
+
+  function updateTcGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#tcGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteTcGroup(gid) {
+    var el = document.getElementById('tc-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete tcGroupsData[gid];
+    updateTcGroupDeleteButtons();
+  }
+
+  // ---- SPO (manual + suggest, dari Master_List_Penerimaan Kulit lewat masterDataRak) ----
+  function setupTcSPOInput(gid) {
+    var input = document.getElementById('tc-spo-input-' + gid);
+    var drop  = document.getElementById('tc-spo-drop-' + gid);
+
+    input.oninput = function() {
+      tcGroupsData[gid].spo = input.value.trim();
+      renderTcGroupSPODrop(gid, input.value);
+      matchTcGroupSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderTcGroupSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihTcGroupSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderTcGroupSPODrop(gid, query) {
+    var drop = document.getElementById('tc-spo-drop-' + gid);
+    if (!masterDataRak.receipts.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctRakSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihTcGroupSPO(gid, spo, style) {
+    document.getElementById('tc-spo-input-' + gid).value = spo;
+    document.getElementById('tc-spo-drop-' + gid).classList.remove('open');
+    applyTcGroupSPO(gid, spo, style);
+  }
+
+  function matchTcGroupSPOStyle(gid, typedSpo) {
+    var style = rakStyleForSPO(typedSpo);
+    if (style) {
+      applyTcGroupSPO(gid, typedSpo.trim(), style);
+    } else {
+      tcGroupsData[gid].spo = typedSpo.trim();
+      tcGroupsData[gid].style = '';
+      document.getElementById('tc-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('tc-style-display-' + gid).className = 'style-display';
+      document.querySelectorAll('#tc-rows-container-' + gid + ' .tc-size-select').forEach(function(sel) {
+        sel.innerHTML = '<option value="">— Pilih SPO dahulu —</option>';
+      });
+    }
+  }
+
+  function applyTcGroupSPO(gid, spo, style) {
+    tcGroupsData[gid].spo = spo;
+    tcGroupsData[gid].style = style;
+    var disp = document.getElementById('tc-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+
+    var sizes = rakSizesForSPO(spo);
+    document.querySelectorAll('#tc-rows-container-' + gid + ' .tc-size-select').forEach(function(sel) {
+      var prev = sel.value;
+      sel.innerHTML = '<option value="">— Pilih Size —</option>' + sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+      if (sizes.indexOf(prev) >= 0) sel.value = prev;
+    });
+    // SPO berubah -> No. OPCK & Qty (otomatis dari OPCK) di semua baris grup ini sudah tidak relevan
+    document.querySelectorAll('#tc-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      card.querySelector('.tc-opck-input').value = '';
+      card.querySelector('.tc-qty-input').value = '';
+    });
+  }
+
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addTcRow(gid) {
+    tcRowCount++;
+    var rid = tcRowCount;
+    var container = document.getElementById('tc-rows-container-' + gid);
+
+    var spo = tcGroupsData[gid] ? tcGroupsData[gid].spo : '';
+    var sizes = rakSizesForSPO(spo);
+    var sizeOpts = sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+    var chips = TC_KETERANGAN_OPTIONS.map(function(k) {
+      return '<button type="button" class="keterangan-chip" onclick="_tcSelectKeterangan(this)">' + k + '</button>';
+    }).join('');
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'tc-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteTcRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<select class="row-field-select tc-size-select" onchange="onTcSizeChange(\''+rid+'\')"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. OPCK</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input tc-opck-input" id="tc-opck-input-'+rid+'" placeholder="Ketik / pilih No. OPCK...">'
+      + '<div class="spo-ac-drop tc-opck-drop" id="tc-opck-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Qty <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari OPCK)</span></span>'
+      + '<input type="text" class="row-field-input tc-qty-input" readonly placeholder="Otomatis">'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Keterangan</span>'
+      + '<div class="keterangan-chip-group">'+chips+'</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">Qty Lembar Minggir</span><input type="text" inputmode="numeric" class="row-field-input tc-minggir-input" placeholder="0"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty Lembar OPCK</span><input type="text" inputmode="numeric" class="row-field-input tc-lembaropck-input" placeholder="0"></div>'
+      + '</div></div>';
+
+    container.appendChild(div);
+    setupTcOPCKInput(gid, rid);
+    updateTcRowBadge(gid);
+  }
+
+  function deleteTcRow(gid, rid) {
+    var container = document.getElementById('tc-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('tc-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateTcRowBadge(gid);
+  }
+
+  function updateTcRowBadge(gid) {
+    var container = document.getElementById('tc-rows-container-' + gid);
+    var badge = document.getElementById('tc-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  function onTcSizeChange(rid) {
+    var row = document.getElementById('tc-row-' + rid);
+    if (!row) return;
+    row.querySelector('.tc-opck-input').value = '';
+    row.querySelector('.tc-qty-input').value = '';
+  }
+
+  // Pass/Tebal/Tipis saling meniadakan (kondisi ketebalan tidak bisa dobel) -> single-select, beda
+  // dari Keterangan di Penukaran Kulit yang boleh multi (beberapa cacat bisa terjadi bersamaan).
+  function _tcSelectKeterangan(btnEl) {
+    var group = btnEl.closest('.keterangan-chip-group');
+    Array.prototype.forEach.call(group.querySelectorAll('.keterangan-chip'), function(c) { c.classList.remove('selected'); });
+    btnEl.classList.add('selected');
+  }
+
+  // ---- NO. OPCK per baris (manual + suggest) — pilih OPCK otomatis isi Size + Qty ----
+  function setupTcOPCKInput(gid, rid) {
+    var input = document.getElementById('tc-opck-input-' + rid);
+    var drop  = document.getElementById('tc-opck-drop-' + rid);
+
+    input.oninput = function() {
+      var row = document.getElementById('tc-row-' + rid);
+      row.querySelector('.tc-qty-input').value = '';
+      renderTcOPCKDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderTcOPCKDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-opck]');
+      if (!item) return;
+      pilihTcOPCK(rid, item.getAttribute('data-opck'), item.getAttribute('data-qty'), item.getAttribute('data-size'));
+    });
+  }
+
+  function renderTcOPCKDrop(gid, rid, query) {
+    var drop = document.getElementById('tc-opck-drop-' + rid);
+    var spo  = tcGroupsData[gid] ? tcGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var row = document.getElementById('tc-row-' + rid);
+    var size = row.querySelector('.tc-size-select').value;
+    var q = (query || '').toLowerCase().trim();
+    var show = rakReceiptsFor(spo, size, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var opckHL = q ? r.opck.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.opck;
+      return '<div class="spo-ac-item" data-opck="' + r.opck + '" data-qty="' + r.qty + '" data-size="' + r.size + '">'
+        + '<span class="spo-ac-spo">' + opckHL + '</span>'
+        + '<span class="spo-ac-style">' + r.size + ' · Qty ' + r.qty + '</span>'
+        + '</div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihTcOPCK(rid, opck, qty, size) {
+    var row = document.getElementById('tc-row-' + rid);
+    document.getElementById('tc-opck-input-' + rid).value = opck;
+    document.getElementById('tc-opck-drop-' + rid).classList.remove('open');
+    row.querySelector('.tc-qty-input').value = qty;
+    var sizeSel = row.querySelector('.tc-size-select');
+    if (!sizeSel.value && size) sizeSel.value = size;
+  }
+
+  // ---- COLLECT + SUBMIT (Pengecekan Thickness) ----
+  function collectTcData() {
+    var tanggal = document.getElementById('tcTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+    if (!tcChecker || !tcAbsen) return { error: 'Pilih Checker terlebih dahulu (di atas form)' };
+
+    var groups = document.querySelectorAll('#tcGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('tc-group-', '');
+      var spo = document.getElementById('tc-spo-input-' + gid).value.trim();
+      var style = tcGroupsData[gid] ? tcGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var size = card.querySelector('.tc-size-select').value;
+        var opck = card.querySelector('.tc-opck-input').value.trim();
+        var qty  = card.querySelector('.tc-qty-input').value;
+        var keteranganEl = card.querySelector('.keterangan-chip.selected');
+        var keterangan = keteranganEl ? keteranganEl.textContent : '';
+        var qtyLembarMinggir = card.querySelector('.tc-minggir-input').value;
+        var qtyLembarOpck    = card.querySelector('.tc-lembaropck-input').value;
+        if (!size) { errorMsg = 'Size wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (!opck) { errorMsg = 'No. OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!qty)  { errorMsg = 'Pilih No. OPCK dari daftar saran agar Qty terisi (SPO ' + spo + ')'; return; }
+        if (!keterangan) { errorMsg = 'Pilih Keterangan di setiap baris (SPO ' + spo + ')'; return; }
+        if (!qtyLembarMinggir) { errorMsg = 'Qty Lembar Minggir wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!qtyLembarOpck)    { errorMsg = 'Qty Lembar OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, opck:opck, size:size, qty:qty, keterangan:keterangan, qtyLembarMinggir:qtyLembarMinggir, qtyLembarOpck:qtyLembarOpck });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, absen:tcAbsen, checker:tcChecker, rows:allRows };
+  }
+
+  function submitThicknessForm() {
+    var data = collectTcData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_URL + '?type=save_thickness_check&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetTcForm();
+        loadTodayThickness();
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- RECAP CEK THICKNESS OPCK (Hari Ini / Kemarin) ----
+  function _renderTcTodayList(rows, dayOffset) {
+    var el = document.getElementById('tcTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _tcDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.opck].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _tcDupRowsToDelete = dupRowsToDelete;
+
+    var cols = ['SPO', 'Size', 'No. OPCK', 'Qty', 'Keterangan', 'Checker'];
+    var html = '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.opck].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.opck) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '<td>' + _escToday(r.keterangan) + '</td>'
+        + '<td>' + _escToday(r.checker) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_tcCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayThickness(dayOffset) {
+    if (dayOffset == null) dayOffset = _tcActiveDay;
+    _tcActiveDay = dayOffset;
+    var el = document.getElementById('tcTodayList');
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('tcTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_URL + '?type=today_thickness&day=' + dayOffset, function(err, data) {
+      _showLoadTime('tcTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderTcTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _tcCleanupDuplicates() {
+    if (!_tcDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _tcDupRowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_URL + '?type=cleanup_dup_thickness&payload=' + encodeURIComponent(JSON.stringify({ rows: _tcDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayThickness();
     });
   }
 
