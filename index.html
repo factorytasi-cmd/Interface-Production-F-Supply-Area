@@ -98,6 +98,7 @@
     .card-in      { background: rgba(234,179,8,0.1);   border: 0.5px solid rgba(234,179,8,0.28); }
     .card-rak     { background: rgba(234,88,12,0.1);   border: 0.5px solid rgba(234,88,12,0.25); }
     .card-out     { background: rgba(29,158,117,0.1);  border: 0.5px solid rgba(29,158,117,0.22); }
+    .card-penukaran { background: rgba(180,83,9,0.1);  border: 0.5px solid rgba(180,83,9,0.25); }
     .card-gap     { background: rgba(225,29,72,0.1);   border: 0.5px solid rgba(225,29,72,0.25); }
     .card-wip     { background: rgba(14,165,233,0.1);  border: 0.5px solid rgba(14,165,233,0.25); }
 
@@ -110,6 +111,7 @@
     .badge-in      { background: rgba(234,179,8,0.15);   color: #7A5700; }
     .badge-rak     { background: rgba(234,88,12,0.15);   color: #9A3E0A; }
     .badge-out     { background: rgba(29,158,117,0.15);  color: #0A5C42; }
+    .badge-penukaran { background: rgba(180,83,9,0.15);  color: #7C2D12; }
     .badge-gap     { background: rgba(225,29,72,0.15);   color: #9F1239; }
     .badge-wip     { background: rgba(14,165,233,0.15);  color: #075985; }
 
@@ -118,6 +120,7 @@
     .icon-in      { background: rgba(234,179,8,0.15); }
     .icon-rak     { background: rgba(234,88,12,0.15); }
     .icon-out     { background: rgba(29,158,117,0.15); }
+    .icon-penukaran { background: rgba(180,83,9,0.15); }
     .icon-gap     { background: rgba(225,29,72,0.15); }
     .icon-wip     { background: rgba(14,165,233,0.15); }
 
@@ -132,6 +135,7 @@
     .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
     .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
     .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
+    .btn-penukaran { background: rgba(180,83,9,0.1);  color: #7C2D12; border-color: rgba(180,83,9,0.32); }
     .btn-gap     { background: rgba(225,29,72,0.1);   color: #9F1239; border-color: rgba(225,29,72,0.32); }
     .btn-wip     { background: rgba(14,165,233,0.1);  color: #075985; border-color: rgba(14,165,233,0.32); }
 
@@ -355,6 +359,25 @@
       cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
     .today-tab-btn.active { background: #333A36; color: white; border-color: transparent; }
+
+    /* Keterangan Penukaran Kulit — multi-pilihan (chip toggle) */
+    .keterangan-chip-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .keterangan-chip {
+      padding: 6px 10px; border-radius: 99px; border: 1.5px solid #E0E2E0; background: white;
+      color: #666; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .keterangan-chip.selected { background: #B45309; color: white; border-color: transparent; }
+
+    /* Tabel checklist Penerimaan Kulit */
+    .pk-terima-tablewrap { border: 1px solid #E0E2E0; border-radius: 12px; overflow-x: auto; background: white; margin-top: 10px; }
+    .pk-terima-table { border-collapse: collapse; width: 100%; font-size: 11.5px; white-space: nowrap; }
+    .pk-terima-table th, .pk-terima-table td { padding: 8px 9px; text-align: left; border-bottom: 1px solid #E8E8E6; }
+    .pk-terima-table tr:last-child td { border-bottom: none; }
+    .pk-terima-table th {
+      font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase;
+      letter-spacing: 0.02em; background: rgba(0,0,0,0.02);
+    }
+    .pk-terima-check { width: 18px; height: 18px; accent-color: #B45309; }
     .today-list { margin-top: 10px; }
     .today-tablewrap {
       border: 1px solid #E0E2E0; border-radius: 12px; overflow-x: auto;
@@ -624,6 +647,23 @@
             <div class="card-footer">
               <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per pengeluaran</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-penukaran" onclick="goTo('page-penukaran-kulit')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-penukaran">Penukaran</span>
+              <div class="card-icon-wrap icon-penukaran">
+                <i class="ti ti-replace" style="font-size:20px;color:#B45309"></i>
+              </div>
+            </div>
+            <div class="card-title">Penukaran Kulit</div>
+            <div class="card-desc">Catat penukaran kulit bermasalah ke supplier &amp; cek status kembalinya</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input &amp; monitoring</span>
+              <span class="card-btn btn-penukaran">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
         </div>
@@ -944,6 +984,144 @@
       </div>
       <div class="load-time-note" id="ofTodayLoadTime"></div>
       <div id="ofTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: PENUKARAN KULIT ==================== -->
+  <div class="page" id="page-penukaran-kulit">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">PENUKARAN KULIT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#B45309,#D97706)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › PENUKARAN KULIT</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(180,83,9,0.12);border-color:rgba(180,83,9,0.3)">
+        <i class="ti ti-replace" style="color:#B45309"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#7C2D12">Penukaran Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TOGGLE 3 TAB -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="pkTabInput" onclick="showPenukaranView('input')">Penukaran Kulit</button>
+        <button type="button" class="wip-toggle-btn" id="pkTabTerima" onclick="showPenukaranView('terima')">Penerimaan Kulit</button>
+        <button type="button" class="wip-toggle-btn" id="pkTabCek" onclick="showPenukaranView('cek')">Cek Penukaran</button>
+      </div>
+
+      <!-- ===== VIEW: INPUT PENUKARAN ===== -->
+      <div id="pkViewInput" class="wip-view">
+        <div class="field-group">
+          <label class="field-label">Tanggal</label>
+          <input type="date" class="field-input" id="pkTanggal">
+        </div>
+
+        <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+          <label class="field-label" style="margin-bottom:0">Data SPO, OPCK &amp; Operator (dari Rak ke Proses)</label>
+          <span id="pkSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(180,83,9,0.12);color:#7C2D12;letter-spacing:0.5px">⏳ Memuat...</span>
+        </div>
+        <div class="load-time-note" id="pkSpoLoadTime"></div>
+        <div class="load-error-row" id="pkSpoErrorRow" style="display:none">
+          <span id="pkSpoErrorMsg"></span>
+          <button type="button" class="retry-btn" onclick="loadOutMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+        </div>
+
+        <div id="pkGroupsContainer"></div>
+
+        <button class="btn-add-group" onclick="addPkGroup()" style="border-color:#B45309;background:rgba(180,83,9,0.08);color:#7C2D12">
+          <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+        </button>
+
+        <div class="divider"></div>
+
+        <button class="btn-submit" id="pkBtnSubmit" onclick="submitPenukaranForm()" style="background:linear-gradient(135deg,#B45309,#D97706);box-shadow:0 4px 16px rgba(180,83,9,0.3)">
+          <i class="ti ti-send" style="font-size:18px"></i>
+          Kirim
+        </button>
+      </div>
+
+      <!-- ===== VIEW: PENERIMAAN KULIT ===== -->
+      <div id="pkViewTerima" class="wip-view" style="display:none">
+        <div class="field-group">
+          <label class="field-label">Tanggal <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(tanggal kembali)</span></label>
+          <input type="date" class="field-input" id="pkTerimaTanggal">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Tanggal Pengiriman</label>
+          <div class="spo-ac-wrap">
+            <input type="text" class="field-input" id="pkTglKirimInput" placeholder="Ketik / pilih tanggal pengiriman..." autocomplete="off">
+            <div class="spo-ac-drop" id="pkTglKirimDrop"></div>
+          </div>
+        </div>
+
+        <div class="load-time-note" id="pkTerimaLoadTime"></div>
+        <div id="pkTerimaTableWrap"></div>
+
+        <div class="divider"></div>
+
+        <button class="btn-submit" id="pkTerimaBtnSubmit" onclick="submitPenukaranKembali()" style="background:linear-gradient(135deg,#B45309,#D97706);box-shadow:0 4px 16px rgba(180,83,9,0.3)">
+          <i class="ti ti-check" style="font-size:18px"></i>
+          Simpan Tanggal Kembali
+        </button>
+      </div>
+
+      <!-- ===== VIEW: CEK PENUKARAN (WIP) ===== -->
+      <div id="pkViewCek" class="wip-view" style="display:none">
+        <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+          <label class="field-label" style="margin-bottom:0">WIP Penukaran (belum ada Tanggal Kembali)</label>
+          <span id="pkCekStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(180,83,9,0.12);color:#7C2D12;letter-spacing:0.5px">⏳ Memuat...</span>
+        </div>
+        <div class="load-time-note" id="pkCekLoadTime"></div>
+        <div class="load-error-row" id="pkCekErrorRow" style="display:none">
+          <span id="pkCekErrorMsg"></span>
+          <button type="button" class="retry-btn" onclick="loadWipPenukaran(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+        </div>
+        <div class="wip-filter">
+          <input type="text" class="wip-filter-input" id="pkCekFilterSpo" placeholder="Filter SPO..." oninput="renderPkCekList()">
+          <input type="text" class="wip-filter-input" id="pkCekFilterSize" placeholder="Filter Size..." oninput="renderPkCekList()">
+        </div>
+        <div class="wip-list" id="pkCekList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
 
     </div>
 
@@ -1552,6 +1730,7 @@
     if (pageId === "page-form-in") initForm();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
+    if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
     if (pageId === "page-gap-cutting") initGapCuttingPage();
     if (pageId === "page-wip-cutting") initWipCuttingPage();
     if (pageId === "page-daily-issue") initDailyIssue();
@@ -2452,18 +2631,30 @@
   }
 
   // ---- LOAD MASTER DATA via JSONP ----
+  // Dipakai bersama oleh halaman Out Pola DAN Penukaran Kulit (sumber datanya sama persis, dari
+  // "Master_List_Rak ke Proses") — mirror status/waktu-muat/error ke elemen kedua halaman sekaligus
+  // (elemen pk* boleh tidak ada, _mirrorEl aman kalau elemennya tidak ditemukan).
+  function _mirrorEl(id, fn) {
+    var el = document.getElementById(id);
+    if (el) fn(el);
+  }
+
   function loadOutMasterData(force) {
     if (_outLoadedOnce && !force) { setOfStatus('ok', distinctOutSPOs('').length); return; }
     setOfStatus('loading');
     document.getElementById('ofLoadTime').textContent = '';
+    _mirrorEl('pkSpoLoadTime', function(el) { el.textContent = ''; });
     _hideLoadError('of');
+    _hideLoadError('pkSpo');
     var t0 = Date.now();
     var url = GAS_URL + '?type=out_pola_master';
     jsonp(url, function(err, data) {
       _showLoadTime('ofLoadTime', Date.now() - t0);
+      _mirrorEl('pkSpoLoadTime', function() { _showLoadTime('pkSpoLoadTime', Date.now() - t0); });
       if (err || !data || data.status !== 'ok') {
         setOfStatus('error');
         _showLoadError('of', err, data);
+        _mirrorEl('pkSpoErrorRow', function() { _showLoadError('pkSpo', err, data); });
         return;
       }
       masterDataOut.records = data.records || [];
@@ -2475,21 +2666,22 @@
   }
 
   function setOfStatus(state, count) {
-    var el = document.getElementById('ofStatus');
-    if (!el) return;
-    if (state === 'loading') {
-      el.textContent = '⏳ Memuat...';
-      el.style.background = 'rgba(29,158,117,0.12)';
-      el.style.color = '#0A5C42';
-    } else if (state === 'ok') {
-      el.textContent = '✓ ' + count + ' SPO tersedia';
-      el.style.background = 'rgba(29,158,117,0.15)';
-      el.style.color = '#0A5C42';
-    } else if (state === 'error') {
-      el.textContent = '✕ Gagal memuat data';
-      el.style.background = 'rgba(220,53,69,0.15)';
-      el.style.color = '#7D1B1B';
-    }
+    [document.getElementById('ofStatus'), document.getElementById('pkSpoStatus')].forEach(function(el) {
+      if (!el) return;
+      if (state === 'loading') {
+        el.textContent = '⏳ Memuat...';
+        el.style.background = 'rgba(29,158,117,0.12)';
+        el.style.color = '#0A5C42';
+      } else if (state === 'ok') {
+        el.textContent = '✓ ' + count + ' SPO tersedia';
+        el.style.background = 'rgba(29,158,117,0.15)';
+        el.style.color = '#0A5C42';
+      } else if (state === 'error') {
+        el.textContent = '✕ Gagal memuat data';
+        el.style.background = 'rgba(220,53,69,0.15)';
+        el.style.color = '#7D1B1B';
+      }
+    });
   }
 
   // ---- HELPER: baca riwayat "Form Keluar Kulit Dari Rak" (masterDataOut.records) ----
@@ -3144,6 +3336,599 @@
     document.getElementById('gapViewOut').style.display = which === 'gapOut' ? 'block' : 'none';
     document.getElementById('gapTabIn').classList.toggle('active', which === 'gapIn');
     document.getElementById('gapTabOut').classList.toggle('active', which === 'gapOut');
+  }
+
+  // ===== PENUKARAN KULIT =====
+  // Sumber SPO/Style/OPCK/Size & Operator/No.Absen: SAMA PERSIS dengan Rak ke Proses (endpoint
+  // rak_master, dari "Master_List_Penerimaan Kulit" & "DATA MASTER OPERATOR") — dipakai ulang
+  // langsung (masterDataRak, distinctRakSPOs, rakStyleForSPO, rakSizesForSPO, rakReceiptsFor),
+  // tidak perlu fetch/endpoint terpisah.
+  var PK_KETERANGAN_OPTIONS = ['Tidak Sesuai Lot','Cacat','Rapuh','Tebal','Tipis','Bercak','Buff','Belang','Snai','Softness Tidak Sesuai'];
+  var pkGroupCount = 0, pkRowCount = 0;
+  var pkGroupsData = {};
+  var pkWipData = []; // hasil wip_penukaran — dipakai bersama tab "Cek Penukaran" & "Penerimaan Kulit"
+  var pkSelectedTglKirim = '';
+
+  function initPenukaranKulitPage() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('pkTanggal').value = yyyy+'-'+mm+'-'+dd;
+    document.getElementById('pkTerimaTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetPkForm();
+    loadOutMasterData();
+    showPenukaranView('input');
+    pkSelectedTglKirim = '';
+    document.getElementById('pkTglKirimInput').value = '';
+    document.getElementById('pkTerimaTableWrap').innerHTML = '';
+    loadWipPenukaran();
+  }
+
+  function resetPkForm() {
+    document.getElementById('pkGroupsContainer').innerHTML = '';
+    pkGroupCount = 0;
+    pkGroupsData = {};
+    addPkGroup();
+  }
+
+  function showPenukaranView(which) {
+    document.getElementById('pkViewInput').style.display  = which === 'input'  ? 'block' : 'none';
+    document.getElementById('pkViewTerima').style.display = which === 'terima' ? 'block' : 'none';
+    document.getElementById('pkViewCek').style.display    = which === 'cek'    ? 'block' : 'none';
+    document.getElementById('pkTabInput').classList.toggle('active', which === 'input');
+    document.getElementById('pkTabTerima').classList.toggle('active', which === 'terima');
+    document.getElementById('pkTabCek').classList.toggle('active', which === 'cek');
+  }
+
+  // ---- SPO GROUPS ----
+  function addPkGroup() {
+    pkGroupCount++;
+    var gid = pkGroupCount;
+    pkGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('pkGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'pk-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deletePkGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="pk-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="pk-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="pk-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="pk-row-badge-' + gid + '" style="background:rgba(180,83,9,0.15);color:#7C2D12;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="pk-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addPkRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupPkSPOInput(gid);
+    addPkRow(gid);
+    updatePkGroupDeleteButtons();
+  }
+
+  function updatePkGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#pkGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deletePkGroup(gid) {
+    var el = document.getElementById('pk-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete pkGroupsData[gid];
+    updatePkGroupDeleteButtons();
+  }
+
+  // ---- SPO (manual + suggest, dari Master_List_Rak ke Proses lewat masterDataOut) ----
+  function setupPkSPOInput(gid) {
+    var input = document.getElementById('pk-spo-input-' + gid);
+    var drop  = document.getElementById('pk-spo-drop-' + gid);
+
+    input.oninput = function() {
+      pkGroupsData[gid].spo = input.value.trim();
+      renderPkGroupSPODrop(gid, input.value);
+      matchPkGroupSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderPkGroupSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihPkGroupSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderPkGroupSPODrop(gid, query) {
+    var drop = document.getElementById('pk-spo-drop-' + gid);
+    if (!masterDataOut.records.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihPkGroupSPO(gid, spo, style) {
+    document.getElementById('pk-spo-input-' + gid).value = spo;
+    document.getElementById('pk-spo-drop-' + gid).classList.remove('open');
+    applyPkGroupSPO(gid, spo, style);
+  }
+
+  function matchPkGroupSPOStyle(gid, typedSpo) {
+    var style = outStyleForSPO(typedSpo);
+    if (style) {
+      applyPkGroupSPO(gid, typedSpo.trim(), style);
+    } else {
+      pkGroupsData[gid].spo = typedSpo.trim();
+      pkGroupsData[gid].style = '';
+      document.getElementById('pk-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('pk-style-display-' + gid).className = 'style-display';
+      document.querySelectorAll('#pk-rows-container-' + gid + ' .pk-size-select').forEach(function(sel) {
+        sel.innerHTML = '<option value="">— Pilih SPO dahulu —</option>';
+      });
+    }
+  }
+
+  function applyPkGroupSPO(gid, spo, style) {
+    pkGroupsData[gid].spo = spo;
+    pkGroupsData[gid].style = style;
+    var disp = document.getElementById('pk-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+
+    var sizes = pkSizesForSPO(spo);
+    document.querySelectorAll('#pk-rows-container-' + gid + ' .pk-size-select').forEach(function(sel) {
+      var prev = sel.value;
+      sel.innerHTML = '<option value="">— Pilih Size —</option>' + sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+      if (sizes.indexOf(prev) >= 0) sel.value = prev;
+    });
+    // SPO berubah -> No. OPCK & Operator/Absen (otomatis dari OPCK) di semua baris grup ini sudah tidak relevan
+    document.querySelectorAll('#pk-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      card.querySelector('.pk-opck-input').value = '';
+      card.querySelector('.pk-operator-display').value = '';
+      card.querySelector('.pk-absen-input').value = '';
+    });
+  }
+
+  // ---- HELPER: baca Master_List_Rak ke Proses (masterDataOut.records) untuk kebutuhan Penukaran Kulit ----
+  function pkSizesForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    var seen = {}; var out = [];
+    masterDataOut.records.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (seen[r.size]) return;
+      seen[r.size] = true;
+      out.push(r.size);
+    });
+    return out;
+  }
+
+  // Cari record (OPCK+Size+Operator+No.Absen) untuk SPO tertentu, difilter Size (kalau sudah dipilih)
+  // dan query ketikan OPCK. 1 OPCK bisa punya beberapa baris (barcode beda) -> tetap ditampilkan
+  // terpisah karena operatornya bisa beda per barcode.
+  function pkRecordsForOPCK(spo, size, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var q = (query || '').toLowerCase().trim();
+    return masterDataOut.records.filter(function(r) {
+      if (r.spo.toLowerCase() !== s) return false;
+      if (size && r.size !== size) return false;
+      if (q && r.opck.toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addPkRow(gid) {
+    pkRowCount++;
+    var rid = pkRowCount;
+    var container = document.getElementById('pk-rows-container-' + gid);
+
+    var spo = pkGroupsData[gid] ? pkGroupsData[gid].spo : '';
+    var sizes = pkSizesForSPO(spo);
+    var sizeOpts = sizes.map(function(s) { return '<option value="'+s+'">'+s+'</option>'; }).join('');
+    var chips = PK_KETERANGAN_OPTIONS.map(function(k) {
+      return '<button type="button" class="keterangan-chip" onclick="this.classList.toggle(\'selected\')">' + k + '</button>';
+    }).join('');
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'pk-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deletePkRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<select class="row-field-select pk-size-select" onchange="onPkSizeChange(\''+rid+'\')"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. OPCK</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input pk-opck-input" id="pk-opck-input-'+rid+'" placeholder="Ketik / pilih No. OPCK...">'
+      + '<div class="spo-ac-drop pk-opck-drop" id="pk-opck-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="text" inputmode="numeric" class="row-field-input pk-qty-input" placeholder="0"></div>'
+      + '<div class="row-field"><span class="row-field-label">SF</span><input type="text" inputmode="numeric" class="row-field-input pk-sf-input" placeholder="0"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Qty Lembar</span>'
+      + '<input type="text" inputmode="numeric" class="row-field-input pk-qtylembar-input" placeholder="0">'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Operator <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari No. OPCK)</span></span>'
+      + '<input type="text" class="row-field-input pk-operator-display" readonly placeholder="Pilih No. OPCK dahulu">'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input pk-absen-input" readonly placeholder="Otomatis">'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Keterangan</span>'
+      + '<div class="keterangan-chip-group">'+chips+'</div>'
+      + '</div></div>';
+
+    container.appendChild(div);
+    setupPkOPCKInput(gid, rid);
+    updatePkRowBadge(gid);
+  }
+
+  function deletePkRow(gid, rid) {
+    var container = document.getElementById('pk-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('pk-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updatePkRowBadge(gid);
+  }
+
+  function updatePkRowBadge(gid) {
+    var container = document.getElementById('pk-rows-container-' + gid);
+    var badge = document.getElementById('pk-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  function onPkSizeChange(rid) {
+    var row = document.getElementById('pk-row-' + rid);
+    if (!row) return;
+    row.querySelector('.pk-opck-input').value = '';
+    row.querySelector('.pk-operator-display').value = '';
+    row.querySelector('.pk-absen-input').value = '';
+  }
+
+  // ---- NO. OPCK per baris (manual + suggest) — pilih OPCK otomatis isi Size + Operator + No.Absen ----
+  function setupPkOPCKInput(gid, rid) {
+    var input = document.getElementById('pk-opck-input-' + rid);
+    var drop  = document.getElementById('pk-opck-drop-' + rid);
+
+    input.oninput = function() {
+      var row = document.getElementById('pk-row-' + rid);
+      row.querySelector('.pk-operator-display').value = '';
+      row.querySelector('.pk-absen-input').value = '';
+      renderPkOPCKDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderPkOPCKDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-opck]');
+      if (!item) return;
+      pilihPkOPCK(rid, item.getAttribute('data-opck'), item.getAttribute('data-size'), item.getAttribute('data-operator'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderPkOPCKDrop(gid, rid, query) {
+    var drop = document.getElementById('pk-opck-drop-' + rid);
+    var spo  = pkGroupsData[gid] ? pkGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var row = document.getElementById('pk-row-' + rid);
+    var size = row.querySelector('.pk-size-select').value;
+    var q = (query || '').toLowerCase().trim();
+    var show = pkRecordsForOPCK(spo, size, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var opckHL = q ? r.opck.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.opck;
+      return '<div class="spo-ac-item" data-opck="' + r.opck + '" data-size="' + r.size + '" data-operator="' + r.operator + '" data-absen="' + r.absen + '">'
+        + '<span class="spo-ac-spo">' + opckHL + '</span>'
+        + '<span class="spo-ac-style">' + r.size + ' · ' + r.operator + '</span>'
+        + '</div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihPkOPCK(rid, opck, size, operator, absen) {
+    var row = document.getElementById('pk-row-' + rid);
+    document.getElementById('pk-opck-input-' + rid).value = opck;
+    document.getElementById('pk-opck-drop-' + rid).classList.remove('open');
+    var sizeSel = row.querySelector('.pk-size-select');
+    if (!sizeSel.value && size) sizeSel.value = size;
+    row.querySelector('.pk-operator-display').value = operator;
+    row.querySelector('.pk-absen-input').value = absen;
+  }
+
+  // ---- COLLECT + SUBMIT (Penukaran Kulit) ----
+  function collectPkData() {
+    var tanggal = document.getElementById('pkTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+
+    var groups = document.querySelectorAll('#pkGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('pk-group-', '');
+      var spo = document.getElementById('pk-spo-input-' + gid).value.trim();
+      var style = pkGroupsData[gid] ? pkGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var size      = card.querySelector('.pk-size-select').value;
+        var opck      = card.querySelector('.pk-opck-input').value.trim();
+        var qty       = card.querySelector('.pk-qty-input').value;
+        var sf        = card.querySelector('.pk-sf-input').value;
+        var qtyLembar = card.querySelector('.pk-qtylembar-input').value;
+        var operator  = card.querySelector('.pk-operator-display').value.trim();
+        var absen     = card.querySelector('.pk-absen-input').value;
+        var keterangan = Array.prototype.map.call(card.querySelectorAll('.keterangan-chip.selected'), function(c) { return c.textContent; }).join(', ');
+        if (!size)     { errorMsg = 'Size wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (!opck)     { errorMsg = 'No. OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!qty)      { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!sf)       { errorMsg = 'SF wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!qtyLembar){ errorMsg = 'Qty Lembar wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!operator || !absen) { errorMsg = 'Pilih No. OPCK dari daftar saran agar Operator & No. Absen terisi (SPO ' + spo + ')'; return; }
+        if (!keterangan) { errorMsg = 'Pilih minimal 1 Keterangan di setiap baris (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, opck:opck, size:size, qty:qty, sf:sf, qtyLembar:qtyLembar, absen:absen, operator:operator, keterangan:keterangan });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
+  }
+
+  function submitPenukaranForm() {
+    var data = collectPkData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_URL + '?type=save_penukaran_kulit&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetPkForm();
+        loadWipPenukaran(true);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- WIP PENUKARAN (dipakai bersama tab "Cek Penukaran" & "Penerimaan Kulit") ----
+  // Selalu dimuat ulang tiap buka menu (bukan cache sekali-per-sesi) — sama seperti WIP/GAP lain.
+  function loadWipPenukaran(force) {
+    setPkCekStatus('loading');
+    document.getElementById('pkCekLoadTime').textContent = '';
+    _hideLoadError('pkCek');
+    var t0 = Date.now();
+    jsonp(GAS_URL + '?type=wip_penukaran', function(err, data) {
+      _showLoadTime('pkCekLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setPkCekStatus('error');
+        _showLoadError('pkCek', err, data);
+        return;
+      }
+      pkWipData = data.rows || [];
+      setPkCekStatus('ok', pkWipData.length);
+      renderPkCekList();
+      renderPkTglKirimOptions();
+    });
+  }
+
+  function setPkCekStatus(state, count) {
+    var el = document.getElementById('pkCekStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(180,83,9,0.12)'; el.style.color = '#7C2D12';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' WIP';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  // ---- TAB: CEK PENUKARAN ----
+  function renderPkCekList() {
+    var spoF  = (document.getElementById('pkCekFilterSpo')  ? document.getElementById('pkCekFilterSpo').value  : '').toLowerCase().trim();
+    var sizeF = (document.getElementById('pkCekFilterSize') ? document.getElementById('pkCekFilterSize').value : '').toLowerCase().trim();
+    var rows = pkWipData.filter(function(r) {
+      if (spoF  && r.spo.toLowerCase().indexOf(spoF) < 0) return false;
+      if (sizeF && (r.size || '').toLowerCase().indexOf(sizeF) < 0) return false;
+      return true;
+    });
+    var el = document.getElementById('pkCekList');
+    if (!rows.length) { el.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+    el.innerHTML = rows.map(function(r) {
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+        + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+        + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · Tanggal ' + _escWip(r.tanggal) + ' · ' + _escWip(r.operator) + '</div>'
+        + '<div class="wip-item-meta">Keterangan: ' + _escWip(r.keterangan) + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">Qty</span><span class="wip-item-qty-value">' + _escWip(r.qty) + '</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ---- TAB: PENERIMAAN KULIT ----
+  function renderPkTglKirimOptions() {
+    var input = document.getElementById('pkTglKirimInput');
+    var drop  = document.getElementById('pkTglKirimDrop');
+    if (input._pkWired) return;
+    input._pkWired = true;
+    input.oninput = function() { renderPkTglKirimDrop(input.value); };
+    input.onfocus = function() { renderPkTglKirimDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-tgl]');
+      if (!item) return;
+      pilihPkTglKirim(item.getAttribute('data-tgl'));
+    });
+  }
+
+  function distinctPkTanggal(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    pkWipData.forEach(function(r) {
+      if (!r.tanggal || seen[r.tanggal]) return;
+      if (q && r.tanggal.toLowerCase().indexOf(q) < 0) return;
+      seen[r.tanggal] = true;
+      out.push(r.tanggal);
+    });
+    out.sort();
+    return out;
+  }
+
+  function renderPkTglKirimDrop(query) {
+    var drop = document.getElementById('pkTglKirimDrop');
+    var show = distinctPkTanggal(query).slice(0, 10);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Tidak ada tanggal pengiriman yang masih pending</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(t) {
+      var cnt = pkWipData.filter(function(r) { return r.tanggal === t; }).length;
+      return '<div class="spo-ac-item" data-tgl="' + t + '"><span class="spo-ac-spo">' + t + '</span><span class="spo-ac-style">' + cnt + ' item</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihPkTglKirim(tanggal) {
+    document.getElementById('pkTglKirimInput').value = tanggal;
+    document.getElementById('pkTglKirimDrop').classList.remove('open');
+    pkSelectedTglKirim = tanggal;
+    renderPkTerimaTable(tanggal);
+  }
+
+  function renderPkTerimaTable(tanggal) {
+    var rows = pkWipData.filter(function(r) { return r.tanggal === tanggal; });
+    var wrap = document.getElementById('pkTerimaTableWrap');
+    if (!rows.length) {
+      wrap.innerHTML = '<div class="wip-empty">Tidak ada data pending untuk tanggal ini</div>';
+      return;
+    }
+    var html = '<div class="pk-terima-tablewrap"><table class="pk-terima-table"><thead><tr>'
+      + '<th>SPO</th><th>Style</th><th>OPCK</th><th>Size</th><th>Qty</th><th>Operator</th><th>Kembali</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>'
+        + '<td>' + _escWip(r.spo) + '</td>'
+        + '<td>' + _escWip(r.style) + '</td>'
+        + '<td>' + _escWip(r.opck) + '</td>'
+        + '<td>' + _escWip(r.size) + '</td>'
+        + '<td>' + _escWip(r.qty) + '</td>'
+        + '<td>' + _escWip(r.operator) + '</td>'
+        + '<td style="text-align:center"><input type="checkbox" class="pk-terima-check" data-row="' + r.row + '"></td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div>';
+    wrap.innerHTML = html;
+  }
+
+  function submitPenukaranKembali() {
+    var tanggalKembali = document.getElementById('pkTerimaTanggal').value;
+    if (!tanggalKembali) { showToast('⚠️ Tanggal harus diisi', 'error'); return; }
+    if (!pkSelectedTglKirim) { showToast('⚠️ Pilih Tanggal Pengiriman dahulu', 'error'); return; }
+
+    var checks = document.querySelectorAll('#pkTerimaTableWrap .pk-terima-check:checked');
+    if (checks.length === 0) { showToast('⚠️ Centang minimal 1 baris yang sudah kembali', 'error'); return; }
+    var rows = Array.prototype.map.call(checks, function(c) { return parseInt(c.getAttribute('data-row'), 10); });
+
+    showLoading(true);
+    var payload = { tanggalKembali: tanggalKembali, rows: rows };
+    var url = GAS_URL + '?type=save_penukaran_kembali&payload=' + encodeURIComponent(JSON.stringify(payload));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ ' + result.updated + ' baris ditandai sudah kembali', 'success');
+        document.getElementById('pkTglKirimInput').value = '';
+        document.getElementById('pkTerimaTableWrap').innerHTML = '';
+        pkSelectedTglKirim = '';
+        loadWipPenukaran(true);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
   }
 
   // ===== DATA WIP CUTTING KULIT =====
