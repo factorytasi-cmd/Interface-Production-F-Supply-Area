@@ -342,14 +342,19 @@
     }
     .retry-btn:active { background: rgba(220,53,69,0.12); }
 
-    /* Tombol "Cek Data Terkirim Hari Ini" — netral, beda dari tombol Kirim yang berwarna */
-    .btn-today {
-      width: 100%; padding: 11px; border-radius: 12px; margin-top: 10px;
-      border: 1.5px solid #D8DAD8; background: white; color: #444;
-      font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+    /* "Cek Data Terkirim" — label + tab Hari Ini/Kemarin, netral beda dari tombol Kirim yang berwarna */
+    .today-label {
+      display: flex; align-items: center; gap: 6px; margin-top: 12px;
+      font-size: 12.5px; font-weight: 600; color: #444;
     }
-    .btn-today:active { background: #F3F4F3; }
+    .today-tabs { display: flex; gap: 6px; margin-top: 8px; }
+    .today-tab-btn {
+      flex: 1; padding: 9px 4px; border-radius: 10px;
+      border: 1.5px solid #D8DAD8; background: white;
+      color: #666; font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .today-tab-btn.active { background: #333A36; color: white; border-color: transparent; }
     .today-list { margin-top: 10px; }
     .today-tablewrap {
       border: 1px solid #E0E2E0; border-radius: 12px; overflow-x: auto;
@@ -368,6 +373,13 @@
       background: #DC3545; color: white; font-size: 9.5px; font-weight: 700; vertical-align: 1px;
     }
     .today-scroll-hint { font-size: 10.5px; color: #999; margin-top: 5px; }
+    .today-cleanup-btn {
+      width: 100%; padding: 10px; border-radius: 10px; margin-top: 8px;
+      border: 1.5px solid #DC3545; background: rgba(220,53,69,0.06); color: #DC3545;
+      font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .today-cleanup-btn:active { background: rgba(220,53,69,0.14); }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -737,11 +749,13 @@
         Kirim
       </button>
 
-      <button type="button" class="btn-today" onclick="loadTodayInKulit()">
-        <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
-      </button>
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="fTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('fTodayTabs','fTodayList',0,this,loadTodayInKulit)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('fTodayTabs','fTodayList',1,this,loadTodayInKulit)">Kemarin</button>
+      </div>
       <div class="load-time-note" id="fTodayLoadTime"></div>
-      <div id="fTodayList" class="today-list"></div>
+      <div id="fTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -829,11 +843,13 @@
         Kirim
       </button>
 
-      <button type="button" class="btn-today" onclick="loadTodayRakProses()">
-        <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
-      </button>
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="rkTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('rkTodayTabs','rkTodayList',0,this,loadTodayRakProses)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('rkTodayTabs','rkTodayList',1,this,loadTodayRakProses)">Kemarin</button>
+      </div>
       <div class="load-time-note" id="rkTodayLoadTime"></div>
-      <div id="rkTodayList" class="today-list"></div>
+      <div id="rkTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -921,11 +937,13 @@
         Kirim
       </button>
 
-      <button type="button" class="btn-today" onclick="loadTodayOutPola()">
-        <i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim Hari Ini
-      </button>
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="ofTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('ofTodayTabs','ofTodayList',0,this,loadTodayOutPola)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('ofTodayTabs','ofTodayList',1,this,loadTodayOutPola)">Kemarin</button>
+      </div>
       <div class="load-time-note" id="ofTodayLoadTime"></div>
-      <div id="ofTodayList" class="today-list"></div>
+      <div id="ofTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -3305,19 +3323,46 @@
     });
   }
 
-  function _renderTodayList(containerId, rows, showOperator) {
+  // Nomor baris sheet (bukan cuma isi kolomnya) yang aman dihapus per container — dihitung ulang
+  // setiap render, dipakai tombol "Bersihkan Duplikat" supaya tahu persis baris mana yang mau dihapus.
+  var _todayDupRowsToDelete = {};
+  // Tab (Hari Ini=0 / Kemarin=1) yang sedang aktif per container — dipakai supaya reload otomatis
+  // (misalnya setelah Bersihkan Duplikat) tetap di tab yang sama, bukan lompat balik ke Hari Ini.
+  var _todayActiveDay = { fTodayList: 0, rkTodayList: 0, ofTodayList: 0 };
+
+  function _todayTabClick(tabsElId, containerId, dayOffset, btnEl, loaderFn) {
+    var tabsEl = document.getElementById(tabsElId);
+    Array.prototype.forEach.call(tabsEl.querySelectorAll('.today-tab-btn'), function(b) { b.classList.remove('active'); });
+    btnEl.classList.add('active');
+    loaderFn(dayOffset);
+  }
+
+  function _renderTodayList(containerId, rows, showOperator, cleanupType, dayOffset) {
     var el = document.getElementById(containerId);
+    _todayDupRowsToDelete[containerId] = [];
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
     if (!rows || !rows.length) {
-      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk hari ini.</div>';
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
       return;
     }
     // Baris dianggap "duplikat" kalau SPO + Size + No. OPCK + No. Barcode sama persis —
     // dipakai buat cek cepat apakah sempat kecatat dobel (misal gara-gara kirim ulang saat "gagal kirim").
-    var counts = {};
+    var groups = {};
     rows.forEach(function(r) {
       var key = [r.spo, r.size, r.opck, r.barcode].join('|');
-      counts[key] = (counts[key] || 0) + 1;
+      (groups[key] = groups[key] || []).push(r);
     });
+    // Baris pertama (nomor baris terkecil = paling awal disimpan) tiap grup duplikat DISISAKAN,
+    // sisanya masuk daftar yang boleh dihapus lewat tombol "Bersihkan Duplikat".
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _todayDupRowsToDelete[containerId] = dupRowsToDelete;
+
     var cols = ['SPO', 'Size', 'No. OPCK', 'No. Barcode', 'Qty'];
     if (showOperator) cols.push('Nama Operator');
     var html = '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
@@ -3325,7 +3370,7 @@
       + '</tr></thead><tbody>';
     rows.forEach(function(r) {
       var key = [r.spo, r.size, r.opck, r.barcode].join('|');
-      var dupCount = counts[key];
+      var dupCount = groups[key].length;
       var isDup = dupCount > 1;
       html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
         + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
@@ -3337,27 +3382,67 @@
       html += '</tr>';
     });
     html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length && cleanupType) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_cleanupTodayDuplicates(\'' + containerId + '\',\'' + cleanupType + '\')">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
     el.innerHTML = html;
   }
 
-  function _loadTodayList(type, containerId, timeElId, showOperator) {
+  // Hapus baris duplikat dari sheet asli — 1 baris tiap grup duplikat tetap disimpan.
+  // Minta konfirmasi eksplisit dulu karena ini menghapus data beneran, tidak bisa dibatalkan.
+  function _cleanupTodayDuplicates(containerId, cleanupType) {
+    var rowsToDelete = _todayDupRowsToDelete[containerId] || [];
+    if (!rowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + rowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_URL + '?type=' + cleanupType + '&payload=' + encodeURIComponent(JSON.stringify({ rows: rowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      if (containerId === 'fTodayList') {
+        loadTodayInKulit();
+        loadRakMasterData(true);
+      } else if (containerId === 'rkTodayList') {
+        loadTodayRakProses();
+        loadRakMasterData(true);
+        loadOutMasterData(true);
+      } else if (containerId === 'ofTodayList') {
+        loadTodayOutPola();
+        loadOutMasterData(true);
+      }
+    });
+  }
+
+  function _loadTodayList(type, containerId, timeElId, showOperator, cleanupType, dayOffset) {
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
     var el = document.getElementById(containerId);
     el.innerHTML = '<div class="wip-empty">Memuat...</div>';
     document.getElementById(timeElId).textContent = '';
     var t0 = Date.now();
-    jsonp(GAS_URL + '?type=' + type, function(err, data) {
+    jsonp(GAS_URL + '?type=' + type + '&day=' + dayOffset, function(err, data) {
       _showLoadTime(timeElId, Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
         return;
       }
-      _renderTodayList(containerId, data.rows, showOperator);
+      _renderTodayList(containerId, data.rows, showOperator, cleanupType, dayOffset);
     });
   }
 
-  function loadTodayInKulit()   { _loadTodayList('today_in_kulit', 'fTodayList', 'fTodayLoadTime', false); }
-  function loadTodayRakProses() { _loadTodayList('today_rak_proses', 'rkTodayList', 'rkTodayLoadTime', true); }
-  function loadTodayOutPola()   { _loadTodayList('today_out_pola', 'ofTodayList', 'ofTodayLoadTime', true); }
+  function loadTodayInKulit(dayOffset)   { _loadTodayList('today_in_kulit', 'fTodayList', 'fTodayLoadTime', false, 'cleanup_dup_in_kulit', dayOffset); }
+  function loadTodayRakProses(dayOffset) { _loadTodayList('today_rak_proses', 'rkTodayList', 'rkTodayLoadTime', true, 'cleanup_dup_rak_proses', dayOffset); }
+  function loadTodayOutPola(dayOffset)   { _loadTodayList('today_out_pola', 'ofTodayList', 'ofTodayLoadTime', true, 'cleanup_dup_out_pola', dayOffset); }
 
   // ===== DAILY ISSUE LOGIC =====
   var DI_APIKEY_KEY = 'dip_apikey';
