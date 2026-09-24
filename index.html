@@ -4759,7 +4759,7 @@
     });
     _tcDupRowsToDelete = dupRowsToDelete;
 
-    var cols = ['SPO', 'Size', 'No. OPCK', 'Qty', 'Keterangan', 'Checker'];
+    var cols = ['SPO', 'Size', 'No. OPCK', 'Qty', 'Keterangan', 'Qty Lembar Minggir', 'Qty Lembar OPCK', 'Checker'];
     var html = '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
@@ -4773,6 +4773,8 @@
         + '<td>' + _escToday(r.opck) + '</td>'
         + '<td>' + _escToday(r.qty) + '</td>'
         + '<td>' + _escToday(r.keterangan) + '</td>'
+        + '<td>' + _escToday(r.qtyLembarMinggir) + '</td>'
+        + '<td>' + _escToday(r.qtyLembarOpck) + '</td>'
         + '<td>' + _escToday(r.checker) + '</td>'
         + '</tr>';
     });
