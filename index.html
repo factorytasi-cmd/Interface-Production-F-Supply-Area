@@ -1112,6 +1112,7 @@
       <!-- TOGGLE (hide/unhide, bukan menu bar) -->
       <div class="wip-toggle">
         <button type="button" class="wip-toggle-btn active" id="wipTabRak" onclick="showWipView('rak')">WIP Rak</button>
+        <button type="button" class="wip-toggle-btn" id="wipTabRakOpck" onclick="showWipView('rakOpck')">WIP Rak OPCK</button>
         <button type="button" class="wip-toggle-btn" id="wipTabProses" onclick="showWipView('proses')">WIP Proses</button>
         <button type="button" class="wip-toggle-btn" id="wipTabProsesOperator" onclick="showWipView('prosesOperator')">WIP Proses Operator</button>
       </div>
@@ -1125,6 +1126,13 @@
       <!-- WIP RAK VIEW -->
       <div id="wipViewRak" class="wip-view">
         <div class="wip-list" id="wipRakList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP RAK OPCK VIEW -->
+      <div id="wipViewRakOpck" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipRakOpckList">
           <div class="wip-empty">Memuat data...</div>
         </div>
       </div>
@@ -3141,9 +3149,10 @@
   // ===== DATA WIP CUTTING KULIT =====
   // Tampilan read-only, sumber data: sheet "WIP RAK" & "WIP PROSES".
   // Toggle antar tampilan pakai hide/unhide (bukan navigasi halaman/menu bar).
-  var wipData = { rak: [], proses: [], prosesOperator: [] };
+  var wipData = { rak: [], rakOpck: [], proses: [], prosesOperator: [] };
   var WIP_VIEW_CONFIG = {
     rak:            { containerId: 'wipRakList',            qtyLabel: 'WIP Rak' },
+    rakOpck:        { containerId: 'wipRakOpckList',        qtyLabel: 'Qty' },
     proses:         { containerId: 'wipProsesList',         qtyLabel: 'WIP Proses' },
     prosesOperator: { containerId: 'wipProsesOperatorList', qtyLabel: 'Balance' }
   };
@@ -3171,10 +3180,12 @@
         return;
       }
       wipData.rak            = data.rak            || [];
+      wipData.rakOpck        = data.rakOpck         || [];
       wipData.proses         = data.proses          || [];
       wipData.prosesOperator = data.prosesOperator  || [];
-      setWipStatus('ok', wipData.rak.length + wipData.proses.length + wipData.prosesOperator.length);
+      setWipStatus('ok', wipData.rak.length + wipData.rakOpck.length + wipData.proses.length + wipData.prosesOperator.length);
       renderWipTable('rak');
+      renderWipTable('rakOpck');
       renderWipTable('proses');
       renderWipTable('prosesOperator');
     });
@@ -3216,20 +3227,26 @@
   // Filter SPO & Size berlaku untuk ketiga tampilan sekaligus (tetap ikut saat toggle tab)
   function applyWipFilter() {
     renderWipTable('rak');
+    renderWipTable('rakOpck');
     renderWipTable('proses');
     renderWipTable('prosesOperator');
   }
 
   function _wipItemCardHTML(which, r, cfg) {
-    var operatorLine = which === 'prosesOperator'
-      ? '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + '</div>'
-        + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>'
-      : '';
-    var qtyValue = which === 'prosesOperator' ? r.balance : r.wip;
+    var metaLine = '';
+    if (which === 'prosesOperator') {
+      metaLine = '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + '</div>'
+        + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>';
+    } else if (which === 'rakOpck') {
+      metaLine = '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · No. Barcode ' + _escWip(r.barcode) + '</div>';
+    }
+    var qtyValue = r.wip;
+    if (which === 'prosesOperator') qtyValue = r.balance;
+    if (which === 'rakOpck') qtyValue = r.qty;
     return '<div class="wip-item">'
       + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
       + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
-      + operatorLine
+      + metaLine
       + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(qtyValue) + '</span></div>'
       + '</div>';
   }
@@ -3294,9 +3311,11 @@
   // Hide/unhide antar tampilan WIP Rak / WIP Proses / WIP Proses Operator (bukan menu bar/navigasi halaman)
   function showWipView(which) {
     document.getElementById('wipViewRak').style.display            = which === 'rak'            ? 'block' : 'none';
+    document.getElementById('wipViewRakOpck').style.display        = which === 'rakOpck'        ? 'block' : 'none';
     document.getElementById('wipViewProses').style.display         = which === 'proses'         ? 'block' : 'none';
     document.getElementById('wipViewProsesOperator').style.display = which === 'prosesOperator' ? 'block' : 'none';
     document.getElementById('wipTabRak').classList.toggle('active', which === 'rak');
+    document.getElementById('wipTabRakOpck').classList.toggle('active', which === 'rakOpck');
     document.getElementById('wipTabProses').classList.toggle('active', which === 'proses');
     document.getElementById('wipTabProsesOperator').classList.toggle('active', which === 'prosesOperator');
   }
