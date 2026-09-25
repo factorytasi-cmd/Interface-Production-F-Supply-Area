@@ -927,7 +927,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('Out Pola dari Cutting Synthetic')">
+        <div class="card card-out" onclick="goTo('page-out-synthetic')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -936,9 +936,9 @@
               </div>
             </div>
             <div class="card-title">Out Pola dari Cutting Synthetic</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat hasil proses PRC per operator yang sudah selesai</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per SPO</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1183,6 +1183,105 @@
       </div>
       <div class="load-time-note" id="rsynTodayLoadTime"></div>
       <div id="rsynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: OUT POLA DARI CUTTING SYNTHETIC ==================== -->
+  <div class="page" id="page-out-synthetic">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting-synthetic')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:15px;letter-spacing:1.5px">OUT POLA DARI CUTTING SYNTHETIC</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#1D9E75,#10B981)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING SYNTHETIC › OUT POLA</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(29,158,117,0.12);border-color:rgba(29,158,117,0.3)">
+        <i class="ti ti-package-export" style="color:#1D9E75"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#0A5C42">Out Pola dari Cutting Synthetic</div>
+          <div class="form-header-pill-sub">Cutting Synthetic Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="outSynTanggal">
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data Proses (dari Master List_Rak Ke Proses Operator)</label>
+        <span id="outSynSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(29,158,117,0.12);color:#0A5C42;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="outSynSpoLoadTime"></div>
+      <div class="load-error-row" id="outSynSpoErrorRow" style="display:none">
+        <span id="outSynSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadOutSynMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO -->
+      <div class="field-group" style="margin-bottom:10px">
+        <label class="field-label">SPO</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="outSynSpoInput" placeholder="Ketik nomor SPO..." autocomplete="off">
+          <div class="spo-ac-drop" id="outSynSpoDrop"></div>
+        </div>
+      </div>
+
+      <!-- TABEL PROSES (otomatis muncul setelah SPO dipilih) -->
+      <div id="outSynTableWrap"></div>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="outSynBtnSubmit" onclick="submitOutSynForm()" style="background:linear-gradient(135deg,#1D9E75,#10B981);box-shadow:0 4px 16px rgba(29,158,117,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="outSynTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('outSynTodayTabs','outSynTodayList',0,this,loadTodayOutSyn)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('outSynTodayTabs','outSynTodayList',1,this,loadTodayOutSyn)">Kemarin</button>
+      </div>
+      <div class="load-time-note" id="outSynTodayLoadTime"></div>
+      <div id="outSynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -2336,6 +2435,7 @@
     if (pageId === "page-form-in") initForm();
     if (pageId === "page-synthetic-in") initSynForm();
     if (pageId === "page-rak-synthetic") initRsynForm();
+    if (pageId === "page-out-synthetic") initOutSynForm();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
@@ -5157,6 +5257,293 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayRsyn();
+    });
+  }
+
+  // ===== OUT POLA DARI CUTTING SYNTHETIC =====
+  var masterDataOutSyn = { receipts: [] };
+  var _outSynLoadedOnce = false;
+  var outSynCurrentRows = [];
+
+  function initOutSynForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('outSynTanggal').value = yyyy+'-'+mm+'-'+dd;
+    document.getElementById('outSynSpoInput').value = '';
+    document.getElementById('outSynTableWrap').innerHTML = '';
+    outSynCurrentRows = [];
+    setupOutSynSPOInput();
+    loadOutSynMasterData();
+  }
+
+  function loadOutSynMasterData(force) {
+    if (_outSynLoadedOnce && !force) { setOutSynSPOStatus('ok', distinctOutSynSPOs('').length); return; }
+    setOutSynSPOStatus('loading');
+    document.getElementById('outSynSpoLoadTime').textContent = '';
+    _hideLoadError('outSynSpo');
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=out_synthetic_master', function(err, data) {
+      _showLoadTime('outSynSpoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setOutSynSPOStatus('error');
+        _showLoadError('outSynSpo', err, data);
+        return;
+      }
+      masterDataOutSyn.receipts = data.receipts || [];
+      _outSynLoadedOnce = true;
+      setOutSynSPOStatus('ok', distinctOutSynSPOs('').length);
+    });
+  }
+
+  function setOutSynSPOStatus(state, count) {
+    var el = document.getElementById('outSynSpoStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(29,158,117,0.12)'; el.style.color = '#0A5C42';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function distinctOutSynSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOutSyn.receipts.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  // ---- SPO (manual + suggest, dari Master List_Rak Ke Proses Operator) ----
+  function setupOutSynSPOInput() {
+    var input = document.getElementById('outSynSpoInput');
+    var drop  = document.getElementById('outSynSpoDrop');
+
+    input.oninput = function() {
+      renderOutSynSPODrop(input.value);
+      renderOutSynTable(input.value);
+    };
+    input.onfocus = function() { renderOutSynSPODrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihOutSynSPO(item.getAttribute('data-spo'));
+    });
+  }
+
+  function renderOutSynSPODrop(query) {
+    var drop = document.getElementById('outSynSpoDrop');
+    if (!masterDataOutSyn.receipts.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOutSynSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOutSynSPO(spo) {
+    document.getElementById('outSynSpoInput').value = spo;
+    document.getElementById('outSynSpoDrop').classList.remove('open');
+    renderOutSynTable(spo);
+  }
+
+  // ---- TABEL PROSES (otomatis muncul begitu SPO cocok, dengan checklist per baris) ----
+  function renderOutSynTable(spo) {
+    var wrap = document.getElementById('outSynTableWrap');
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) {
+      wrap.innerHTML = '';
+      outSynCurrentRows = [];
+      return;
+    }
+    outSynCurrentRows = masterDataOutSyn.receipts.filter(function(r) { return r.spo.toLowerCase() === s; });
+    if (!outSynCurrentRows.length) {
+      wrap.innerHTML = '<div class="wip-empty">Tidak ada data proses pending untuk SPO ini</div>';
+      return;
+    }
+    var html = '<div class="pk-terima-tablewrap"><table class="pk-terima-table"><thead><tr>'
+      + '<th>SPO</th><th>Style</th><th>PRC</th><th>No.PRC</th><th>Size</th><th>Qty</th><th>Material</th><th>Operator</th><th>No.Absen</th><th>Selesai</th>'
+      + '</tr></thead><tbody>';
+    outSynCurrentRows.forEach(function(r, idx) {
+      html += '<tr>'
+        + '<td>' + _escWip(r.spo) + '</td>'
+        + '<td>' + _escWip(r.style) + '</td>'
+        + '<td>' + _escWip(r.prc) + '</td>'
+        + '<td>' + _escWip(r.noPrc) + '</td>'
+        + '<td>' + _escWip(r.size) + '</td>'
+        + '<td>' + _escWip(r.qty) + '</td>'
+        + '<td>' + _escWip(r.material) + '</td>'
+        + '<td>' + _escWip(r.operator) + '</td>'
+        + '<td>' + _escWip(r.absen) + '</td>'
+        + '<td style="text-align:center"><input type="checkbox" class="outsyn-check" data-idx="' + idx + '"></td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div>';
+    wrap.innerHTML = html;
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectOutSynData() {
+    var tanggal = document.getElementById('outSynTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+    var spo = document.getElementById('outSynSpoInput').value.trim();
+    if (!spo) return { error: 'SPO harus diisi' };
+
+    var checks = document.querySelectorAll('#outSynTableWrap .outsyn-check:checked');
+    if (checks.length === 0) return { error: 'Centang minimal 1 baris yang sudah selesai' };
+
+    var rows = Array.prototype.map.call(checks, function(c) {
+      var idx = parseInt(c.getAttribute('data-idx'), 10);
+      var r = outSynCurrentRows[idx];
+      return {
+        spo: r.spo, style: r.style, prc: r.prc, noPrc: r.noPrc, size: r.size, qty: r.qty,
+        material: r.material, noRoll: r.noRoll, kategori: r.kategori, boros: r.boros,
+        operator: r.operator, absen: r.absen
+      };
+    });
+
+    return { tanggal: tanggal, rows: rows };
+  }
+
+  function submitOutSynForm() {
+    var data = collectOutSynData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_SYNTHETIC_URL + '?type=save_out_synthetic&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        document.getElementById('outSynSpoInput').value = '';
+        document.getElementById('outSynTableWrap').innerHTML = '';
+        outSynCurrentRows = [];
+        loadTodayOutSyn();
+        loadOutSynMasterData(true);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
+  var _outSynDupRowsToDelete = [];
+
+  function _renderOutSynTodayList(rows, dayOffset) {
+    var el = document.getElementById('outSynTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _outSynDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.prc, r.noPrc].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _outSynDupRowsToDelete = dupRowsToDelete;
+
+    var statsHtml = _renderTodayStatsBar(rows, 'prc', 'Jumlah PRC', [{ field: 'qty', label: 'Total Qty' }]);
+    var cols = ['SPO', 'PRC', 'No. PRC', 'Size', 'Qty', 'Material', 'Operator'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.prc, r.noPrc].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.prc) + '</td>'
+        + '<td>' + _escToday(r.noPrc) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '<td>' + _escToday(r.material) + '</td>'
+        + '<td>' + _escToday(r.operator) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_outSynCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayOutSyn(dayOffset) {
+    var containerId = 'outSynTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('outSynTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=today_out_synthetic&day=' + dayOffset, function(err, data) {
+      _showLoadTime('outSynTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderOutSynTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _outSynCleanupDuplicates() {
+    if (!_outSynDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _outSynDupRowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_SYNTHETIC_URL + '?type=cleanup_dup_out_synthetic&payload=' + encodeURIComponent(JSON.stringify({ rows: _outSynDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayOutSyn();
     });
   }
 
