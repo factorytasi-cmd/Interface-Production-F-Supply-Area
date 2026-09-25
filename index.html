@@ -445,6 +445,13 @@
       background: #DC3545; color: white; font-size: 9.5px; font-weight: 700; vertical-align: 1px;
     }
     .today-scroll-hint { font-size: 10.5px; color: #999; margin-top: 5px; }
+    .today-stats { display: flex; gap: 8px; margin-top: 10px; }
+    .today-stat-chip {
+      flex: 1; min-width: 0; background: #F7F7F5; border: 1px solid #E0E2E0; border-radius: 10px;
+      padding: 8px 6px; text-align: center;
+    }
+    .today-stat-value { display: block; font-size: 15px; font-weight: 700; color: #111; }
+    .today-stat-label { display: block; font-size: 9px; color: #666; margin-top: 2px; line-height: 1.3; }
     .today-cleanup-btn {
       width: 100%; padding: 10px; border-radius: 10px; margin-top: 8px;
       border: 1.5px solid #DC3545; background: rgba(220,53,69,0.06); color: #DC3545;
@@ -1187,6 +1194,14 @@
           <i class="ti ti-send" style="font-size:18px"></i>
           Kirim
         </button>
+
+        <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+        <div class="today-tabs" id="pkKirimTodayTabs">
+          <button type="button" class="today-tab-btn active" onclick="_todayTabClick('pkKirimTodayTabs','pkKirimTodayList',0,this,loadTodayPenukaran)">Hari Ini</button>
+          <button type="button" class="today-tab-btn" onclick="_todayTabClick('pkKirimTodayTabs','pkKirimTodayList',1,this,loadTodayPenukaran)">Kemarin</button>
+        </div>
+        <div class="load-time-note" id="pkKirimTodayLoadTime"></div>
+        <div id="pkKirimTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
       </div>
 
       <!-- ===== VIEW: PENERIMAAN KULIT ===== -->
@@ -1213,6 +1228,14 @@
           <i class="ti ti-check" style="font-size:18px"></i>
           Simpan Tanggal Kembali
         </button>
+
+        <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+        <div class="today-tabs" id="pkKembaliTodayTabs">
+          <button type="button" class="today-tab-btn active" onclick="_todayTabClick('pkKembaliTodayTabs','pkKembaliTodayList',0,this,loadTodayPenukaranKembali)">Hari Ini</button>
+          <button type="button" class="today-tab-btn" onclick="_todayTabClick('pkKembaliTodayTabs','pkKembaliTodayList',1,this,loadTodayPenukaranKembali)">Kemarin</button>
+        </div>
+        <div class="load-time-note" id="pkKembaliTodayLoadTime"></div>
+        <div id="pkKembaliTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
       </div>
 
       <!-- ===== VIEW: CEK PENUKARAN (WIP) ===== -->
@@ -2199,10 +2222,10 @@
       + '<div style="margin-top:8px">'
       + '<div class="row-field" style="margin-bottom:8px">'
       + '<span class="row-field-label">Size</span>'
-      + '<select class="row-field-select size-select"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
+      + '<select class="row-field-select size-select" onchange="checkDupInKulit()"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
       + '</div>'
       + '<div class="row-grid">'
-      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input opck-input" placeholder="Nomor OPCK"></div>'
+      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input opck-input" placeholder="Nomor OPCK" onblur="checkDupInKulit()"></div>'
       + '<div class="row-field"><span class="row-field-label">SF Tab</span><input type="number" class="row-field-input sftab-input" placeholder="0" min="0"></div>'
       + '</div>'
       + '<div class="row-grid" style="margin-top:8px">'
@@ -2268,6 +2291,9 @@
         var sfkulit = card.querySelector('.sfkulit-input').value;
         var berat   = card.querySelector('.berat-input').value;
         if (!size || !opck || !barcode) { errorMsg = 'Size, No. OPCK, dan No. Barcode wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!qty)     { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!sfkulit) { errorMsg = 'SF Kulit wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!berat)   { errorMsg = 'Berat Awal wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         allRows.push({ spo:spo, style:style, size:size, opck:opck, sftab:sftab, barcode:barcode, qty:qty, sfkulit:sfkulit, berat:berat });
       });
     });
@@ -2711,6 +2737,7 @@
     row.querySelector('.rk-qty-input').value = qty;
     var sizeSel = row.querySelector('.rk-size-select');
     if (!sizeSel.value && size) sizeSel.value = size;
+    checkDupRak();
   }
 
   // ---- OPERATOR per baris (manual + suggest, dari DATA MASTER OPERATOR) ----
@@ -2759,6 +2786,7 @@
     document.getElementById('rk-operator-input-' + rid).value = nama;
     document.getElementById('rk-operator-drop-' + rid).classList.remove('open');
     row.querySelector('.rk-absen-input').value = absen;
+    checkDupRak();
   }
 
   // ---- COLLECT + SUBMIT ----
@@ -3131,6 +3159,7 @@
     var sel = row.querySelector('.of-barcode-select');
     var opt = sel.options[sel.selectedIndex];
     row.querySelector('.of-opck-input').value = opt ? (opt.getAttribute('data-opck') || '') : '';
+    checkDupOut();
   }
 
   // ---- SPO per grup (manual + suggest) ----
@@ -3318,6 +3347,7 @@
     document.getElementById('of-operator-drop-' + rid).classList.remove('open');
     row.querySelector('.of-absen-input').value = absen;
     resetOfRowFromOperator(rid);
+    checkDupOut();
   }
 
   // ---- SIZE per baris (manual + suggest, difilter oleh SPO grup + Operator baris) ----
@@ -3924,6 +3954,26 @@
     if (!sizeSel.value && size) sizeSel.value = size;
     row.querySelector('.pk-operator-display').value = operator;
     row.querySelector('.pk-absen-input').value = absen;
+    checkDupPk();
+  }
+
+  function checkDupPk() {
+    var cards = document.querySelectorAll('#pkGroupsContainer .row-card');
+    var seen = {};
+    var dup = null;
+    cards.forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var gid = group ? group.id.replace('pk-group-', '') : null;
+      var spoInput = gid ? document.getElementById('pk-spo-input-' + gid) : null;
+      var spo = spoInput ? spoInput.value.trim() : '';
+      var size = card.querySelector('.pk-size-select').value;
+      var opck = card.querySelector('.pk-opck-input').value.trim();
+      if (!spo || !size || !opck) return;
+      var key = spo.toLowerCase() + '|' + size.toLowerCase() + '|' + opck.toLowerCase();
+      if (seen[key]) dup = { spo:spo, size:size, opck:opck };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ Data SPO ' + dup.spo + ', Size ' + dup.size + ', OPCK ' + dup.opck + ' sudah diisi di baris lain form ini', 'error');
   }
 
   // ---- COLLECT + SUBMIT (Penukaran Kulit) ----
@@ -3992,6 +4042,7 @@
         _pkLastSubmittedData = { tanggal: data.tanggal, rows: data.rows };
         resetPkForm();
         loadWipPenukaran(true);
+        loadTodayPenukaran();
         _pkOpenSuratJalanModal();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
@@ -4175,7 +4226,8 @@
     });
     var el = document.getElementById('pkCekList');
     if (!rows.length) { el.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
-    el.innerHTML = rows.map(function(r) {
+    var statsHtml = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty Pcs' }, { field: 'qtyLembar', label: 'Total Qty Lembar' }]);
+    el.innerHTML = statsHtml + rows.map(function(r) {
       return '<div class="wip-item">'
         + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
         + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
@@ -4290,9 +4342,149 @@
         document.getElementById('pkTerimaTableWrap').innerHTML = '';
         pkSelectedTglKirim = '';
         loadWipPenukaran(true);
+        loadTodayPenukaranKembali();
       } else {
         showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
       }
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — tab "Penukaran Kulit" (filter kolom Tanggal input) ----
+  var _pkKirimDupRowsToDelete = [];
+
+  function _renderPkKirimTodayList(rows, dayOffset) {
+    var el = document.getElementById('pkKirimTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _pkKirimDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.opck].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _pkKirimDupRowsToDelete = dupRowsToDelete;
+
+    var statsHtml = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty' }, { field: 'qtyLembar', label: 'Total Qty Lembar' }]);
+    var cols = ['SPO', 'Size', 'No. OPCK', 'Qty', 'SF', 'Qty Lembar', 'Keterangan', 'Operator'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.opck].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.opck) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '<td>' + _escToday(r.sf) + '</td>'
+        + '<td>' + _escToday(r.qtyLembar) + '</td>'
+        + '<td>' + _escToday(r.keterangan) + '</td>'
+        + '<td>' + _escToday(r.operator) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_pkKirimCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayPenukaran(dayOffset) {
+    var containerId = 'pkKirimTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('pkKirimTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_URL + '?type=today_penukaran&day=' + dayOffset, function(err, data) {
+      _showLoadTime('pkKirimTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderPkKirimTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _pkKirimCleanupDuplicates() {
+    if (!_pkKirimDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _pkKirimDupRowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_URL + '?type=cleanup_dup_penukaran&payload=' + encodeURIComponent(JSON.stringify({ rows: _pkKirimDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayPenukaran();
+      loadWipPenukaran(true);
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — tab "Penerimaan Kulit" (filter kolom Tanggal Kembali) ----
+  function _renderPkKembaliTodayList(rows, dayOffset) {
+    var el = document.getElementById('pkKembaliTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada barang yang ditandai kembali ' + dayLabel + '.</div>';
+      return;
+    }
+    var statsHtml = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty' }, { field: 'qtyLembar', label: 'Total Qty Lembar' }]);
+    var cols = ['SPO', 'Size', 'No. OPCK', 'Qty', 'Qty Lembar', 'Keterangan', 'Operator'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>'
+        + '<td>' + _escToday(r.spo) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.opck) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '<td>' + _escToday(r.qtyLembar) + '</td>'
+        + '<td>' + _escToday(r.keterangan) + '</td>'
+        + '<td>' + _escToday(r.operator) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
+  }
+
+  function loadTodayPenukaranKembali(dayOffset) {
+    var containerId = 'pkKembaliTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('pkKembaliTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_URL + '?type=today_penukaran_kembali&day=' + dayOffset, function(err, data) {
+      _showLoadTime('pkKembaliTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderPkKembaliTodayList(data.rows, dayOffset);
     });
   }
 
@@ -4759,8 +4951,9 @@
     });
     _tcDupRowsToDelete = dupRowsToDelete;
 
+    var statsHtml = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty' }]);
     var cols = ['SPO', 'Size', 'No. OPCK', 'Qty', 'Keterangan', 'Qty Lembar Minggir', 'Qty Lembar OPCK', 'Checker'];
-    var html = '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
     rows.forEach(function(r) {
@@ -5011,6 +5204,71 @@
     setTimeout(function() { t.className = 'toast'; }, duration);
   }
 
+  // ===== CEK DUPLIKAT REAL-TIME DI DALAM FORM (sebelum submit) =====
+  // Bandingkan SEMUA baris yang sudah diisi di form yang sedang dibuka — kalau ada 2 baris dengan
+  // kombinasi field kunci yang sama persis, kasih peringatan langsung supaya user tahu SEBELUM
+  // kirim (bukan baru ketahuan setelah cek sheet / lewat fitur "Cek Data Terkirim").
+  function checkDupInKulit() {
+    var cards = document.querySelectorAll('#groupsContainer .row-card');
+    var seen = {};
+    var dup = null;
+    cards.forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var gid = group ? group.id.replace('group-', '') : null;
+      var spoInput = gid ? document.getElementById('spo-input-' + gid) : null;
+      var spo = spoInput ? spoInput.value.trim() : '';
+      var size = card.querySelector('.size-select').value;
+      var opck = card.querySelector('.opck-input').value.trim();
+      if (!spo || !size || !opck) return;
+      var key = spo.toLowerCase() + '|' + size.toLowerCase() + '|' + opck.toLowerCase();
+      if (seen[key]) dup = { spo:spo, size:size, opck:opck };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ Data SPO ' + dup.spo + ', Size ' + dup.size + ', OPCK ' + dup.opck + ' sudah diisi di baris lain form ini', 'error');
+  }
+
+  function checkDupRak() {
+    var cards = document.querySelectorAll('#rkGroupsContainer .row-card');
+    var seen = {};
+    var dup = null;
+    cards.forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var gid = group ? group.id.replace('rk-group-', '') : null;
+      var spoInput = gid ? document.getElementById('rk-spo-input-' + gid) : null;
+      var spo = spoInput ? spoInput.value.trim() : '';
+      var size = card.querySelector('.rk-size-select').value;
+      var opck = card.querySelector('.rk-opck-input').value.trim();
+      var operator = card.querySelector('.rk-operator-input').value.trim();
+      var absen = card.querySelector('.rk-absen-input').value.trim();
+      if (!spo || !size || !opck || !operator || !absen) return;
+      var key = [spo.toLowerCase(), size.toLowerCase(), opck.toLowerCase(), operator.toLowerCase(), absen.toLowerCase()].join('|');
+      if (seen[key]) dup = { spo:spo, size:size, opck:opck, operator:operator, absen:absen };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ Data SPO ' + dup.spo + ', Size ' + dup.size + ', OPCK ' + dup.opck + ', Operator ' + dup.operator + ', No. Absen ' + dup.absen + ' sudah diisi di baris lain form ini', 'error');
+  }
+
+  function checkDupOut() {
+    var cards = document.querySelectorAll('#ofGroupsContainer .row-card');
+    var seen = {};
+    var dup = null;
+    cards.forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var gid = group ? group.id.replace('of-group-', '') : null;
+      var spoInput = gid ? document.getElementById('of-spo-input-' + gid) : null;
+      var spo = spoInput ? spoInput.value.trim() : '';
+      var size = card.querySelector('.of-size-input').value.trim();
+      var barcode = card.querySelector('.of-barcode-select').value;
+      var operator = card.querySelector('.of-operator-input').value.trim();
+      var absen = card.querySelector('.of-absen-input').value.trim();
+      if (!spo || !size || !barcode || !operator || !absen) return;
+      var key = [spo.toLowerCase(), size.toLowerCase(), barcode.toLowerCase(), operator.toLowerCase(), absen.toLowerCase()].join('|');
+      if (seen[key]) dup = { spo:spo, size:size, barcode:barcode, operator:operator, absen:absen };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ Data SPO ' + dup.spo + ', Size ' + dup.size + ', No. Barcode ' + dup.barcode + ', Operator ' + dup.operator + ', No. Absen ' + dup.absen + ' sudah diisi di baris lain form ini', 'error');
+  }
+
   // ===== CEK DATA TERKIRIM HARI INI (In Kulit / Rak ke Proses / Out Pola) =====
   // Baca langsung dari sheet (tanpa cache) supaya user bisa pastikan submit yang sempat
   // "gagal kirim" itu benar-benar tercetak atau tidak, tanpa perlu buka Google Sheets.
@@ -5034,7 +5292,28 @@
     loaderFn(dayOffset);
   }
 
-  function _renderTodayList(containerId, rows, showOperator, cleanupType, dayOffset) {
+  // Kotak ringkasan (Jumlah OPCK/Barcode + Total Qty dst) di atas tabel "Cek Data Terkirim" — dipakai
+  // ulang di semua menu. countField: field yang dihitung JUMLAH-nya (nilai unik/distinct), misal
+  // 'opck' atau 'barcode'. qtyFields: [{field, label}] yang di-total (dijumlahkan).
+  function _renderTodayStatsBar(rows, countField, countLabel, qtyFields) {
+    var distinctSet = {};
+    var sums = {};
+    qtyFields.forEach(function(qf) { sums[qf.field] = 0; });
+    rows.forEach(function(r) {
+      if (r[countField]) distinctSet[r[countField]] = true;
+      qtyFields.forEach(function(qf) {
+        var v = parseFloat(r[qf.field]);
+        if (!isNaN(v)) sums[qf.field] += v;
+      });
+    });
+    var chips = [{ label: countLabel, value: Object.keys(distinctSet).length }];
+    qtyFields.forEach(function(qf) { chips.push({ label: qf.label, value: sums[qf.field] }); });
+    return '<div class="today-stats">' + chips.map(function(c) {
+      return '<div class="today-stat-chip"><span class="today-stat-value">' + c.value + '</span><span class="today-stat-label">' + c.label + '</span></div>';
+    }).join('') + '</div>';
+  }
+
+  function _renderTodayList(containerId, rows, showOperator, cleanupType, dayOffset, countField, countLabel) {
     var el = document.getElementById(containerId);
     _todayDupRowsToDelete[containerId] = [];
     var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
@@ -5060,9 +5339,11 @@
     });
     _todayDupRowsToDelete[containerId] = dupRowsToDelete;
 
+    var statsHtml = _renderTodayStatsBar(rows, countField || 'opck', countLabel || 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty' }]);
+
     var cols = ['SPO', 'Size', 'No. OPCK', 'No. Barcode', 'Qty'];
     if (showOperator) cols.push('Nama Operator');
-    var html = '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
     rows.forEach(function(r) {
@@ -5120,7 +5401,7 @@
     });
   }
 
-  function _loadTodayList(type, containerId, timeElId, showOperator, cleanupType, dayOffset) {
+  function _loadTodayList(type, containerId, timeElId, showOperator, cleanupType, dayOffset, countField, countLabel) {
     if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
     _todayActiveDay[containerId] = dayOffset;
     var el = document.getElementById(containerId);
@@ -5133,13 +5414,13 @@
         el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
         return;
       }
-      _renderTodayList(containerId, data.rows, showOperator, cleanupType, dayOffset);
+      _renderTodayList(containerId, data.rows, showOperator, cleanupType, dayOffset, countField, countLabel);
     });
   }
 
-  function loadTodayInKulit(dayOffset)   { _loadTodayList('today_in_kulit', 'fTodayList', 'fTodayLoadTime', false, 'cleanup_dup_in_kulit', dayOffset); }
-  function loadTodayRakProses(dayOffset) { _loadTodayList('today_rak_proses', 'rkTodayList', 'rkTodayLoadTime', true, 'cleanup_dup_rak_proses', dayOffset); }
-  function loadTodayOutPola(dayOffset)   { _loadTodayList('today_out_pola', 'ofTodayList', 'ofTodayLoadTime', true, 'cleanup_dup_out_pola', dayOffset); }
+  function loadTodayInKulit(dayOffset)   { _loadTodayList('today_in_kulit', 'fTodayList', 'fTodayLoadTime', false, 'cleanup_dup_in_kulit', dayOffset, 'opck', 'Jumlah OPCK'); }
+  function loadTodayRakProses(dayOffset) { _loadTodayList('today_rak_proses', 'rkTodayList', 'rkTodayLoadTime', true, 'cleanup_dup_rak_proses', dayOffset, 'opck', 'Jumlah OPCK'); }
+  function loadTodayOutPola(dayOffset)   { _loadTodayList('today_out_pola', 'ofTodayList', 'ofTodayLoadTime', true, 'cleanup_dup_out_pola', dayOffset, 'barcode', 'Jumlah Barcode'); }
 
   // ===== DAILY ISSUE LOGIC =====
   var DI_APIKEY_KEY = 'dip_apikey';
