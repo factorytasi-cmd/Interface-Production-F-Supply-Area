@@ -2150,7 +2150,9 @@
   //  CONFIG — GANTI URL INI DENGAN URL APPS SCRIPT ANDA
   // ============================================================
   // ============================================================
-  var GAS_URL = 'https://script.google.com/macros/s/AKfycbymPjze__AmrViyVC2KnnEyli2aF44gmLF07bITTzcpEFKrMcgZ1H8m0wTkg4tX04li/exec';
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbw_kH-P1RyaPXJmrNR3Ow3YzieKQRNIsEWQgmASxTUJIRBc5RJaV-mgPqxcj-nAsJ8/exec';
+  // Cutting Synthetic ada di Apps Script project TERPISAH (project & URL sendiri, bukan bagian dari GAS_URL di atas)
+  var GAS_SYNTHETIC_URL = 'https://script.google.com/macros/s/AKfycbymPjze__AmrViyVC2KnnEyli2aF44gmLF07bITTzcpEFKrMcgZ1H8m0wTkg4tX04li/exec';
   // ============================================================
 
   var masterData = { spo: [] };
@@ -3898,7 +3900,7 @@
     document.getElementById('synSpoLoadTime').textContent = '';
     _hideLoadError('synSpo');
     var t0 = Date.now();
-    jsonp(GAS_URL + '?type=synthetic_in_master', function(err, data) {
+    jsonp(GAS_SYNTHETIC_URL + '?type=synthetic_in_master', function(err, data) {
       _showLoadTime('synSpoLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         setSynSPOStatus('error');
@@ -4203,7 +4205,7 @@
     if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
 
     showLoading(true);
-    var url = GAS_URL + '?type=save_synthetic_in&payload=' + encodeURIComponent(JSON.stringify(data));
+    var url = GAS_SYNTHETIC_URL + '?type=save_synthetic_in&payload=' + encodeURIComponent(JSON.stringify(data));
 
     jsonp(url, function(err, result) {
       showLoading(false);
@@ -4286,7 +4288,7 @@
     el.innerHTML = '<div class="wip-empty">Memuat...</div>';
     document.getElementById('synTodayLoadTime').textContent = '';
     var t0 = Date.now();
-    jsonp(GAS_URL + '?type=today_synthetic_in&day=' + dayOffset, function(err, data) {
+    jsonp(GAS_SYNTHETIC_URL + '?type=today_synthetic_in&day=' + dayOffset, function(err, data) {
       _showLoadTime('synTodayLoadTime', Date.now() - t0);
       if (err || !data || data.status !== 'ok') {
         el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
@@ -4304,7 +4306,7 @@
     );
     if (!ok) return;
     showLoading(true);
-    var url = GAS_URL + '?type=cleanup_dup_synthetic_in&payload=' + encodeURIComponent(JSON.stringify({ rows: _synDupRowsToDelete }));
+    var url = GAS_SYNTHETIC_URL + '?type=cleanup_dup_synthetic_in&payload=' + encodeURIComponent(JSON.stringify({ rows: _synDupRowsToDelete }));
     jsonp(url, function(err, data) {
       showLoading(false);
       if (err || !data || data.status !== 'ok') {
