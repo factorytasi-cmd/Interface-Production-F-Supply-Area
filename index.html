@@ -968,7 +968,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('Input Potong Boros')">
+        <div class="card card-boros" onclick="goTo('page-boros-synthetic')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-boros">Boros</span>
@@ -977,9 +977,9 @@
               </div>
             </div>
             <div class="card-title">Input Potong Boros</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat hasil potongan boros (OK/NOK) per PRC</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per PRC</span>
               <span class="card-btn btn-boros">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1306,6 +1306,100 @@
       </div>
       <div class="load-time-note" id="outSynTodayLoadTime"></div>
       <div id="outSynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: INPUT POTONG BOROS (CUTTING SYNTHETIC) ==================== -->
+  <div class="page" id="page-boros-synthetic">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting-synthetic')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:15px;letter-spacing:1.5px">INPUT POTONG BOROS</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#DB2777,#EC4899)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING SYNTHETIC › POTONG BOROS</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(219,39,119,0.12);border-color:rgba(219,39,119,0.3)">
+        <i class="ti ti-scissors" style="color:#DB2777"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#9D174D">Input Potong Boros</div>
+          <div class="form-header-pill-sub">Cutting Synthetic Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="borsynTanggal">
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data Proses (dari Master List_Rak Ke Proses Operator)</label>
+        <span id="borsynSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(219,39,119,0.12);color:#9D174D;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="borsynSpoLoadTime"></div>
+      <div class="load-error-row" id="borsynSpoErrorRow" style="display:none">
+        <span id="borsynSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadBorsynMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="borsynGroupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addBorsynGroup()" style="border-color:#DB2777;background:rgba(219,39,119,0.08);color:#9D174D">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="borsynBtnSubmit" onclick="submitBorsynForm()" style="background:linear-gradient(135deg,#DB2777,#EC4899);box-shadow:0 4px 16px rgba(219,39,119,0.3)">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="borsynTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('borsynTodayTabs','borsynTodayList',0,this,loadTodayBorsyn)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('borsynTodayTabs','borsynTodayList',1,this,loadTodayBorsyn)">Kemarin</button>
+      </div>
+      <div class="load-time-note" id="borsynTodayLoadTime"></div>
+      <div id="borsynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -2460,6 +2554,7 @@
     if (pageId === "page-synthetic-in") initSynForm();
     if (pageId === "page-rak-synthetic") initRsynForm();
     if (pageId === "page-out-synthetic") initOutSynForm();
+    if (pageId === "page-boros-synthetic") initBorsynForm();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
@@ -5726,6 +5821,682 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayOutSyn();
+    });
+  }
+
+  // ===== INPUT POTONG BOROS (CUTTING SYNTHETIC) =====
+  var masterDataBorsyn = { receipts: [] };
+  var _borsynLoadedOnce = false;
+  var borsynGroupCount = 0, borsynRowCount = 0;
+  var borsynGroupsData = {};
+  var BORSYN_POLA_OPTIONS = ['Body Back', 'Body Palm', 'Thumb', 'Machi', 'Kombinasi'];
+  var BORSYN_KETERANGAN_OPTIONS = ['Shading', 'Bergaris', 'Bintik', 'Noda Kuning', 'Kusut'];
+
+  function initBorsynForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('borsynTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetBorsynForm();
+    loadBorsynMasterData();
+  }
+
+  function resetBorsynForm() {
+    document.getElementById('borsynGroupsContainer').innerHTML = '';
+    borsynGroupCount = 0;
+    borsynGroupsData = {};
+    addBorsynGroup();
+  }
+
+  // ---- LOAD MASTER DATA (Riwayat "Master List_Rak Ke Proses Operator", TANPA filter status —
+  // boros bisa dicatat untuk PRC apa saja yang sudah pernah diproses) ----
+  function loadBorsynMasterData(force) {
+    if (_borsynLoadedOnce && !force) { setBorsynSPOStatus('ok', distinctBorsynSPOs('').length); return; }
+    setBorsynSPOStatus('loading');
+    document.getElementById('borsynSpoLoadTime').textContent = '';
+    _hideLoadError('borsynSpo');
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=boros_synthetic_master', function(err, data) {
+      _showLoadTime('borsynSpoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setBorsynSPOStatus('error');
+        _showLoadError('borsynSpo', err, data);
+        return;
+      }
+      masterDataBorsyn.receipts = data.receipts || [];
+      _borsynLoadedOnce = true;
+      setBorsynSPOStatus('ok', distinctBorsynSPOs('').length);
+    });
+  }
+
+  function setBorsynSPOStatus(state, count) {
+    var el = document.getElementById('borsynSpoStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(219,39,119,0.12)'; el.style.color = '#9D174D';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  // ---- HELPER: baca riwayat (masterDataBorsyn.receipts) ----
+  function distinctBorsynSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataBorsyn.receipts.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  function borsynStyleForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterDataBorsyn.receipts.length; i++) {
+      if (masterDataBorsyn.receipts[i].spo.toLowerCase() === s) return masterDataBorsyn.receipts[i].style;
+    }
+    return null;
+  }
+
+  function borsynPrcsForSPO(spo, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataBorsyn.receipts.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (seen[r.prc]) return;
+      if (q && r.prc.toLowerCase().indexOf(q) < 0) return;
+      seen[r.prc] = true;
+      out.push(r.prc);
+    });
+    return out;
+  }
+
+  function borsynNoPrcsFor(spo, prc, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var p = (prc || '').trim().toLowerCase();
+    var q = (query || '').toLowerCase().trim();
+    return masterDataBorsyn.receipts.filter(function(r) {
+      if (r.spo.toLowerCase() !== s) return false;
+      if (r.prc.toLowerCase() !== p) return false;
+      if (q && r.noPrc.toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  function findBorsynReceipt(spo, prc, noPrc) {
+    var s = (spo || '').trim().toLowerCase();
+    var p = (prc || '').trim().toLowerCase();
+    var n = (noPrc || '').trim().toLowerCase();
+    if (!s || !p || !n) return null;
+    for (var i = 0; i < masterDataBorsyn.receipts.length; i++) {
+      var r = masterDataBorsyn.receipts[i];
+      if (r.spo.toLowerCase() === s && r.prc.toLowerCase() === p && r.noPrc.toLowerCase() === n) return r;
+    }
+    return null;
+  }
+
+  // ---- SPO GROUPS ----
+  function addBorsynGroup() {
+    borsynGroupCount++;
+    var gid = borsynGroupCount;
+    borsynGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('borsynGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'borsyn-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteBorsynGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="borsyn-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="borsyn-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="borsyn-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail PRC</span>'
+      + '<span class="rowCountBadge" id="borsyn-row-badge-' + gid + '" style="background:rgba(219,39,119,0.15);color:#9D174D;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 PRC</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="borsyn-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addBorsynRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah PRC'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupBorsynSPOInput(gid);
+    addBorsynRow(gid);
+    updateBorsynGroupDeleteButtons();
+  }
+
+  function updateBorsynGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#borsynGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteBorsynGroup(gid) {
+    var el = document.getElementById('borsyn-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete borsynGroupsData[gid];
+    updateBorsynGroupDeleteButtons();
+  }
+
+  // ---- SPO (manual + suggest, dari Master List_Rak Ke Proses Operator) ----
+  function setupBorsynSPOInput(gid) {
+    var input = document.getElementById('borsyn-spo-input-' + gid);
+    var drop  = document.getElementById('borsyn-spo-drop-' + gid);
+
+    input.oninput = function() {
+      borsynGroupsData[gid].spo = input.value.trim();
+      renderBorsynGroupSPODrop(gid, input.value);
+      matchBorsynGroupSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderBorsynGroupSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihBorsynGroupSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderBorsynGroupSPODrop(gid, query) {
+    var drop = document.getElementById('borsyn-spo-drop-' + gid);
+    if (!masterDataBorsyn.receipts.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctBorsynSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihBorsynGroupSPO(gid, spo, style) {
+    document.getElementById('borsyn-spo-input-' + gid).value = spo;
+    document.getElementById('borsyn-spo-drop-' + gid).classList.remove('open');
+    applyBorsynGroupSPO(gid, spo, style);
+  }
+
+  function matchBorsynGroupSPOStyle(gid, typedSpo) {
+    var style = borsynStyleForSPO(typedSpo);
+    if (style) {
+      applyBorsynGroupSPO(gid, typedSpo.trim(), style);
+    } else {
+      borsynGroupsData[gid].spo = typedSpo.trim();
+      borsynGroupsData[gid].style = '';
+      document.getElementById('borsyn-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('borsyn-style-display-' + gid).className = 'style-display';
+    }
+  }
+
+  function applyBorsynGroupSPO(gid, spo, style) {
+    borsynGroupsData[gid].spo = spo;
+    borsynGroupsData[gid].style = style;
+    var disp = document.getElementById('borsyn-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    // SPO berubah -> PRC/No.PRC & auto-fill di semua baris grup ini sudah tidak relevan
+    document.querySelectorAll('#borsyn-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      card.querySelector('.borsyn-prc-input').value = '';
+      card.querySelector('.borsyn-noprc-input').value = '';
+      clearBorsynRowMatch(card.id.replace('borsyn-row-', ''));
+    });
+  }
+
+  // ---- ROWS (PRC) di dalam tiap grup SPO ----
+  function addBorsynRow(gid) {
+    borsynRowCount++;
+    var rid = borsynRowCount;
+    var container = document.getElementById('borsyn-rows-container-' + gid);
+
+    var polaOpts = BORSYN_POLA_OPTIONS.map(function(p) { return '<option value="'+p+'">'+p+'</option>'; }).join('');
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'borsyn-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">PRC '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteBorsynRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">PRC</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input borsyn-prc-input" id="borsyn-prc-input-'+rid+'" placeholder="Ketik / pilih PRC...">'
+      + '<div class="spo-ac-drop" id="borsyn-prc-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. PRC</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input borsyn-noprc-input" id="borsyn-noprc-input-'+rid+'" placeholder="Ketik / pilih No. PRC...">'
+      + '<div class="spo-ac-drop" id="borsyn-noprc-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">Size</span><input type="text" class="row-field-input borsyn-size-display" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">No. Roll</span><input type="text" class="row-field-input borsyn-noroll-display" readonly placeholder="Otomatis"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px"><span class="row-field-label">Material</span><input type="text" class="row-field-input borsyn-material-display" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Pola</span>'
+      + '<select class="row-field-select borsyn-pola-select"><option value="">— Pilih Pola —</option>'+polaOpts+'</select>'
+      + '</div>'
+      + '<div class="row-grid" style="margin-top:8px">'
+      + '<div class="row-field"><span class="row-field-label">Qty OK</span><input type="number" class="row-field-input borsyn-qtyok-input" placeholder="0" min="0"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty NOK</span><input type="number" class="row-field-input borsyn-qtynok-input" placeholder="0" min="0"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Keterangan</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input borsyn-keterangan-input" id="borsyn-keterangan-input-'+rid+'" placeholder="Ketik / pilih keterangan...">'
+      + '<div class="spo-ac-drop" id="borsyn-keterangan-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupBorsynPrcInput(gid, rid);
+    setupBorsynNoPrcInput(gid, rid);
+    setupBorsynKeteranganInput(rid);
+    updateBorsynRowBadge(gid);
+  }
+
+  function deleteBorsynRow(gid, rid) {
+    var container = document.getElementById('borsyn-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 PRC per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('borsyn-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateBorsynRowBadge(gid);
+  }
+
+  function updateBorsynRowBadge(gid) {
+    var container = document.getElementById('borsyn-rows-container-' + gid);
+    var badge = document.getElementById('borsyn-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' PRC';
+  }
+
+  // ---- PRC per baris (manual + suggest, difilter oleh SPO grup) ----
+  function setupBorsynPrcInput(gid, rid) {
+    var input = document.getElementById('borsyn-prc-input-' + rid);
+    var drop  = document.getElementById('borsyn-prc-drop-' + rid);
+
+    input.oninput = function() {
+      document.getElementById('borsyn-noprc-input-' + rid).value = '';
+      clearBorsynRowMatch(rid);
+      renderBorsynPrcDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderBorsynPrcDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-prc]');
+      if (!item) return;
+      pilihBorsynPrc(gid, rid, item.getAttribute('data-prc'));
+    });
+  }
+
+  function renderBorsynPrcDrop(gid, rid, query) {
+    var drop = document.getElementById('borsyn-prc-drop-' + rid);
+    var spo = borsynGroupsData[gid] ? borsynGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = borsynPrcsForSPO(spo, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">PRC tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(p) {
+      var pHL = q ? p.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : p;
+      return '<div class="spo-ac-item" data-prc="' + p + '"><span class="spo-ac-spo">' + pHL + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihBorsynPrc(gid, rid, prc) {
+    document.getElementById('borsyn-prc-input-' + rid).value = prc;
+    document.getElementById('borsyn-prc-drop-' + rid).classList.remove('open');
+    document.getElementById('borsyn-noprc-input-' + rid).value = '';
+    clearBorsynRowMatch(rid);
+  }
+
+  // ---- NO. PRC per baris (manual + suggest, difilter oleh SPO + PRC) ----
+  function setupBorsynNoPrcInput(gid, rid) {
+    var input = document.getElementById('borsyn-noprc-input-' + rid);
+    var drop  = document.getElementById('borsyn-noprc-drop-' + rid);
+
+    input.oninput = function() {
+      tryMatchBorsynRow(gid, rid);
+      renderBorsynNoPrcDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderBorsynNoPrcDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-noprc]');
+      if (!item) return;
+      pilihBorsynNoPrc(gid, rid, item.getAttribute('data-noprc'));
+    });
+  }
+
+  function renderBorsynNoPrcDrop(gid, rid, query) {
+    var drop = document.getElementById('borsyn-noprc-drop-' + rid);
+    var spo = borsynGroupsData[gid] ? borsynGroupsData[gid].spo : '';
+    var prc = document.getElementById('borsyn-prc-input-' + rid).value.trim();
+    if (!spo || !prc) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO &amp; PRC dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = borsynNoPrcsFor(spo, prc, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. PRC tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var nHL = q ? r.noPrc.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.noPrc;
+      return '<div class="spo-ac-item" data-noprc="' + r.noPrc + '"><span class="spo-ac-spo">' + nHL + '</span><span class="spo-ac-style">' + r.size + ' · ' + r.material + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihBorsynNoPrc(gid, rid, noPrc) {
+    document.getElementById('borsyn-noprc-input-' + rid).value = noPrc;
+    document.getElementById('borsyn-noprc-drop-' + rid).classList.remove('open');
+    tryMatchBorsynRow(gid, rid);
+  }
+
+  function tryMatchBorsynRow(gid, rid) {
+    var spo   = borsynGroupsData[gid] ? borsynGroupsData[gid].spo : '';
+    var prc   = document.getElementById('borsyn-prc-input-' + rid).value.trim();
+    var noPrc = document.getElementById('borsyn-noprc-input-' + rid).value.trim();
+    var match = findBorsynReceipt(spo, prc, noPrc);
+    if (!match) { clearBorsynRowMatch(rid); return; }
+    var row = document.getElementById('borsyn-row-' + rid);
+    row.querySelector('.borsyn-size-display').value     = match.size;
+    row.querySelector('.borsyn-noroll-display').value   = match.noRoll;
+    row.querySelector('.borsyn-material-display').value = match.material;
+    checkDupBorsyn();
+  }
+
+  function clearBorsynRowMatch(rid) {
+    var row = document.getElementById('borsyn-row-' + rid);
+    if (!row) return;
+    ['size','noroll','material'].forEach(function(f) {
+      var el = row.querySelector('.borsyn-' + f + '-display');
+      if (el) el.value = '';
+    });
+  }
+
+  // ---- KETERANGAN per baris (manual + suggest dari daftar tetap) ----
+  function setupBorsynKeteranganInput(rid) {
+    var input = document.getElementById('borsyn-keterangan-input-' + rid);
+    var drop  = document.getElementById('borsyn-keterangan-drop-' + rid);
+
+    input.oninput = function() { renderBorsynKeteranganDrop(rid, input.value); };
+    input.onfocus = function() { renderBorsynKeteranganDrop(rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-ket]');
+      if (!item) return;
+      pilihBorsynKeterangan(rid, item.getAttribute('data-ket'));
+    });
+  }
+
+  function renderBorsynKeteranganDrop(rid, query) {
+    var drop = document.getElementById('borsyn-keterangan-drop-' + rid);
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? BORSYN_KETERANGAN_OPTIONS.filter(function(k) { return k.toLowerCase().indexOf(q) >= 0; })
+      : BORSYN_KETERANGAN_OPTIONS;
+    if (filtered.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Tidak ada saran — bisa diisi manual</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = filtered.map(function(k) {
+      var kHL = q ? k.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k;
+      return '<div class="spo-ac-item" data-ket="' + k + '"><span class="spo-ac-spo">' + kHL + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihBorsynKeterangan(rid, ket) {
+    document.getElementById('borsyn-keterangan-input-' + rid).value = ket;
+    document.getElementById('borsyn-keterangan-drop-' + rid).classList.remove('open');
+  }
+
+  // Peringatan real-time kalau SPO+PRC+No.PRC yang sama sudah diisi di baris lain form ini.
+  function checkDupBorsyn() {
+    var cards = document.querySelectorAll('#borsynGroupsContainer .row-card');
+    var seen = {};
+    var dup = null;
+    cards.forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var gid = group ? group.id.replace('borsyn-group-', '') : null;
+      var spoInput = gid ? document.getElementById('borsyn-spo-input-' + gid) : null;
+      var spo = spoInput ? spoInput.value.trim() : '';
+      var prc = card.querySelector('.borsyn-prc-input').value.trim();
+      var noPrc = card.querySelector('.borsyn-noprc-input').value.trim();
+      if (!spo || !prc || !noPrc) return;
+      var key = [spo.toLowerCase(), prc.toLowerCase(), noPrc.toLowerCase()].join('|');
+      if (seen[key]) dup = { spo:spo, prc:prc, noPrc:noPrc };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ Data SPO ' + dup.spo + ', PRC ' + dup.prc + ', No. PRC ' + dup.noPrc + ' sudah diisi di baris lain form ini', 'error');
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectBorsynData() {
+    var tanggal = document.getElementById('borsynTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+
+    var groups = document.querySelectorAll('#borsynGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('borsyn-group-', '');
+      var spo = document.getElementById('borsyn-spo-input-' + gid).value.trim();
+      var style = borsynGroupsData[gid] ? borsynGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 PRC harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var prc        = card.querySelector('.borsyn-prc-input').value.trim();
+        var noPrc      = card.querySelector('.borsyn-noprc-input').value.trim();
+        var size       = card.querySelector('.borsyn-size-display').value;
+        var noRoll     = card.querySelector('.borsyn-noroll-display').value;
+        var material   = card.querySelector('.borsyn-material-display').value;
+        var pola       = card.querySelector('.borsyn-pola-select').value;
+        var qtyOk      = card.querySelector('.borsyn-qtyok-input').value;
+        var qtyNok     = card.querySelector('.borsyn-qtynok-input').value;
+        var keterangan = card.querySelector('.borsyn-keterangan-input').value.trim();
+        if (!prc)      { errorMsg = 'PRC wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!noPrc)    { errorMsg = 'No. PRC wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!size || !noRoll || !material) { errorMsg = 'Pilih PRC & No. PRC dari daftar saran agar Size/No.Roll/Material terisi (SPO ' + spo + ')'; return; }
+        if (!pola)     { errorMsg = 'Pola wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
+        if (qtyOk === '')  { errorMsg = 'Qty OK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (qtyNok === '') { errorMsg = 'Qty NOK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!keterangan) { errorMsg = 'Keterangan wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        allRows.push({ spo:spo, style:style, size:size, prc:prc, noPrc:noPrc, noRoll:noRoll, material:material, pola:pola, qtyOk:qtyOk, qtyNok:qtyNok, keterangan:keterangan });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
+  }
+
+  function submitBorsynForm() {
+    var data = collectBorsynData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_SYNTHETIC_URL + '?type=save_potong_boros&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetBorsynForm();
+        loadTodayBorsyn();
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
+  var _borsynDupRowsToDelete = [];
+
+  function _renderBorsynTodayList(rows, dayOffset) {
+    var el = document.getElementById('borsynTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _borsynDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.prc, r.noPrc].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _borsynDupRowsToDelete = dupRowsToDelete;
+
+    var statsHtml = _renderTodayStatsBar(rows, 'prc', 'Jumlah PRC', [{ field: 'qtyOk', label: 'Total Qty OK' }, { field: 'qtyNok', label: 'Total Qty NOK' }]);
+    var cols = ['SPO', 'PRC', 'No. PRC', 'Size', 'Pola', 'Qty OK', 'Qty NOK', 'Keterangan'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.prc, r.noPrc].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.prc) + '</td>'
+        + '<td>' + _escToday(r.noPrc) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.pola) + '</td>'
+        + '<td>' + _escToday(r.qtyOk) + '</td>'
+        + '<td>' + _escToday(r.qtyNok) + '</td>'
+        + '<td>' + _escToday(r.keterangan) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_borsynCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayBorsyn(dayOffset) {
+    var containerId = 'borsynTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('borsynTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=today_potong_boros&day=' + dayOffset, function(err, data) {
+      _showLoadTime('borsynTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderBorsynTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _borsynCleanupDuplicates() {
+    if (!_borsynDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _borsynDupRowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_SYNTHETIC_URL + '?type=cleanup_dup_potong_boros&payload=' + encodeURIComponent(JSON.stringify({ rows: _borsynDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayBorsyn();
     });
   }
 
