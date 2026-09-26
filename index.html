@@ -192,6 +192,30 @@
     }
     .style-display.filled { color: #111; background: white; border-color: #EAB308; font-weight: 500; }
 
+    /* DUET? TOGGLE (lebih dari 1 operator per baris) */
+    .duet-toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 11px; border: 1px solid #E0E2E0; border-radius: 10px;
+      background: #FAFAF8; cursor: pointer;
+    }
+    .duet-toggle-label { font-size: 12px; font-weight: 600; color: #333; }
+    .duet-switch { width: 36px; height: 20px; border-radius: 99px; position: relative; flex-shrink: 0; transition: background .15s; }
+    .duet-switch.off { background: #CBD0CE; }
+    .duet-switch.on { background: #EA580C; }
+    .duet-knob { width: 16px; height: 16px; border-radius: 50%; background: white; position: absolute; top: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.25); transition: left .15s, right .15s; }
+    .duet-switch.off .duet-knob { left: 2px; }
+    .duet-switch.on .duet-knob { right: 2px; }
+    .duet-member-card {
+      position: relative; border: 1px dashed #D8DAD7; border-radius: 12px;
+      padding: 10px; margin-bottom: 8px; background: #FAFAF8;
+    }
+    .duet-member-num { font-size: 10px; font-weight: 700; color: #EA580C; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .duet-member-remove {
+      position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(220,53,69,0.1); color: #B91C1C; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; cursor: pointer;
+    }
+
     /* ROWS TABLE */
     .rows-section { margin-top: 4px; }
     .rows-label {
@@ -4595,6 +4619,8 @@
     document.getElementById('rsynGroupsContainer').innerHTML = '';
     rsynGroupCount = 0;
     rsynGroupsData = {};
+    rsynDuetActive = {};
+    rsynDuetMembers = {};
     addRsynGroup();
   }
 
@@ -4868,6 +4894,13 @@
       + '<div class="row-field"><span class="row-field-label">Kategori</span><input type="text" class="row-field-input rsyn-kategori-display" readonly placeholder="Otomatis"></div>'
       + '</div>'
       + '<div class="row-field" style="margin-top:8px"><span class="row-field-label">Potong Boros</span><input type="text" class="row-field-input rsyn-boros-display" readonly placeholder="Otomatis"></div>'
+
+      + '<div class="duet-toggle-row" id="rsyn-duet-toggle-'+rid+'" onclick="toggleRsynDuet(\''+rid+'\')" style="margin-top:10px">'
+      + '<span class="duet-toggle-label">Duet? <span style="font-weight:400;color:#aaa;font-size:9px">(lebih dari 1 operator)</span></span>'
+      + '<div class="duet-switch off" id="rsyn-duet-switch-'+rid+'"><div class="duet-knob"></div></div>'
+      + '</div>'
+
+      + '<div id="rsyn-operator-single-'+rid+'">'
       + '<div class="row-field" style="margin-top:8px">'
       + '<span class="row-field-label">Operator</span>'
       + '<div class="spo-ac-wrap">'
@@ -4878,7 +4911,17 @@
       + '<div class="row-field" style="margin-top:8px">'
       + '<span class="row-field-label">No. Absen</span>'
       + '<input type="text" class="row-field-input rsyn-absen-display" id="rsyn-absen-display-'+rid+'" readonly placeholder="Otomatis">'
-      + '</div></div>';
+      + '</div>'
+      + '</div>'
+
+      + '<div id="rsyn-operator-duet-'+rid+'" style="display:none;margin-top:8px">'
+      + '<div id="rsyn-duet-members-'+rid+'"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addRsynDuetMember(\''+rid+'\')" style="margin-top:4px">'
+      + '<i class="ti ti-plus" style="font-size:14px"></i> Tambah Operator'
+      + '</button>'
+      + '</div>'
+
+      + '</div>';
 
     container.appendChild(div);
     setupRsynPrcInput(gid, rid);
@@ -4896,7 +4939,123 @@
     }
     var el = document.getElementById('rsyn-row-' + rid);
     if (el) el.parentNode.removeChild(el);
+    delete rsynDuetActive[rid];
+    delete rsynDuetMembers[rid];
     updateRsynRowBadge(gid);
+  }
+
+  // ---- DUET? (lebih dari 1 operator per baris PRC) ----
+  var rsynDuetActive = {};
+  var rsynDuetMembers = {};
+  var rsynDuetMemberCount = 0;
+
+  function toggleRsynDuet(rid) {
+    var active = !rsynDuetActive[rid];
+    rsynDuetActive[rid] = active;
+    document.getElementById('rsyn-duet-switch-' + rid).className = 'duet-switch ' + (active ? 'on' : 'off');
+    document.getElementById('rsyn-operator-single-' + rid).style.display = active ? 'none' : '';
+    document.getElementById('rsyn-operator-duet-' + rid).style.display = active ? '' : 'none';
+    if (active && (!rsynDuetMembers[rid] || rsynDuetMembers[rid].length === 0)) {
+      rsynDuetMembers[rid] = [];
+      addRsynDuetMember(rid);
+      addRsynDuetMember(rid);
+    }
+  }
+
+  function addRsynDuetMember(rid) {
+    rsynDuetMemberCount++;
+    var mid = rsynDuetMemberCount;
+    if (!rsynDuetMembers[rid]) rsynDuetMembers[rid] = [];
+    rsynDuetMembers[rid].push(mid);
+
+    var container = document.getElementById('rsyn-duet-members-' + rid);
+    var div = document.createElement('div');
+    div.className = 'duet-member-card';
+    div.id = 'rsyn-duet-member-' + mid;
+
+    div.innerHTML = '<div class="duet-member-num">OPERATOR #' + rsynDuetMembers[rid].length + '</div>'
+      + '<div class="duet-member-remove" onclick="removeRsynDuetMember(\''+rid+'\',\''+mid+'\')"><i class="ti ti-x"></i></div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Operator</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input rsyn-duet-operator-input" id="rsyn-duet-operator-input-'+mid+'" placeholder="Ketik nama operator...">'
+      + '<div class="spo-ac-drop" id="rsyn-duet-operator-drop-'+mid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input rsyn-duet-absen-display" id="rsyn-duet-absen-display-'+mid+'" readonly placeholder="Otomatis">'
+      + '</div>'
+      + '<div class="row-field">'
+      + '<span class="row-field-label">Proses</span>'
+      + '<input type="text" class="row-field-input rsyn-duet-proses-input" id="rsyn-duet-proses-input-'+mid+'" placeholder="Ketik proses...">'
+      + '</div>';
+
+    container.appendChild(div);
+    setupRsynDuetOperatorInput(mid);
+  }
+
+  function removeRsynDuetMember(rid, mid) {
+    if (rsynDuetMembers[rid].length <= 2) {
+      showToast('Minimal 2 operator untuk mode Duet', 'error');
+      return;
+    }
+    var el = document.getElementById('rsyn-duet-member-' + mid);
+    if (el) el.parentNode.removeChild(el);
+    rsynDuetMembers[rid] = rsynDuetMembers[rid].filter(function(x) { return x != mid; });
+    rsynDuetMembers[rid].forEach(function(m, idx) {
+      var card = document.getElementById('rsyn-duet-member-' + m);
+      if (card) {
+        var label = card.querySelector('.duet-member-num');
+        if (label) label.textContent = 'OPERATOR #' + (idx + 1);
+      }
+    });
+  }
+
+  // ---- OPERATOR per anggota Duet (manual + suggest, dari DATA MASTER OPERATOR) ----
+  function setupRsynDuetOperatorInput(mid) {
+    var input = document.getElementById('rsyn-duet-operator-input-' + mid);
+    var drop  = document.getElementById('rsyn-duet-operator-drop-' + mid);
+
+    input.oninput = function() {
+      document.getElementById('rsyn-duet-absen-display-' + mid).value = '';
+      renderRsynDuetOperatorDrop(mid, input.value);
+    };
+    input.onfocus = function() { renderRsynDuetOperatorDrop(mid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-nama]');
+      if (!item) return;
+      pilihRsynDuetOperator(mid, item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderRsynDuetOperatorDrop(mid, query) {
+    var drop = document.getElementById('rsyn-duet-operator-drop-' + mid);
+    if (!masterDataRsyn.operators.length) { drop.classList.remove('open'); return; }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? masterDataRsyn.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
+      : masterDataRsyn.operators;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var namaHL = q ? o.nama.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o.nama;
+      return '<div class="spo-ac-item" data-nama="' + o.nama + '" data-absen="' + o.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + o.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihRsynDuetOperator(mid, nama, absen) {
+    document.getElementById('rsyn-duet-operator-input-' + mid).value = nama;
+    document.getElementById('rsyn-duet-operator-drop-' + mid).classList.remove('open');
+    document.getElementById('rsyn-duet-absen-display-' + mid).value = absen;
   }
 
   function updateRsynRowBadge(gid) {
@@ -5120,6 +5279,7 @@
 
       rowCards.forEach(function(card) {
         if (errorMsg) return;
+        var rid      = card.id.replace('rsyn-row-', '');
         var prc      = card.querySelector('.rsyn-prc-input').value.trim();
         var noPrc    = card.querySelector('.rsyn-noprc-input').value.trim();
         var size     = card.querySelector('.rsyn-size-display').value;
@@ -5129,14 +5289,35 @@
         var noRoll   = card.querySelector('.rsyn-noroll-display').value;
         var kategori = card.querySelector('.rsyn-kategori-display').value;
         var boros    = card.querySelector('.rsyn-boros-display').value;
-        var operator = card.querySelector('.rsyn-operator-input').value.trim();
-        var absen    = card.querySelector('.rsyn-absen-display').value;
         if (!prc)      { errorMsg = 'PRC wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!noPrc)    { errorMsg = 'No. PRC wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!size || !qty) { errorMsg = 'Pilih PRC & No. PRC dari daftar saran agar Size/Qty/dst terisi (SPO ' + spo + ')'; return; }
-        if (!operator) { errorMsg = 'Operator wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
-        if (!absen)    { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ')'; return; }
-        allRows.push({ spo:spo, style:style, prc:prc, noPrc:noPrc, size:size, qty:qty, material:material, meter:meter, noRoll:noRoll, kategori:kategori, boros:boros, operator:operator, absen:absen });
+
+        var operator, absen, proses;
+        if (rsynDuetActive[rid]) {
+          var members = rsynDuetMembers[rid] || [];
+          if (members.length < 2) { errorMsg = 'Minimal 2 operator untuk mode Duet (SPO ' + spo + ')'; return; }
+          var ops = [], abs = [], prs = [], incomplete = false;
+          members.forEach(function(mid) {
+            var opVal = document.getElementById('rsyn-duet-operator-input-' + mid).value.trim();
+            var abVal = document.getElementById('rsyn-duet-absen-display-' + mid).value;
+            var prVal = document.getElementById('rsyn-duet-proses-input-' + mid).value.trim();
+            if (!opVal || !abVal || !prVal) incomplete = true;
+            ops.push(opVal); abs.push(abVal); prs.push(prVal);
+          });
+          if (incomplete) { errorMsg = 'Semua operator (Operator, No. Absen, Proses) wajib diisi lengkap saat Duet aktif (SPO ' + spo + ')'; return; }
+          operator = ops.join('/');
+          absen = abs.join('/');
+          proses = prs.join('/');
+        } else {
+          operator = card.querySelector('.rsyn-operator-input').value.trim();
+          absen = card.querySelector('.rsyn-absen-display').value;
+          proses = '';
+          if (!operator) { errorMsg = 'Operator wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+          if (!absen)    { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ')'; return; }
+        }
+
+        allRows.push({ spo:spo, style:style, prc:prc, noPrc:noPrc, size:size, qty:qty, material:material, meter:meter, noRoll:noRoll, kategori:kategori, boros:boros, operator:operator, absen:absen, proses:proses });
       });
     });
 
@@ -5195,7 +5376,7 @@
     _rsynDupRowsToDelete = dupRowsToDelete;
 
     var statsHtml = _renderTodayStatsBar(rows, 'prc', 'Jumlah PRC', [{ field: 'qty', label: 'Total Qty' }, { field: 'meter', label: 'Total Meter' }]);
-    var cols = ['SPO', 'PRC', 'No. PRC', 'Size', 'Qty', 'Material', 'Operator'];
+    var cols = ['SPO', 'PRC', 'No. PRC', 'Size', 'Qty', 'Material', 'Operator', 'Proses'];
     var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
@@ -5211,6 +5392,7 @@
         + '<td>' + _escToday(r.qty) + '</td>'
         + '<td>' + _escToday(r.material) + '</td>'
         + '<td>' + _escToday(r.operator) + '</td>'
+        + '<td>' + _escToday(r.proses) + '</td>'
         + '</tr>';
     });
     html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
