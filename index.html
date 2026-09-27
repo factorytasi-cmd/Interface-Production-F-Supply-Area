@@ -361,6 +361,10 @@
     .wip-group.open .wip-group-body { display: flex; }
     .wip-group-body .wip-item { border-color: #E8E8E6; }
 
+    .wip-group-label-static {
+      font-size: 10px; font-weight: 700; color: #888; letter-spacing: 1px; text-transform: uppercase;
+      margin: 0 0 8px 2px;
+    }
     .wip-filter { display: flex; gap: 8px; margin-bottom: 12px; }
     .wip-filter-input {
       flex: 1; padding: 9px 12px; border-radius: 10px;
@@ -1002,7 +1006,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('Data WIP Cutting Synthetic')">
+        <div class="card card-wip" onclick="goTo('page-wip-synthetic')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-wip">Monitoring</span>
@@ -1011,9 +1015,9 @@
               </div>
             </div>
             <div class="card-title">Data WIP Cutting Synthetic</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Pantau WIP Rak &amp; WIP Proses secara real-time</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-chart-bar" style="font-size:13px"></i> Monitoring</span>
               <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1400,6 +1404,113 @@
       </div>
       <div class="load-time-note" id="borsynTodayLoadTime"></div>
       <div id="borsynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: DATA WIP CUTTING SYNTHETIC ==================== -->
+  <div class="page" id="page-wip-synthetic">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting-synthetic')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">DATA WIP CUTTING SYNTHETIC</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING SYNTHETIC › DATA WIP</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(14,165,233,0.12);border-color:rgba(14,165,233,0.3)">
+        <i class="ti ti-chart-bar" style="color:#0EA5E9"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#075985">Data WIP Cutting Synthetic</div>
+          <div class="form-header-pill-sub">Cutting Synthetic Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari Master List_Penerimaan Synthetic &amp; Master List_Rak Ke Proses Operator)</label>
+        <span id="wipSynStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="wipSynLoadTime"></div>
+      <div class="load-error-row" id="wipSynErrorRow" style="display:none">
+        <span id="wipSynErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadWipSynData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="wipSynTabRak" onclick="showWipSynView('rak')">WIP Rak</button>
+        <button type="button" class="wip-toggle-btn" id="wipSynTabRakDetail" onclick="showWipSynView('rakDetail')">WIP Rak PRC</button>
+        <button type="button" class="wip-toggle-btn" id="wipSynTabProses" onclick="showWipSynView('proses')">WIP Proses</button>
+        <button type="button" class="wip-toggle-btn" id="wipSynTabProsesOperator" onclick="showWipSynView('prosesOperator')">WIP Proses Operator</button>
+      </div>
+
+      <!-- FILTER SPO & SIZE (berlaku untuk tampilan yang sedang aktif) -->
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="wipSynFilterSpo" placeholder="Filter SPO..." oninput="applyWipSynFilter()">
+        <input type="text" class="wip-filter-input" id="wipSynFilterSize" placeholder="Filter Size..." oninput="applyWipSynFilter()">
+      </div>
+
+      <!-- WIP RAK VIEW (1.1 — SPO/Size/Qty, hanya Set) -->
+      <div id="wipSynViewRak" class="wip-view">
+        <div class="wip-list" id="wipSynRakList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP RAK PRC VIEW (1.2 — SPO/Size/PRC/No.PRC/No.Roll/Qty, dikelompokkan Set & Non-Set) -->
+      <div id="wipSynViewRakDetail" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipSynRakDetailList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP PROSES VIEW (1.3 — SPO/Size/Qty, hanya Set) -->
+      <div id="wipSynViewProses" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipSynProsesList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP PROSES OPERATOR VIEW (1.4 — SPO/Size/PRC/No.PRC/No.Roll/Qty/Operator/No.Absen) -->
+      <div id="wipSynViewProsesOperator" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipSynProsesOperatorList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
 
     </div>
 
@@ -2555,6 +2666,7 @@
     if (pageId === "page-rak-synthetic") initRsynForm();
     if (pageId === "page-out-synthetic") initOutSynForm();
     if (pageId === "page-boros-synthetic") initBorsynForm();
+    if (pageId === "page-wip-synthetic") initWipSynPage();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
@@ -6498,6 +6610,141 @@
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayBorsyn();
     });
+  }
+
+  // ===== DATA WIP CUTTING SYNTHETIC =====
+  var wipSynData = { rak: [], rakDetail: [], proses: [], prosesOperator: [] };
+
+  function initWipSynPage() {
+    document.getElementById('wipSynFilterSpo').value = '';
+    document.getElementById('wipSynFilterSize').value = '';
+    showWipSynView('rak');
+    loadWipSynData();
+  }
+
+  // WIP selalu dimuat ulang tiap buka menu (bukan cache sekali-per-sesi) — menu monitoring,
+  // datanya harus selalu real-time, sama seperti Data WIP Cutting Kulit.
+  function loadWipSynData() {
+    setWipSynStatus('loading');
+    document.getElementById('wipSynLoadTime').textContent = '';
+    _hideLoadError('wipSyn');
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=wip_synthetic_data', function(err, data) {
+      _showLoadTime('wipSynLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setWipSynStatus('error');
+        _showLoadError('wipSyn', err, data);
+        return;
+      }
+      wipSynData.rak            = data.rak            || [];
+      wipSynData.rakDetail      = data.rakDetail       || [];
+      wipSynData.proses         = data.proses          || [];
+      wipSynData.prosesOperator = data.prosesOperator  || [];
+      setWipSynStatus('ok', wipSynData.rak.length + wipSynData.rakDetail.length + wipSynData.proses.length + wipSynData.prosesOperator.length);
+      renderWipSynView('rak');
+      renderWipSynView('rakDetail');
+      renderWipSynView('proses');
+      renderWipSynView('prosesOperator');
+    });
+  }
+
+  function setWipSynStatus(state, count) {
+    var el = document.getElementById('wipSynStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(14,165,233,0.12)'; el.style.color = '#075985';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function getWipSynFilterValues() {
+    var spoEl  = document.getElementById('wipSynFilterSpo');
+    var sizeEl = document.getElementById('wipSynFilterSize');
+    return {
+      spo:  (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
+      size: (sizeEl ? sizeEl.value : '').toLowerCase().trim()
+    };
+  }
+
+  // Filter SPO & Size berlaku untuk keempat tampilan sekaligus (tetap ikut saat toggle tab)
+  function applyWipSynFilter() {
+    renderWipSynView('rak');
+    renderWipSynView('rakDetail');
+    renderWipSynView('proses');
+    renderWipSynView('prosesOperator');
+  }
+
+  function _wipSynItemCardHTML(r, showDetail, showOperator) {
+    var metaLine = '';
+    if (showDetail) {
+      metaLine += '<div class="wip-item-meta">PRC ' + _escWip(r.prc) + ' · No.PRC ' + _escWip(r.noPrc) + ' · No.Roll ' + _escWip(r.noRoll) + '</div>';
+    }
+    if (showOperator) {
+      metaLine += '<div class="wip-item-operator"><i class="ti ti-user" style="font-size:12px"></i>' + _escWip(r.operator) + (r.absen ? ' · ' + _escWip(r.absen) : '') + '</div>';
+    }
+    return '<div class="wip-item">'
+      + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+      + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+      + metaLine
+      + '<div class="wip-item-qty"><span class="wip-item-qty-label">Qty</span><span class="wip-item-qty-value">' + _escWip(r.qty) + '</span></div>'
+      + '</div>';
+  }
+
+  function renderWipSynView(which) {
+    var f = getWipSynFilterValues();
+    var rows = wipSynData[which].filter(function(r) {
+      if (f.spo  && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
+      if (f.size && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      return true;
+    });
+
+    if (which === 'rak') {
+      var containerRak = document.getElementById('wipSynRakList');
+      containerRak.innerHTML = rows.length ? rows.map(function(r) { return _wipSynItemCardHTML(r, false, false); }).join('') : '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+
+    if (which === 'proses') {
+      var containerProses = document.getElementById('wipSynProsesList');
+      containerProses.innerHTML = rows.length ? rows.map(function(r) { return _wipSynItemCardHTML(r, false, false); }).join('') : '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+
+    if (which === 'prosesOperator') {
+      var containerPO = document.getElementById('wipSynProsesOperatorList');
+      containerPO.innerHTML = rows.length ? rows.map(function(r) { return _wipSynItemCardHTML(r, true, true); }).join('') : '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+
+    if (which === 'rakDetail') {
+      var container = document.getElementById('wipSynRakDetailList');
+      if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+      var setRows = rows.filter(function(r) { return r.isSet; });
+      var nonSetRows = rows.filter(function(r) { return !r.isSet; });
+      var html = '<div class="wip-group-label-static">✓ Set Komplit (' + setRows.length + ')</div>';
+      html += setRows.length ? setRows.map(function(r) { return _wipSynItemCardHTML(r, true, false); }).join('') : '<div class="wip-empty">Tidak ada</div>';
+      html += '<div class="wip-group-label-static" style="margin-top:14px">○ Non-Set (' + nonSetRows.length + ')</div>';
+      html += nonSetRows.length ? nonSetRows.map(function(r) { return _wipSynItemCardHTML(r, true, false); }).join('') : '<div class="wip-empty">Tidak ada</div>';
+      container.innerHTML = html;
+    }
+  }
+
+  // Hide/unhide antar tampilan (bukan menu bar/navigasi halaman)
+  function showWipSynView(which) {
+    document.getElementById('wipSynViewRak').style.display            = which === 'rak'            ? 'block' : 'none';
+    document.getElementById('wipSynViewRakDetail').style.display      = which === 'rakDetail'      ? 'block' : 'none';
+    document.getElementById('wipSynViewProses').style.display         = which === 'proses'         ? 'block' : 'none';
+    document.getElementById('wipSynViewProsesOperator').style.display = which === 'prosesOperator' ? 'block' : 'none';
+    document.getElementById('wipSynTabRak').classList.toggle('active', which === 'rak');
+    document.getElementById('wipSynTabRakDetail').classList.toggle('active', which === 'rakDetail');
+    document.getElementById('wipSynTabProses').classList.toggle('active', which === 'proses');
+    document.getElementById('wipSynTabProsesOperator').classList.toggle('active', which === 'prosesOperator');
   }
 
   // ===== PENUKARAN KULIT =====
