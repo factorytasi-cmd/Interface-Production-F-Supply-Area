@@ -1478,10 +1478,14 @@
         <button type="button" class="wip-toggle-btn" id="wipSynTabProsesOperator" onclick="showWipSynView('prosesOperator')">WIP Proses Operator</button>
       </div>
 
-      <!-- FILTER SPO & SIZE (berlaku untuk tampilan yang sedang aktif) -->
+      <!-- FILTER SPO/Size/Material/Operator (berlaku untuk keempat tampilan sekaligus) -->
       <div class="wip-filter">
         <input type="text" class="wip-filter-input" id="wipSynFilterSpo" placeholder="Filter SPO..." oninput="applyWipSynFilter()">
         <input type="text" class="wip-filter-input" id="wipSynFilterSize" placeholder="Filter Size..." oninput="applyWipSynFilter()">
+      </div>
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="wipSynFilterMaterial" placeholder="Filter Material..." oninput="applyWipSynFilter()">
+        <input type="text" class="wip-filter-input" id="wipSynFilterOperator" placeholder="Filter Operator..." oninput="applyWipSynFilter()">
       </div>
 
       <!-- WIP RAK VIEW (1.1 — SPO/Size/Qty, hanya Set) -->
@@ -6618,6 +6622,8 @@
   function initWipSynPage() {
     document.getElementById('wipSynFilterSpo').value = '';
     document.getElementById('wipSynFilterSize').value = '';
+    document.getElementById('wipSynFilterMaterial').value = '';
+    document.getElementById('wipSynFilterOperator').value = '';
     showWipSynView('rak');
     loadWipSynData();
   }
@@ -6664,11 +6670,15 @@
   }
 
   function getWipSynFilterValues() {
-    var spoEl  = document.getElementById('wipSynFilterSpo');
-    var sizeEl = document.getElementById('wipSynFilterSize');
+    var spoEl      = document.getElementById('wipSynFilterSpo');
+    var sizeEl     = document.getElementById('wipSynFilterSize');
+    var materialEl = document.getElementById('wipSynFilterMaterial');
+    var operatorEl = document.getElementById('wipSynFilterOperator');
     return {
-      spo:  (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
-      size: (sizeEl ? sizeEl.value : '').toLowerCase().trim()
+      spo:      (spoEl      ? spoEl.value      : '').toLowerCase().trim(),
+      size:     (sizeEl     ? sizeEl.value     : '').toLowerCase().trim(),
+      material: (materialEl ? materialEl.value : '').toLowerCase().trim(),
+      operator: (operatorEl ? operatorEl.value : '').toLowerCase().trim()
     };
   }
 
@@ -6682,6 +6692,9 @@
 
   function _wipSynItemCardHTML(r, showDetail, showOperator) {
     var metaLine = '';
+    if (r.material) {
+      metaLine += '<div class="wip-item-meta">Material: ' + _escWip(r.material) + '</div>';
+    }
     if (showDetail) {
       metaLine += '<div class="wip-item-meta">PRC ' + _escWip(r.prc) + ' · No.PRC ' + _escWip(r.noPrc) + ' · No.Roll ' + _escWip(r.noRoll) + '</div>';
     }
@@ -6699,8 +6712,12 @@
   function renderWipSynView(which) {
     var f = getWipSynFilterValues();
     var rows = wipSynData[which].filter(function(r) {
-      if (f.spo  && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
-      if (f.size && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      if (f.spo      && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
+      if (f.size     && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      if (f.material && (r.material || '').toLowerCase().indexOf(f.material) < 0) return false;
+      if (f.operator) {
+        if (!r.operator || r.operator.toLowerCase().indexOf(f.operator) < 0) return false;
+      }
       return true;
     });
 
