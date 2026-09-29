@@ -392,9 +392,9 @@
       display: flex; align-items: center; gap: 6px; margin-top: 12px;
       font-size: 12.5px; font-weight: 600; color: #444;
     }
-    .today-tabs { display: flex; gap: 6px; margin-top: 8px; }
+    .today-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .today-tab-btn {
-      flex: 1; padding: 9px 4px; border-radius: 10px;
+      flex: 1 1 45%; padding: 9px 4px; border-radius: 10px;
       border: 1.5px solid #D8DAD8; background: white;
       color: #666; font-size: 12px; font-weight: 600;
       cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s, border-color 0.15s;
@@ -1114,6 +1114,8 @@
       <div class="today-tabs" id="synTodayTabs">
         <button type="button" class="today-tab-btn active" onclick="_todayTabClick('synTodayTabs','synTodayList',0,this,loadTodaySynIn)">Hari Ini</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('synTodayTabs','synTodayList',1,this,loadTodaySynIn)">Kemarin</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('synTodayTabs','synTodayList',0,this,loadTodaySynSet)">In Set Material Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('synTodayTabs','synTodayList',1,this,loadTodaySynSet)">In Set Material Kemaren</button>
       </div>
       <div class="load-time-note" id="synTodayLoadTime"></div>
       <div id="synTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
@@ -1307,6 +1309,8 @@
       <div class="today-tabs" id="outSynTodayTabs">
         <button type="button" class="today-tab-btn active" onclick="_todayTabClick('outSynTodayTabs','outSynTodayList',0,this,loadTodayOutSyn)">Hari Ini</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('outSynTodayTabs','outSynTodayList',1,this,loadTodayOutSyn)">Kemarin</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('outSynTodayTabs','outSynTodayList',0,this,loadTodayOutSynSet)">Out Set Material Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('outSynTodayTabs','outSynTodayList',1,this,loadTodayOutSynSet)">Out Set Material Kemaren</button>
       </div>
       <div class="load-time-note" id="outSynTodayLoadTime"></div>
       <div id="outSynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
@@ -4323,6 +4327,7 @@
     addSynGroup();
     loadSynMasterData();
     loadSynMaterialList();
+    loadSynStylePrcMaterial();
   }
 
   function loadSynMasterData(force) {
@@ -4366,6 +4371,54 @@
       if (synMasterData.spo[i].spo.toLowerCase() === s) return synMasterData.spo[i];
     }
     return null;
+  }
+
+  // ---- STYLE+PRC → MATERIAL (dari sheet "Master List_Style PRC Material") — autofill Material saat PRC diisi ----
+  var synStylePrcMaterial = [];
+  var _synStylePrcMaterialLoadedOnce = false;
+
+  function loadSynStylePrcMaterial(force) {
+    if (_synStylePrcMaterialLoadedOnce && !force) return;
+    jsonp(GAS_SYNTHETIC_URL + '?type=style_prc_material_list', function(err, data) {
+      if (err || !data || data.status !== 'ok') return;
+      synStylePrcMaterial = data.list || [];
+      _synStylePrcMaterialLoadedOnce = true;
+    });
+  }
+
+  function findSynStylePrcMaterial(style, prc) {
+    var s = (style || '').trim().toLowerCase();
+    var p = (prc || '').trim().toLowerCase();
+    if (!s || !p) return null;
+    for (var i = 0; i < synStylePrcMaterial.length; i++) {
+      var item = synStylePrcMaterial[i];
+      if (item.style.toLowerCase() === s && item.prc.toLowerCase() === p) return item.material;
+    }
+    return null;
+  }
+
+  // Isi Material otomatis dari Style+PRC kalau ketemu di master — TIDAK menimpa Material yang
+  // sudah diisi manual/dipilih user (dicek kosong dulu), supaya autofill ini cuma bersifat bantuan.
+  function trySynMaterialAutofill(rid) {
+    var row = document.getElementById('syn-row-' + rid);
+    if (!row) return;
+    var group = row.closest('.spo-group');
+    var gid = group ? group.id.replace('syn-group-', '') : null;
+    var style = (gid && synGroupsData[gid]) ? synGroupsData[gid].style : '';
+    if (!style) return;
+    var prcInput = row.querySelector('.syn-prc-input');
+    var prc = prcInput ? prcInput.value.trim() : '';
+    if (!prc) return;
+    var materialInput = row.querySelector('.syn-material-input');
+    if (!materialInput || materialInput.value.trim()) return;
+    var material = findSynStylePrcMaterial(style, prc);
+    if (material) materialInput.value = material;
+  }
+
+  function _trySynMaterialAutofillForGroup(gid) {
+    document.querySelectorAll('#syn-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      trySynMaterialAutofill(card.id.replace('syn-row-', ''));
+    });
   }
 
   // ---- SPO GROUPS ----
@@ -4482,6 +4535,7 @@
     document.querySelectorAll('#syn-rows-container-' + gid + ' .syn-size-select').forEach(function(sel) {
       updateSizeOptions(sel, found ? found.sizes : []);
     });
+    _trySynMaterialAutofillForGroup(gid);
   }
 
   function matchSynSPOStyle(gid, typedSpo) {
@@ -4494,6 +4548,7 @@
       document.querySelectorAll('#syn-rows-container-' + gid + ' .syn-size-select').forEach(function(sel) {
         updateSizeOptions(sel, found.sizes);
       });
+      _trySynMaterialAutofillForGroup(gid);
     } else {
       synGroupsData[gid].style = '';
       disp.textContent = 'Pilih atau ketik SPO';
@@ -4523,7 +4578,7 @@
       + '<select class="row-field-select syn-size-select" onchange="checkDupSyn()"><option value="">— Pilih Size —</option>'+sizeOpts+'</select>'
       + '</div>'
       + '<div class="row-grid">'
-      + '<div class="row-field"><span class="row-field-label">PRC</span><input type="text" class="row-field-input syn-prc-input" placeholder="PRC" onblur="checkDupSyn()"></div>'
+      + '<div class="row-field"><span class="row-field-label">PRC</span><input type="text" class="row-field-input syn-prc-input" id="syn-prc-input-'+rid+'" placeholder="PRC" oninput="trySynMaterialAutofill(\''+rid+'\')" onblur="checkDupSyn()"></div>'
       + '<div class="row-field"><span class="row-field-label">No. PRC</span><input type="text" class="row-field-input syn-noprc-input" placeholder="No. PRC" onblur="checkDupSyn()"></div>'
       + '</div>'
       + '<div class="row-grid" style="margin-top:8px">'
@@ -4807,6 +4862,50 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodaySynIn();
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — IN SET MATERIAL (ringkasan Set PRC lengkap, dari "Form_Data IN Material Per SPO") ----
+  function _renderSynSetTodayList(rows, dayOffset) {
+    var el = document.getElementById('synTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada Set Material yang lengkap ' + dayLabel + '.</div>';
+      return;
+    }
+    var statsHtml = _renderTodayStatsBar(rows, 'noPrc', 'Jumlah Set', [{ field: 'qty', label: 'Total Qty' }]);
+    var cols = ['SPO', 'Style', 'Size', 'No. PRC', 'Qty'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>'
+        + '<td>' + _escToday(r.spo) + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.noPrc) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
+  }
+
+  function loadTodaySynSet(dayOffset) {
+    var containerId = 'synTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('synTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=today_synthetic_in_set&day=' + dayOffset, function(err, data) {
+      _showLoadTime('synTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderSynSetTodayList(data.rows, dayOffset);
     });
   }
 
@@ -5101,7 +5200,7 @@
       + '<div class="row-field"><span class="row-field-label">Meter</span><input type="text" class="row-field-input rsyn-meter-display" readonly placeholder="Otomatis"></div>'
       + '</div>'
       + '<div class="row-grid" style="margin-top:8px">'
-      + '<div class="row-field"><span class="row-field-label">No. Roll</span><input type="text" class="row-field-input rsyn-noroll-display" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">No. Roll <span style="font-size:9px;color:#aaa;font-weight:400">(bisa diedit)</span></span><input type="text" class="row-field-input rsyn-noroll-display" placeholder="Otomatis"></div>'
       + '<div class="row-field"><span class="row-field-label">Kategori</span><input type="text" class="row-field-input rsyn-kategori-display" readonly placeholder="Otomatis"></div>'
       + '</div>'
       + '<div class="row-field" style="margin-top:8px"><span class="row-field-label">Potong Boros</span><input type="text" class="row-field-input rsyn-boros-display" readonly placeholder="Otomatis"></div>'
@@ -5497,12 +5596,13 @@
         var qty      = card.querySelector('.rsyn-qty-display').value;
         var material = card.querySelector('.rsyn-material-display').value;
         var meter    = card.querySelector('.rsyn-meter-display').value;
-        var noRoll   = card.querySelector('.rsyn-noroll-display').value;
+        var noRoll   = card.querySelector('.rsyn-noroll-display').value.trim();
         var kategori = card.querySelector('.rsyn-kategori-display').value;
         var boros    = card.querySelector('.rsyn-boros-display').value;
         if (!prc)      { errorMsg = 'PRC wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!noPrc)    { errorMsg = 'No. PRC wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!size || !qty) { errorMsg = 'Pilih PRC & No. PRC dari daftar saran agar Size/Qty/dst terisi (SPO ' + spo + ')'; return; }
+        if (!noRoll)   { errorMsg = 'No. Roll wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
 
         var operator, absen, proses;
         if (rsynDuetActive[rid]) {
@@ -5937,6 +6037,50 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayOutSyn();
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — OUT SET MATERIAL (ringkasan Set PRC lengkap, dari "Form_Data Out Pola Per SPO") ----
+  function _renderOutSynSetTodayList(rows, dayOffset) {
+    var el = document.getElementById('outSynTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada Set Material yang lengkap ' + dayLabel + '.</div>';
+      return;
+    }
+    var statsHtml = _renderTodayStatsBar(rows, 'noPrc', 'Jumlah Set', [{ field: 'qty', label: 'Total Qty' }]);
+    var cols = ['SPO', 'Style', 'Size', 'No. PRC', 'Qty'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>'
+        + '<td>' + _escToday(r.spo) + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.noPrc) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
+  }
+
+  function loadTodayOutSynSet(dayOffset) {
+    var containerId = 'outSynTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('outSynTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=today_out_synthetic_set&day=' + dayOffset, function(err, data) {
+      _showLoadTime('outSynTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderOutSynSetTodayList(data.rows, dayOffset);
     });
   }
 
