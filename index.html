@@ -8311,7 +8311,11 @@
 
   function renderOtMemberOperatorDrop(mid, query) {
     var drop = document.getElementById('ot-member-operator-drop-' + mid);
-    if (!masterDataOt.operatorsSewing.length) { drop.classList.remove('open'); return; }
+    if (!masterDataOt.operatorsSewing.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data Operator belum dimuat / kosong — cek "MASTER DATA_OPERATOR ACCESSORIES" (Proses=Sewing)</div>';
+      drop.classList.add('open');
+      return;
+    }
     var q = (query || '').toLowerCase().trim();
     var filtered = q
       ? masterDataOt.operatorsSewing.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
@@ -8355,7 +8359,11 @@
 
   function renderOtMemberRepairDrop(mid, query) {
     var drop = document.getElementById('ot-member-repair-drop-' + mid);
-    if (!masterDataOt.kategoriRepair.length) { drop.classList.remove('open'); return; }
+    if (!masterDataOt.kategoriRepair.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data Jenis Repair belum dimuat / kosong — cek "MASTER DATA_KATEGORI QUALITY" (Status Quality=REPAIR)</div>';
+      drop.classList.add('open');
+      return;
+    }
     var q = (query || '').toLowerCase().trim();
     var filtered = q
       ? masterDataOt.kategoriRepair.filter(function(k) { return k.kategori.toLowerCase().indexOf(q) >= 0 || k.kode.toLowerCase().indexOf(q) >= 0; })
@@ -8393,7 +8401,11 @@
 
   function renderOtMemberRejectDrop(mid, query) {
     var drop = document.getElementById('ot-member-reject-drop-' + mid);
-    if (!masterDataOt.kategoriReject.length) { drop.classList.remove('open'); return; }
+    if (!masterDataOt.kategoriReject.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data Jenis Reject belum dimuat / kosong — cek "MASTER DATA_KATEGORI QUALITY" (Status Quality=REJECT)</div>';
+      drop.classList.add('open');
+      return;
+    }
     var q = (query || '').toLowerCase().trim();
     var filtered = q
       ? masterDataOt.kategoriReject.filter(function(k) { return k.kategori.toLowerCase().indexOf(q) >= 0 || k.kode.toLowerCase().indexOf(q) >= 0; })
