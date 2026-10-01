@@ -8165,7 +8165,11 @@
     recalcOtRowTotal(rid);
   }
 
-  // ---- QTY OK + rekap "Total diproses" per baris Size (QtyOK + semua QtyRepair/QtyReject operator) ----
+  // ---- QTY OK + rekap "Qty OK diproses" per baris Size ----
+  // CATATAN: cuma Qty OK yang mengurangi WIP Sewing / menambah Out Tab di REPORT_PERGERAKAN — Qty
+  // Repair & Qty Reject TIDAK ikut dibatasi oleh WIP Sewing tersedia (unit Repair/Reject dianggap
+  // masih di tahap Sewing untuk dikerjakan ulang, cuma dicatat sebagai info di Form_Out Tab QC &
+  // Form_Operator Repair & Reject). Jadi batas/cap di sini HANYA berlaku untuk Qty OK.
   function setupOtQtyOkInput(rid) {
     var input = document.getElementById('ot-qtyok-input-' + rid);
     input.oninput = function() { recalcOtRowTotal(rid); };
@@ -8185,17 +8189,17 @@
       sumRepair += rEl ? (Number(rEl.value) || 0) : 0;
       sumReject += jEl ? (Number(jEl.value) || 0) : 0;
     });
-    var total = qtyOk + sumRepair + sumReject;
+    var extraInfo = (sumRepair || sumReject) ? (' (Repair ' + sumRepair + ', Reject ' + sumReject + ' — tidak mengurangi WIP Sewing)') : '';
     var maxAttr = row.getAttribute('data-max-qty');
     var max = maxAttr !== null ? Number(maxAttr) : null;
     if (max === null) {
-      note.textContent = 'Total diproses: ' + total + ' (pilih Size dulu untuk tahu WIP Sewing tersedia)';
+      note.textContent = 'Qty OK diproses: ' + qtyOk + extraInfo + ' (pilih Size dulu untuk tahu WIP Sewing tersedia)';
       note.style.color = '#999';
-    } else if (total > max) {
-      note.textContent = '⚠️ Total diproses: ' + total + ' MELEBIHI WIP Sewing tersedia (' + max + ')';
+    } else if (qtyOk > max) {
+      note.textContent = '⚠️ Qty OK ' + qtyOk + ' MELEBIHI WIP Sewing tersedia (' + max + ')' + extraInfo;
       note.style.color = '#DC2626';
     } else {
-      note.textContent = 'Total diproses: ' + total + ' / Tersedia: ' + max;
+      note.textContent = 'Qty OK diproses: ' + qtyOk + ' / WIP Sewing Tersedia: ' + max + extraInfo;
       note.style.color = '#0A5C42';
     }
   }
@@ -8467,7 +8471,6 @@
         if (memberIds.length === 0) { errorMsg = 'Minimal 1 Operator di setiap Size (SPO ' + spo + ')'; return; }
 
         var operators = [];
-        var sumRepair = 0, sumReject = 0;
         memberIds.forEach(function(mid) {
           if (errorMsg) return;
           var opName = document.getElementById('ot-member-operator-input-' + mid).value.trim();
@@ -8486,15 +8489,14 @@
             errorMsg = 'Jenis Reject dan Qty Reject harus diisi berpasangan (SPO ' + spo + ', Size ' + size + ')'; return;
           }
 
-          sumRepair += Number(qtyRepair) || 0;
-          sumReject += Number(qtyReject) || 0;
           operators.push({ operator:opName, absen:opAbsen, jenisRepair:jenisRepair, qtyRepair:qtyRepair, jenisReject:jenisReject, qtyReject:qtyReject });
         });
         if (errorMsg) return;
 
-        var total = (Number(qtyOk) || 0) + sumRepair + sumReject;
-        if (maxAttr !== null && total > Number(maxAttr)) {
-          errorMsg = 'Total Qty (OK+Repair+Reject) SPO ' + spo + ' Size ' + size + ' melebihi WIP Sewing yang tersedia (' + maxAttr + ')';
+        // Cuma Qty OK yang dibatasi WIP Sewing tersedia — Repair & Reject tidak ikut dihitung
+        // (lihat catatan di recalcOtRowTotal / backend save_out_tab).
+        if (maxAttr !== null && (Number(qtyOk) || 0) > Number(maxAttr)) {
+          errorMsg = 'Qty OK SPO ' + spo + ' Size ' + size + ' melebihi WIP Sewing yang tersedia (' + maxAttr + ')';
           return;
         }
 
