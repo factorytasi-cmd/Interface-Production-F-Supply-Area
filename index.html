@@ -2440,7 +2440,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('Data WIP Accessories')">
+        <div class="card card-wip" onclick="goTo('page-wip-accessories')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-wip">Monitoring</span>
@@ -2449,9 +2449,9 @@
               </div>
             </div>
             <div class="card-title">Data WIP Accessories</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Lihat WIP Rak/Persiapan/Cutting/Sewing &amp; Cumulative</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-chart-bar" style="font-size:13px"></i> Monitoring real-time</span>
               <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -2961,6 +2961,129 @@
     </div>
   </div>
 
+  <!-- ==================== PAGE: DATA WIP ACCESSORIES ==================== -->
+  <div class="page" id="page-wip-accessories">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-accessories')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">DATA WIP ACCESSORIES</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › ACCESSORIES › DATA WIP</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(14,165,233,0.12);border-color:rgba(14,165,233,0.3)">
+        <i class="ti ti-chart-bar" style="color:#0EA5E9"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#075985">Data WIP Accessories</div>
+          <div class="form-header-pill-sub">Accessories Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari REPORT_PERGERAKAN)</label>
+        <span id="wipAcStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="wipAcLoadTime"></div>
+      <div class="load-error-row" id="wipAcErrorRow" style="display:none">
+        <span id="wipAcErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadWipAccessoriesData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="wipAcTabRak" onclick="showWipAcView('rak')">WIP Rak</button>
+        <button type="button" class="wip-toggle-btn" id="wipAcTabPersiapan" onclick="showWipAcView('persiapan')">WIP Persiapan</button>
+        <button type="button" class="wip-toggle-btn" id="wipAcTabCutting" onclick="showWipAcView('cutting')">WIP Cutting</button>
+        <button type="button" class="wip-toggle-btn" id="wipAcTabSewing" onclick="showWipAcView('sewing')">WIP Sewing</button>
+        <button type="button" class="wip-toggle-btn" id="wipAcTabInCumul" onclick="showWipAcView('inCumul')">In Cumul</button>
+        <button type="button" class="wip-toggle-btn" id="wipAcTabOutCumul" onclick="showWipAcView('outCumul')">Out Cumul</button>
+      </div>
+
+      <!-- FILTER SPO & SIZE (berlaku untuk tampilan yang sedang aktif) -->
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="wipAcFilterSpo" placeholder="Filter SPO..." oninput="applyWipAcFilter()">
+        <input type="text" class="wip-filter-input" id="wipAcFilterSize" placeholder="Filter Size..." oninput="applyWipAcFilter()">
+      </div>
+
+      <!-- WIP RAK VIEW -->
+      <div id="wipAcViewRak" class="wip-view">
+        <div class="wip-list" id="wipAcRakList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP PERSIAPAN VIEW -->
+      <div id="wipAcViewPersiapan" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipAcPersiapanList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP CUTTING VIEW -->
+      <div id="wipAcViewCutting" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipAcCuttingList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- WIP SEWING VIEW -->
+      <div id="wipAcViewSewing" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipAcSewingList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- IN CUMUL VIEW -->
+      <div id="wipAcViewInCumul" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipAcInCumulList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- OUT CUMUL VIEW -->
+      <div id="wipAcViewOutCumul" class="wip-view" style="display:none">
+        <div class="wip-list" id="wipAcOutCumulList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== PAGE 8: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
     <div class="header-zone">
@@ -3359,6 +3482,7 @@
     if (pageId === "page-persiapan-cutting") initPcForm();
     if (pageId === "page-cutting-sewing") initCsForm();
     if (pageId === "page-out-tab") initOtForm();
+    if (pageId === "page-wip-accessories") initWipAccessoriesPage();
     if (pageId === "page-rak-synthetic") initRsynForm();
     if (pageId === "page-out-synthetic") initOutSynForm();
     if (pageId === "page-boros-synthetic") initBorsynForm();
@@ -12361,6 +12485,135 @@
     document.getElementById('wipTabRakOpck').classList.toggle('active', which === 'rakOpck');
     document.getElementById('wipTabProses').classList.toggle('active', which === 'proses');
     document.getElementById('wipTabProsesOperator').classList.toggle('active', which === 'prosesOperator');
+  }
+
+  // ===== DATA WIP ACCESSORIES =====
+  // Tampilan read-only, sumber data TUNGGAL: sheet "REPORT_PERGERAKAN" (kolom E=CUMUL IN,F=WIP RAK,
+  // G=WIP PERSIAPAN,H=WIP CUTTING,I=WIP SEWING,J=OUT TAB) — 6 tampilan dari 1x panggilan endpoint.
+  // Toggle antar tampilan pakai hide/unhide (bukan navigasi halaman/menu bar), sama seperti Data WIP
+  // Cutting Kulit. Selalu dimuat ulang tiap buka menu (bukan cache) karena ini monitoring real-time.
+  var wipAcData = { rak: [], persiapan: [], cutting: [], sewing: [], inCumul: [], outCumul: [] };
+  var WIP_AC_VIEW_CONFIG = {
+    rak:       { containerId: 'wipAcRakList',       qtyLabel: 'WIP Rak' },
+    persiapan: { containerId: 'wipAcPersiapanList', qtyLabel: 'WIP Persiapan' },
+    cutting:   { containerId: 'wipAcCuttingList',   qtyLabel: 'WIP Cutting' },
+    sewing:    { containerId: 'wipAcSewingList',    qtyLabel: 'WIP Sewing' },
+    inCumul:   { containerId: 'wipAcInCumulList',   qtyLabel: 'In Cumul' },
+    outCumul:  { containerId: 'wipAcOutCumulList',  qtyLabel: 'Out Cumul' }
+  };
+
+  function initWipAccessoriesPage() {
+    document.getElementById('wipAcFilterSpo').value = '';
+    document.getElementById('wipAcFilterSize').value = '';
+    showWipAcView('rak');
+    loadWipAccessoriesData();
+  }
+
+  function loadWipAccessoriesData() {
+    setWipAcStatus('loading');
+    document.getElementById('wipAcLoadTime').textContent = '';
+    _hideLoadError('wipAc');
+    var t0 = Date.now();
+    var url = GAS_ACCESSORIES_URL + '?type=wip_accessories_data';
+    jsonp(url, function(err, data) {
+      _showLoadTime('wipAcLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setWipAcStatus('error');
+        _showLoadError('wipAc', err, data);
+        return;
+      }
+      wipAcData.rak       = data.rak       || [];
+      wipAcData.persiapan = data.persiapan || [];
+      wipAcData.cutting   = data.cutting   || [];
+      wipAcData.sewing    = data.sewing    || [];
+      wipAcData.inCumul   = data.inCumul   || [];
+      wipAcData.outCumul  = data.outCumul  || [];
+      setWipAcStatus('ok', wipAcData.rak.length + wipAcData.persiapan.length + wipAcData.cutting.length + wipAcData.sewing.length + wipAcData.inCumul.length + wipAcData.outCumul.length);
+      renderWipAcTable('rak');
+      renderWipAcTable('persiapan');
+      renderWipAcTable('cutting');
+      renderWipAcTable('sewing');
+      renderWipAcTable('inCumul');
+      renderWipAcTable('outCumul');
+    });
+  }
+
+  function setWipAcStatus(state, count) {
+    var el = document.getElementById('wipAcStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(14,165,233,0.12)';
+      el.style.color = '#075985';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)';
+      el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)';
+      el.style.color = '#7D1B1B';
+    }
+  }
+
+  function getWipAcFilterValues() {
+    var spoEl  = document.getElementById('wipAcFilterSpo');
+    var sizeEl = document.getElementById('wipAcFilterSize');
+    return {
+      spo:  (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
+      size: (sizeEl ? sizeEl.value : '').toLowerCase().trim()
+    };
+  }
+
+  // Filter SPO & Size berlaku untuk keenam tampilan sekaligus (tetap ikut saat toggle tab)
+  function applyWipAcFilter() {
+    renderWipAcTable('rak');
+    renderWipAcTable('persiapan');
+    renderWipAcTable('cutting');
+    renderWipAcTable('sewing');
+    renderWipAcTable('inCumul');
+    renderWipAcTable('outCumul');
+  }
+
+  function _wipAcItemCardHTML(r, cfg) {
+    return '<div class="wip-item">'
+      + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+      + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+      + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(r.qty) + '</span></div>'
+      + '</div>';
+  }
+
+  function renderWipAcTable(which) {
+    var f = getWipAcFilterValues();
+    var rows = wipAcData[which].filter(function(r) {
+      if (f.spo  && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
+      if (f.size && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      return true;
+    });
+    var cfg = WIP_AC_VIEW_CONFIG[which];
+    var container = document.getElementById(cfg.containerId);
+    if (!container) return;
+    if (!rows.length) {
+      container.innerHTML = '<div class="wip-empty">Tidak ada data</div>';
+      return;
+    }
+    container.innerHTML = rows.map(function(r) { return _wipAcItemCardHTML(r, cfg); }).join('');
+  }
+
+  // Hide/unhide antar tampilan WIP Rak/Persiapan/Cutting/Sewing/In Cumul/Out Cumul (bukan navigasi halaman)
+  function showWipAcView(which) {
+    document.getElementById('wipAcViewRak').style.display       = which === 'rak'       ? 'block' : 'none';
+    document.getElementById('wipAcViewPersiapan').style.display = which === 'persiapan' ? 'block' : 'none';
+    document.getElementById('wipAcViewCutting').style.display   = which === 'cutting'   ? 'block' : 'none';
+    document.getElementById('wipAcViewSewing').style.display    = which === 'sewing'    ? 'block' : 'none';
+    document.getElementById('wipAcViewInCumul').style.display   = which === 'inCumul'   ? 'block' : 'none';
+    document.getElementById('wipAcViewOutCumul').style.display  = which === 'outCumul'  ? 'block' : 'none';
+    document.getElementById('wipAcTabRak').classList.toggle('active', which === 'rak');
+    document.getElementById('wipAcTabPersiapan').classList.toggle('active', which === 'persiapan');
+    document.getElementById('wipAcTabCutting').classList.toggle('active', which === 'cutting');
+    document.getElementById('wipAcTabSewing').classList.toggle('active', which === 'sewing');
+    document.getElementById('wipAcTabInCumul').classList.toggle('active', which === 'inCumul');
+    document.getElementById('wipAcTabOutCumul').classList.toggle('active', which === 'outCumul');
   }
 
   // ---- UI HELPERS ----
