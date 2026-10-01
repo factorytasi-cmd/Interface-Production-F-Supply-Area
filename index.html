@@ -2406,7 +2406,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('Out Tab dari Accessories')">
+        <div class="card card-out" onclick="goTo('page-out-tab')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -2415,9 +2415,9 @@
               </div>
             </div>
             <div class="card-title">Out Tab dari Accessories</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat hasil QC (OK/Repair/Reject) dari WIP Sewing</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per proses</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -2844,6 +2844,119 @@
     </div>
   </div>
 
+  <!-- ==================== PAGE: OUT TAB DARI ACCESSORIES ==================== -->
+  <div class="page" id="page-out-tab">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-accessories')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:17px;letter-spacing:1.5px">OUT TAB DARI ACCESSORIES</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#1D9E75,#34D399)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › ACCESSORIES › OUT TAB</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(29,158,117,0.12);border-color:rgba(29,158,117,0.3)">
+        <i class="ti ti-tag" style="color:#1D9E75"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#0A5C42">Out Tab dari Accessories</div>
+          <div class="form-header-pill-sub">Accessories Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="otTanggal">
+      </div>
+
+      <!-- OPERATOR QC (global, dipilih sekali untuk seluruh submit) -->
+      <div class="field-group" style="margin-bottom:10px">
+        <label class="field-label">Operator QC</label>
+        <div class="spo-ac-wrap">
+          <input type="text" class="field-input" id="otQcInput" placeholder="Ketik nama Operator QC..." autocomplete="off">
+          <div class="spo-ac-drop" id="otQcDrop"></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">No. Absen QC <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis)</span></label>
+        <input type="text" class="field-input" id="otQcAbsenDisplay" readonly placeholder="Otomatis">
+      </div>
+
+      <!-- JAM KE (global, single-select 1-11) -->
+      <div class="field-group">
+        <label class="field-label">Jam Ke-</label>
+        <div class="keterangan-chip-group" id="otJamKeGroup"></div>
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data WIP Sewing &amp; Master QC</label>
+        <span id="otSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="otSpoLoadTime"></div>
+      <div class="load-error-row" id="otSpoErrorRow" style="display:none">
+        <span id="otSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadOtMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="otGroupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addOtGroup()">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="otBtnSubmit" onclick="submitOtForm()">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="otTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayOt)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayOt)">Kemarin</button>
+      </div>
+      <div class="load-time-note" id="otTodayLoadTime"></div>
+      <div id="otTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== PAGE 8: DAILY ISSUE ==================== -->
   <div class="page" id="page-daily-issue">
     <div class="header-zone">
@@ -3241,6 +3354,7 @@
     if (pageId === "page-rak-persiapan") initRpForm();
     if (pageId === "page-persiapan-cutting") initPcForm();
     if (pageId === "page-cutting-sewing") initCsForm();
+    if (pageId === "page-out-tab") initOtForm();
     if (pageId === "page-rak-synthetic") initRsynForm();
     if (pageId === "page-out-synthetic") initOutSynForm();
     if (pageId === "page-boros-synthetic") initBorsynForm();
@@ -7594,6 +7708,904 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayCs();
+    });
+  }
+
+  // ===== OUT TAB DARI ACCESSORIES =====
+  // SPO+Size sumbernya dari REPORT_PERGERAKAN yang WIP SEWING != 0. Operator QC & Jam Ke dipilih
+  // SEKALI untuk seluruh submit (seperti Checker di Pengecekan Thickness). Per Size bisa diisi
+  // sampai 3 Operator (mirip pola Duet member), masing-masing operator punya Jenis Repair+Qty
+  // Repair dan Jenis Reject+Qty Reject SENDIRI-SENDIRI, keduanya OPSIONAL per pasangan (boleh
+  // kosong kalau operator itu tidak ada temuan — tapi kalau salah satu diisi, pasangannya wajib
+  // ikut diisi). Submit mengurangi WIP SEWING & menambah OUT TAB di REPORT_PERGERAKAN sebesar
+  // (QtyOK + semua QtyRepair + semua QtyReject) per SPO+Size, mencatat ringkasan ke
+  // "Form_Out Tab QC" (maks 3 kolom operator, tanpa rincian jenis) dan rincian per operator ke
+  // "Form_Operator Repair & Reject".
+  var masterDataOt = { receipts: [], operatorsQC: [], operatorsSewing: [], kategoriRepair: [], kategoriReject: [] };
+  var _otLoadedOnce = false;
+  var otGroupCount = 0, otRowCount = 0, otMemberCount = 0;
+  var otGroupsData = {};
+  var otMembers = {};
+  var otJamKe = '';
+  var otQc = { nama: '', absen: '' };
+
+  function initOtForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('otTanggal').value = yyyy+'-'+mm+'-'+dd;
+    document.getElementById('otQcInput').value = '';
+    document.getElementById('otQcAbsenDisplay').value = '';
+    otQc = { nama: '', absen: '' };
+    otJamKe = '';
+    setupOtQcInput();
+    renderOtJamKeButtons();
+    resetOtForm();
+    loadOtMasterData();
+  }
+
+  function resetOtForm() {
+    document.getElementById('otGroupsContainer').innerHTML = '';
+    otGroupCount = 0;
+    otGroupsData = {};
+    addOtGroup();
+  }
+
+  // ---- JAM KE (global, single-select 1-11, chip pattern sama dgn Keterangan Thickness Check) ----
+  function renderOtJamKeButtons() {
+    var group = document.getElementById('otJamKeGroup');
+    var html = '';
+    for (var i = 1; i <= 11; i++) {
+      html += '<button type="button" class="keterangan-chip" onclick="pilihOtJamKe(this,' + i + ')">' + i + '</button>';
+    }
+    group.innerHTML = html;
+  }
+
+  function pilihOtJamKe(btnEl, n) {
+    var group = btnEl.closest('.keterangan-chip-group');
+    Array.prototype.forEach.call(group.querySelectorAll('.keterangan-chip'), function(c) { c.classList.remove('selected'); });
+    btnEl.classList.add('selected');
+    otJamKe = n;
+  }
+
+  // ---- OPERATOR QC (global, manual + suggest, dari MASTER LIST_OPERATOR QC) ----
+  function setupOtQcInput() {
+    var input = document.getElementById('otQcInput');
+    var drop  = document.getElementById('otQcDrop');
+    if (input._wired) return;
+    input._wired = true;
+
+    input.oninput = function() {
+      otQc = { nama: input.value.trim(), absen: '' };
+      document.getElementById('otQcAbsenDisplay').value = '';
+      renderOtQcDrop(input.value);
+    };
+    input.onfocus = function() { renderOtQcDrop(input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-nama]');
+      if (!item) return;
+      pilihOtQc(item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderOtQcDrop(query) {
+    var drop = document.getElementById('otQcDrop');
+    if (!masterDataOt.operatorsQC.length) { drop.classList.remove('open'); return; }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? masterDataOt.operatorsQC.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
+      : masterDataOt.operatorsQC;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator QC tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var namaHL = q ? o.nama.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o.nama;
+      return '<div class="spo-ac-item" data-nama="' + o.nama + '" data-absen="' + o.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + o.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOtQc(nama, absen) {
+    document.getElementById('otQcInput').value = nama;
+    document.getElementById('otQcDrop').classList.remove('open');
+    document.getElementById('otQcAbsenDisplay').value = absen;
+    otQc = { nama: nama, absen: absen };
+  }
+
+  // ---- LOAD MASTER DATA (gabungan: WIP Sewing + Operator QC + Operator Sewing + Kategori Quality) ----
+  function loadOtMasterData(force) {
+    if (_otLoadedOnce && !force) { setOtSPOStatus('ok', distinctOtSPOs('').length); return; }
+    setOtSPOStatus('loading');
+    document.getElementById('otSpoLoadTime').textContent = '';
+    _hideLoadError('otSpo');
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=out_tab_master', function(err, data) {
+      _showLoadTime('otSpoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setOtSPOStatus('error');
+        _showLoadError('otSpo', err, data);
+        return;
+      }
+      masterDataOt.receipts = data.receipts || [];
+      masterDataOt.operatorsQC = data.operatorsQC || [];
+      masterDataOt.operatorsSewing = data.operatorsSewing || [];
+      masterDataOt.kategoriRepair = data.kategoriRepair || [];
+      masterDataOt.kategoriReject = data.kategoriReject || [];
+      _otLoadedOnce = true;
+      setOtSPOStatus('ok', distinctOtSPOs('').length);
+    });
+  }
+
+  function setOtSPOStatus(state, count) {
+    var el = document.getElementById('otSpoStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(29,158,117,0.12)'; el.style.color = '#0A5C42';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function distinctOtSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataOt.receipts.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  function otStyleForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterDataOt.receipts.length; i++) {
+      if (masterDataOt.receipts[i].spo.toLowerCase() === s) return masterDataOt.receipts[i].style;
+    }
+    return null;
+  }
+
+  function otSizesForSPO(spo, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var q = (query || '').toLowerCase().trim();
+    var out = [];
+    masterDataOt.receipts.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (q && r.size.toLowerCase().indexOf(q) < 0) return;
+      out.push(r);
+    });
+    return out;
+  }
+
+  function findOtReceipt(spo, size) {
+    var s = (spo || '').trim().toLowerCase();
+    var z = (size || '').trim().toLowerCase();
+    if (!s || !z) return null;
+    for (var i = 0; i < masterDataOt.receipts.length; i++) {
+      var r = masterDataOt.receipts[i];
+      if (r.spo.toLowerCase() === s && r.size.toLowerCase() === z) return r;
+    }
+    return null;
+  }
+
+  // ---- SPO GROUPS ----
+  function addOtGroup() {
+    otGroupCount++;
+    var gid = otGroupCount;
+    otGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('otGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'ot-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteOtGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="ot-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="ot-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="ot-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="ot-row-badge-' + gid + '" style="background:rgba(29,158,117,0.15);color:#0A5C42;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="ot-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addOtRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupOtSPOInput(gid);
+    addOtRow(gid);
+    updateOtGroupDeleteButtons();
+  }
+
+  function updateOtGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#otGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteOtGroup(gid) {
+    var el = document.getElementById('ot-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete otGroupsData[gid];
+    updateOtGroupDeleteButtons();
+  }
+
+  // ---- SPO (manual + suggest, dari REPORT_PERGERAKAN yang WIP SEWING != 0) ----
+  function setupOtSPOInput(gid) {
+    var input = document.getElementById('ot-spo-input-' + gid);
+    var drop  = document.getElementById('ot-spo-drop-' + gid);
+
+    input.oninput = function() {
+      otGroupsData[gid].spo = input.value.trim();
+      renderOtSPODrop(gid, input.value);
+      matchOtSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderOtSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihOtSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderOtSPODrop(gid, query) {
+    var drop = document.getElementById('ot-spo-drop-' + gid);
+    if (!masterDataOt.receipts.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctOtSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan / WIP Sewing sudah habis</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOtSPO(gid, spo, style) {
+    document.getElementById('ot-spo-input-' + gid).value = spo;
+    document.getElementById('ot-spo-drop-' + gid).classList.remove('open');
+    applyOtSPO(gid, spo, style);
+  }
+
+  function matchOtSPOStyle(gid, typedSpo) {
+    var style = otStyleForSPO(typedSpo);
+    if (style !== null) {
+      applyOtSPO(gid, typedSpo.trim(), style);
+    } else {
+      otGroupsData[gid].spo = typedSpo.trim();
+      otGroupsData[gid].style = '';
+      document.getElementById('ot-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('ot-style-display-' + gid).className = 'style-display';
+    }
+  }
+
+  function applyOtSPO(gid, spo, style) {
+    otGroupsData[gid].spo = spo;
+    otGroupsData[gid].style = style;
+    var disp = document.getElementById('ot-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    // SPO berubah -> Size & auto-fill di semua baris grup ini sudah tidak relevan
+    document.querySelectorAll('#ot-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      card.querySelector('.ot-size-input').value = '';
+      clearOtRowMatch(card.id.replace('ot-row-', ''));
+    });
+  }
+
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addOtRow(gid) {
+    otRowCount++;
+    var rid = otRowCount;
+    var container = document.getElementById('ot-rows-container-' + gid);
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'ot-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteOtRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input ot-size-input" id="ot-size-input-'+rid+'" placeholder="Ketik / pilih Size...">'
+      + '<div class="spo-ac-drop" id="ot-size-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">WIP Sewing Tersedia</span><input type="text" class="row-field-input ot-avail-display" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty OK</span><input type="number" class="row-field-input ot-qtyok-input" id="ot-qtyok-input-'+rid+'" placeholder="0" min="0"></div>'
+      + '</div>'
+      + '<div class="ot-total-note" id="ot-total-note-'+rid+'" style="font-size:10.5px;color:#999;margin-top:6px"></div>'
+
+      + '<div class="rows-label" style="margin-top:12px">'
+      + '<span>Operator</span>'
+      + '<span class="rowCountBadge" id="ot-member-badge-'+rid+'" style="background:rgba(29,158,117,0.15);color:#0A5C42;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 operator</span>'
+      + '</div>'
+      + '<div id="ot-members-'+rid+'"></div>'
+      + '<button type="button" class="btn-add-row" id="ot-add-member-btn-'+rid+'" onclick="addOtMember(\''+rid+'\')">'
+      + '<i class="ti ti-plus" style="font-size:14px"></i> Tambah Operator'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupOtSizeInput(gid, rid);
+    setupOtQtyOkInput(rid);
+    otMembers[rid] = [];
+    addOtMember(rid);
+    updateOtRowBadge(gid);
+  }
+
+  function deleteOtRow(gid, rid) {
+    var container = document.getElementById('ot-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 Size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('ot-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    delete otMembers[rid];
+    updateOtRowBadge(gid);
+  }
+
+  function updateOtRowBadge(gid) {
+    var container = document.getElementById('ot-rows-container-' + gid);
+    var badge = document.getElementById('ot-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  // ---- SIZE per baris (manual + suggest, difilter oleh SPO grup — cuma Size yang WIP SEWING != 0) ----
+  function setupOtSizeInput(gid, rid) {
+    var input = document.getElementById('ot-size-input-' + rid);
+    var drop  = document.getElementById('ot-size-drop-' + rid);
+
+    input.oninput = function() {
+      tryMatchOtRow(gid, rid);
+      renderOtSizeDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderOtSizeDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-size]');
+      if (!item) return;
+      pilihOtSize(gid, rid, item.getAttribute('data-size'));
+    });
+  }
+
+  function renderOtSizeDrop(gid, rid, query) {
+    var drop = document.getElementById('ot-size-drop-' + rid);
+    var spo = otGroupsData[gid] ? otGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = otSizesForSPO(spo, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var sHL = q ? r.size.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.size;
+      return '<div class="spo-ac-item" data-size="' + r.size + '"><span class="spo-ac-spo">' + sHL + '</span><span class="spo-ac-style">WIP Sewing ' + r.wipSewing + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOtSize(gid, rid, size) {
+    document.getElementById('ot-size-input-' + rid).value = size;
+    document.getElementById('ot-size-drop-' + rid).classList.remove('open');
+    tryMatchOtRow(gid, rid);
+  }
+
+  function tryMatchOtRow(gid, rid) {
+    var spo  = otGroupsData[gid] ? otGroupsData[gid].spo : '';
+    var size = document.getElementById('ot-size-input-' + rid).value.trim();
+    var match = findOtReceipt(spo, size);
+    var row = document.getElementById('ot-row-' + rid);
+    if (!match) { clearOtRowMatch(rid); return; }
+    row.querySelector('.ot-avail-display').value = match.wipSewing;
+    row.setAttribute('data-max-qty', match.wipSewing);
+    recalcOtRowTotal(rid);
+  }
+
+  function clearOtRowMatch(rid) {
+    var row = document.getElementById('ot-row-' + rid);
+    if (!row) return;
+    var avail = row.querySelector('.ot-avail-display');
+    if (avail) avail.value = '';
+    row.removeAttribute('data-max-qty');
+    recalcOtRowTotal(rid);
+  }
+
+  // ---- QTY OK + rekap "Total diproses" per baris Size (QtyOK + semua QtyRepair/QtyReject operator) ----
+  function setupOtQtyOkInput(rid) {
+    var input = document.getElementById('ot-qtyok-input-' + rid);
+    input.oninput = function() { recalcOtRowTotal(rid); };
+  }
+
+  function recalcOtRowTotal(rid) {
+    var row = document.getElementById('ot-row-' + rid);
+    if (!row) return;
+    var note = document.getElementById('ot-total-note-' + rid);
+    if (!note) return;
+    var qtyOkEl = row.querySelector('.ot-qtyok-input');
+    var qtyOk = qtyOkEl ? (Number(qtyOkEl.value) || 0) : 0;
+    var sumRepair = 0, sumReject = 0;
+    (otMembers[rid] || []).forEach(function(mid) {
+      var rEl = document.getElementById('ot-member-qtyrepair-' + mid);
+      var jEl = document.getElementById('ot-member-qtyreject-' + mid);
+      sumRepair += rEl ? (Number(rEl.value) || 0) : 0;
+      sumReject += jEl ? (Number(jEl.value) || 0) : 0;
+    });
+    var total = qtyOk + sumRepair + sumReject;
+    var maxAttr = row.getAttribute('data-max-qty');
+    var max = maxAttr !== null ? Number(maxAttr) : null;
+    if (max === null) {
+      note.textContent = 'Total diproses: ' + total + ' (pilih Size dulu untuk tahu WIP Sewing tersedia)';
+      note.style.color = '#999';
+    } else if (total > max) {
+      note.textContent = '⚠️ Total diproses: ' + total + ' MELEBIHI WIP Sewing tersedia (' + max + ')';
+      note.style.color = '#DC2626';
+    } else {
+      note.textContent = 'Total diproses: ' + total + ' / Tersedia: ' + max;
+      note.style.color = '#0A5C42';
+    }
+  }
+
+  // ---- OPERATOR entries per Size (maks 3, mirip pola Duet member — tiap operator punya Jenis
+  // Repair+Qty Repair & Jenis Reject+Qty Reject sendiri, keduanya opsional per pasangan) ----
+  function addOtMember(rid) {
+    var members = otMembers[rid] || (otMembers[rid] = []);
+    if (members.length >= 3) { showToast('Maksimal 3 Operator per Size', 'error'); return; }
+    otMemberCount++;
+    var mid = otMemberCount;
+    members.push(mid);
+
+    var container = document.getElementById('ot-members-' + rid);
+    var div = document.createElement('div');
+    div.className = 'duet-member-card';
+    div.id = 'ot-member-' + mid;
+
+    div.innerHTML = '<div class="duet-member-num">OPERATOR #' + members.length + '</div>'
+      + (members.length > 1 ? '<div class="duet-member-remove" onclick="removeOtMember(\''+rid+'\',\''+mid+'\')"><i class="ti ti-x"></i></div>' : '')
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Operator</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input ot-member-operator-input" id="ot-member-operator-input-'+mid+'" placeholder="Ketik nama operator...">'
+      + '<div class="spo-ac-drop" id="ot-member-operator-drop-'+mid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">No. Absen</span>'
+      + '<input type="text" class="row-field-input ot-member-absen-display" id="ot-member-absen-display-'+mid+'" readonly placeholder="Otomatis">'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Jenis Repair <span style="font-size:9px;color:#aaa;font-weight:400">(opsional)</span></span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input ot-member-repair-input" id="ot-member-repair-input-'+mid+'" placeholder="Ketik / pilih jenis repair...">'
+      + '<div class="spo-ac-drop" id="ot-member-repair-drop-'+mid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Qty Repair</span>'
+      + '<input type="number" class="row-field-input ot-member-qtyrepair-input" id="ot-member-qtyrepair-'+mid+'" placeholder="0" min="0">'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Jenis Reject <span style="font-size:9px;color:#aaa;font-weight:400">(opsional)</span></span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input ot-member-reject-input" id="ot-member-reject-input-'+mid+'" placeholder="Ketik / pilih jenis reject...">'
+      + '<div class="spo-ac-drop" id="ot-member-reject-drop-'+mid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field">'
+      + '<span class="row-field-label">Qty Reject</span>'
+      + '<input type="number" class="row-field-input ot-member-qtyreject-input" id="ot-member-qtyreject-'+mid+'" placeholder="0" min="0">'
+      + '</div>';
+
+    container.appendChild(div);
+    setupOtMemberOperatorInput(rid, mid);
+    setupOtMemberRepairInput(mid);
+    setupOtMemberRejectInput(mid);
+    document.getElementById('ot-member-qtyrepair-' + mid).oninput = function() { recalcOtRowTotal(rid); };
+    document.getElementById('ot-member-qtyreject-' + mid).oninput = function() { recalcOtRowTotal(rid); };
+    updateOtMemberBadge(rid);
+    updateOtAddMemberBtn(rid);
+    recalcOtRowTotal(rid);
+  }
+
+  function removeOtMember(rid, mid) {
+    var members = otMembers[rid] || [];
+    if (members.length <= 1) { showToast('Minimal 1 Operator per Size', 'error'); return; }
+    var el = document.getElementById('ot-member-' + mid);
+    if (el) el.parentNode.removeChild(el);
+    otMembers[rid] = members.filter(function(x) { return x != mid; });
+    otMembers[rid].forEach(function(m, idx) {
+      var card = document.getElementById('ot-member-' + m);
+      if (card) {
+        var label = card.querySelector('.duet-member-num');
+        if (label) label.textContent = 'OPERATOR #' + (idx + 1);
+      }
+    });
+    updateOtMemberBadge(rid);
+    updateOtAddMemberBtn(rid);
+    recalcOtRowTotal(rid);
+  }
+
+  function updateOtMemberBadge(rid) {
+    var badge = document.getElementById('ot-member-badge-' + rid);
+    if (badge) badge.textContent = (otMembers[rid] || []).length + ' operator';
+  }
+
+  function updateOtAddMemberBtn(rid) {
+    var btn = document.getElementById('ot-add-member-btn-' + rid);
+    if (btn) btn.style.display = (otMembers[rid] || []).length >= 3 ? 'none' : 'flex';
+  }
+
+  // ---- OPERATOR per entry (manual + suggest, dari MASTER DATA_OPERATOR ACCESSORIES Proses=Sewing) ----
+  function setupOtMemberOperatorInput(rid, mid) {
+    var input = document.getElementById('ot-member-operator-input-' + mid);
+    var drop  = document.getElementById('ot-member-operator-drop-' + mid);
+
+    input.oninput = function() {
+      document.getElementById('ot-member-absen-display-' + mid).value = '';
+      renderOtMemberOperatorDrop(mid, input.value);
+    };
+    input.onfocus = function() { renderOtMemberOperatorDrop(mid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-nama]');
+      if (!item) return;
+      pilihOtMemberOperator(mid, item.getAttribute('data-nama'), item.getAttribute('data-absen'));
+    });
+  }
+
+  function renderOtMemberOperatorDrop(mid, query) {
+    var drop = document.getElementById('ot-member-operator-drop-' + mid);
+    if (!masterDataOt.operatorsSewing.length) { drop.classList.remove('open'); return; }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? masterDataOt.operatorsSewing.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
+      : masterDataOt.operatorsSewing;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var namaHL = q ? o.nama.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o.nama;
+      return '<div class="spo-ac-item" data-nama="' + o.nama + '" data-absen="' + o.absen + '"><span class="spo-ac-spo">' + namaHL + '</span><span class="spo-ac-style">' + o.absen + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOtMemberOperator(mid, nama, absen) {
+    document.getElementById('ot-member-operator-input-' + mid).value = nama;
+    document.getElementById('ot-member-operator-drop-' + mid).classList.remove('open');
+    document.getElementById('ot-member-absen-display-' + mid).value = absen;
+  }
+
+  // ---- JENIS REPAIR per entry (manual + suggest, dari MASTER DATA_KATEGORI QUALITY Status=REPAIR) ----
+  function setupOtMemberRepairInput(mid) {
+    var input = document.getElementById('ot-member-repair-input-' + mid);
+    var drop  = document.getElementById('ot-member-repair-drop-' + mid);
+
+    input.oninput = function() { renderOtMemberRepairDrop(mid, input.value); };
+    input.onfocus = function() { renderOtMemberRepairDrop(mid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-kategori]');
+      if (!item) return;
+      document.getElementById('ot-member-repair-input-' + mid).value = item.getAttribute('data-kategori');
+      drop.classList.remove('open');
+    });
+  }
+
+  function renderOtMemberRepairDrop(mid, query) {
+    var drop = document.getElementById('ot-member-repair-drop-' + mid);
+    if (!masterDataOt.kategoriRepair.length) { drop.classList.remove('open'); return; }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? masterDataOt.kategoriRepair.filter(function(k) { return k.kategori.toLowerCase().indexOf(q) >= 0 || k.kode.toLowerCase().indexOf(q) >= 0; })
+      : masterDataOt.kategoriRepair;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Jenis repair tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(k) {
+      var katHL = q ? k.kategori.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k.kategori;
+      return '<div class="spo-ac-item" data-kategori="' + k.kategori + '"><span class="spo-ac-spo">' + katHL + '</span><span class="spo-ac-style">' + k.kode + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  // ---- JENIS REJECT per entry (manual + suggest, dari MASTER DATA_KATEGORI QUALITY Status=REJECT) ----
+  function setupOtMemberRejectInput(mid) {
+    var input = document.getElementById('ot-member-reject-input-' + mid);
+    var drop  = document.getElementById('ot-member-reject-drop-' + mid);
+
+    input.oninput = function() { renderOtMemberRejectDrop(mid, input.value); };
+    input.onfocus = function() { renderOtMemberRejectDrop(mid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-kategori]');
+      if (!item) return;
+      document.getElementById('ot-member-reject-input-' + mid).value = item.getAttribute('data-kategori');
+      drop.classList.remove('open');
+    });
+  }
+
+  function renderOtMemberRejectDrop(mid, query) {
+    var drop = document.getElementById('ot-member-reject-drop-' + mid);
+    if (!masterDataOt.kategoriReject.length) { drop.classList.remove('open'); return; }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q
+      ? masterDataOt.kategoriReject.filter(function(k) { return k.kategori.toLowerCase().indexOf(q) >= 0 || k.kode.toLowerCase().indexOf(q) >= 0; })
+      : masterDataOt.kategoriReject;
+    var show = filtered.slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Jenis reject tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(k) {
+      var katHL = q ? k.kategori.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k.kategori;
+      return '<div class="spo-ac-item" data-kategori="' + k.kategori + '"><span class="spo-ac-spo">' + katHL + '</span><span class="spo-ac-style">' + k.kode + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectOtData() {
+    var tanggal = document.getElementById('otTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+    if (!otQc.nama) return { error: 'Operator QC wajib diisi' };
+    if (!otQc.absen) return { error: 'Pilih Operator QC dari daftar saran agar No. Absen QC terisi' };
+    if (!otJamKe) return { error: 'Jam Ke- wajib dipilih' };
+
+    var groups = document.querySelectorAll('#otGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('ot-group-', '');
+      var spo = document.getElementById('ot-spo-input-' + gid).value.trim();
+      var style = otGroupsData[gid] ? otGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 Size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var rid = card.id.replace('ot-row-', '');
+        var size  = card.querySelector('.ot-size-input').value.trim();
+        var avail = card.querySelector('.ot-avail-display').value;
+        var qtyOk = card.querySelector('.ot-qtyok-input').value;
+        var maxAttr = card.getAttribute('data-max-qty');
+        if (!size)  { errorMsg = 'Size wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!avail) { errorMsg = 'Pilih Size dari daftar saran agar WIP Sewing tersedia terbaca (SPO ' + spo + ')'; return; }
+        if (!qtyOk) { errorMsg = 'Qty OK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+
+        var memberIds = otMembers[rid] || [];
+        if (memberIds.length === 0) { errorMsg = 'Minimal 1 Operator di setiap Size (SPO ' + spo + ')'; return; }
+
+        var operators = [];
+        var sumRepair = 0, sumReject = 0;
+        memberIds.forEach(function(mid) {
+          if (errorMsg) return;
+          var opName = document.getElementById('ot-member-operator-input-' + mid).value.trim();
+          var opAbsen = document.getElementById('ot-member-absen-display-' + mid).value;
+          var jenisRepair = document.getElementById('ot-member-repair-input-' + mid).value.trim();
+          var qtyRepair = document.getElementById('ot-member-qtyrepair-' + mid).value;
+          var jenisReject = document.getElementById('ot-member-reject-input-' + mid).value.trim();
+          var qtyReject = document.getElementById('ot-member-qtyreject-' + mid).value;
+
+          if (!opName)  { errorMsg = 'Operator wajib diisi di setiap entry (SPO ' + spo + ', Size ' + size + ')'; return; }
+          if (!opAbsen) { errorMsg = 'Pilih Operator dari daftar saran agar No. Absen terisi (SPO ' + spo + ', Size ' + size + ')'; return; }
+          if ((jenisRepair && !qtyRepair) || (!jenisRepair && qtyRepair)) {
+            errorMsg = 'Jenis Repair dan Qty Repair harus diisi berpasangan (SPO ' + spo + ', Size ' + size + ')'; return;
+          }
+          if ((jenisReject && !qtyReject) || (!jenisReject && qtyReject)) {
+            errorMsg = 'Jenis Reject dan Qty Reject harus diisi berpasangan (SPO ' + spo + ', Size ' + size + ')'; return;
+          }
+
+          sumRepair += Number(qtyRepair) || 0;
+          sumReject += Number(qtyReject) || 0;
+          operators.push({ operator:opName, absen:opAbsen, jenisRepair:jenisRepair, qtyRepair:qtyRepair, jenisReject:jenisReject, qtyReject:qtyReject });
+        });
+        if (errorMsg) return;
+
+        var total = (Number(qtyOk) || 0) + sumRepair + sumReject;
+        if (maxAttr !== null && total > Number(maxAttr)) {
+          errorMsg = 'Total Qty (OK+Repair+Reject) SPO ' + spo + ' Size ' + size + ' melebihi WIP Sewing yang tersedia (' + maxAttr + ')';
+          return;
+        }
+
+        allRows.push({ spo:spo, style:style, size:size, qtyOk:qtyOk, operators:operators });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, jamKe:otJamKe, operatorQC:otQc.nama, absenQC:otQc.absen, rows:allRows };
+  }
+
+  function submitOtForm() {
+    var data = collectOtData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_ACCESSORIES_URL + '?type=save_out_tab&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetOtForm();
+        loadTodayOt();
+        loadOtMasterData(true);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
+  var _otDupRowsToDelete = [];
+
+  function _renderOtTodayList(rows, dayOffset) {
+    var el = document.getElementById('otTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _otDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    // Duplikat dideteksi per SPO+Size+Jam Ke (SPO+Size yang sama BOLEH berulang di Jam Ke berbeda).
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.jamKe].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _otDupRowsToDelete = dupRowsToDelete;
+
+    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qtyOk', label: 'Total OK' }, { field: 'qtyRepair', label: 'Total Repair' }, { field: 'qtyReject', label: 'Total Reject' }]);
+    var cols = ['Jam Ke', 'SPO', 'Style', 'Size', 'Qty OK', 'Qty Repair', 'Qty Reject', 'Operator QC'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.jamKe].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.jamKe) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.spo) + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.qtyOk) + '</td>'
+        + '<td>' + _escToday(r.qtyRepair) + '</td>'
+        + '<td>' + _escToday(r.qtyReject) + '</td>'
+        + '<td>' + _escToday(r.operatorQC) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_otCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayOt(dayOffset) {
+    var containerId = 'otTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('otTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=today_out_tab&day=' + dayOffset, function(err, data) {
+      _showLoadTime('otTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderOtTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _otCleanupDuplicates() {
+    if (!_otDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _otDupRowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan? ' +
+      'Catatan: angka WIP Sewing/OUT TAB di REPORT_PERGERAKAN dan baris di "Form_Operator Repair & Reject" TIDAK ikut dikoreksi otomatis oleh pembersihan ini.'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_ACCESSORIES_URL + '?type=cleanup_dup_out_tab&payload=' + encodeURIComponent(JSON.stringify({ rows: _otDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayOt();
     });
   }
 
