@@ -2943,6 +2943,10 @@
       <div class="today-tabs" id="otTodayTabs">
         <button type="button" class="today-tab-btn active" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayOt)">Hari Ini</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayOt)">Kemarin</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayKapasitasQc)">Kapasitas QC Harian</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayKapasitasQc)">Kapasitas QC Kemarin</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayOperatorRR)">Operator Repair & Reject Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayOperatorRR)">Operator Repair & Reject Kemarin</button>
       </div>
       <div class="load-time-note" id="otTodayLoadTime"></div>
       <div id="otTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
@@ -8624,6 +8628,150 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayOt();
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — Kapasitas QC Harian ("Form_KAPASITAS QC") ----
+  // SATU baris per Tanggal+Jam Ke+No.Absen QC (sudah terakumulasi di server — kalau QC yang sama
+  // isi beberapa kali di Jam Ke yang sama, Qty OK/Repair/Reject-nya dijumlahkan jadi 1 baris), jadi
+  // tidak perlu fitur "Bersihkan Duplikat" di sini.
+  function _renderKapasitasQcTodayList(rows, dayOffset) {
+    var el = document.getElementById('otTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data Kapasitas QC ' + dayLabel + '.</div>';
+      return;
+    }
+    var statsHtml = _renderTodayStatsBar(rows, 'absenQC', 'Jumlah QC', [{ field: 'qtyOk', label: 'Total OK' }, { field: 'qtyRepair', label: 'Total Repair' }, { field: 'qtyReject', label: 'Total Reject' }]);
+    var cols = ['Jam Ke', 'No. Absen', 'Operator QC', 'Qty OK', 'Qty Repair', 'Qty Reject'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>'
+        + '<td>' + _escToday(r.jamKe) + '</td>'
+        + '<td>' + _escToday(r.absenQC) + '</td>'
+        + '<td>' + _escToday(r.operatorQC) + '</td>'
+        + '<td>' + _escToday(r.qtyOk) + '</td>'
+        + '<td>' + _escToday(r.qtyRepair) + '</td>'
+        + '<td>' + _escToday(r.qtyReject) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
+  }
+
+  function loadTodayKapasitasQc(dayOffset) {
+    var containerId = 'otTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('otTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=today_kapasitas_qc&day=' + dayOffset, function(err, data) {
+      _showLoadTime('otTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderKapasitasQcTodayList(data.rows, dayOffset);
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — Operator Repair & Reject ("Form_Operator Repair & Reject") ----
+  var _orrDupRowsToDelete = [];
+
+  function _renderOperatorRRTodayList(rows, dayOffset) {
+    var el = document.getElementById('otTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _orrDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data Operator Repair & Reject ' + dayLabel + '.</div>';
+      return;
+    }
+    // Duplikat dideteksi per SPO+Size+Jam Ke+No.Absen Operator (operator sama boleh kerja Size/Jam berbeda).
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.jamKe, r.opAbsen].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _orrDupRowsToDelete = dupRowsToDelete;
+
+    var statsHtml = _renderTodayStatsBar(rows, 'opAbsen', 'Jumlah Operator', [{ field: 'qtyRepair', label: 'Total Repair' }, { field: 'qtyReject', label: 'Total Reject' }]);
+    var cols = ['Jam Ke', 'SPO', 'Style', 'Size', 'Operator', 'No. Absen', 'Jenis Repair', 'Qty Repair', 'Jenis Reject', 'Qty Reject', 'Operator QC'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size, r.jamKe, r.opAbsen].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.jamKe) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.spo) + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.opName) + '</td>'
+        + '<td>' + _escToday(r.opAbsen) + '</td>'
+        + '<td>' + _escToday(r.jenisRepair) + '</td>'
+        + '<td>' + _escToday(r.qtyRepair) + '</td>'
+        + '<td>' + _escToday(r.jenisReject) + '</td>'
+        + '<td>' + _escToday(r.qtyReject) + '</td>'
+        + '<td>' + _escToday(r.operatorQC) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_orrCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayOperatorRR(dayOffset) {
+    var containerId = 'otTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('otTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=today_operator_repair_reject&day=' + dayOffset, function(err, data) {
+      _showLoadTime('otTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderOperatorRRTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _orrCleanupDuplicates() {
+    if (!_orrDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _orrDupRowsToDelete.length + ' baris duplikat dari sheet "Form_Operator Repair & Reject" (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_ACCESSORIES_URL + '?type=cleanup_dup_operator_repair_reject&payload=' + encodeURIComponent(JSON.stringify({ rows: _orrDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayOperatorRR();
     });
   }
 
