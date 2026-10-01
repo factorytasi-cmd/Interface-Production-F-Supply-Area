@@ -8350,13 +8350,15 @@
       if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
     });
     drop.addEventListener('click', function(e) {
-      var item = e.target.closest('[data-kategori]');
+      var item = e.target.closest('[data-kode]');
       if (!item) return;
-      document.getElementById('ot-member-repair-input-' + mid).value = item.getAttribute('data-kategori');
+      document.getElementById('ot-member-repair-input-' + mid).value = item.getAttribute('data-kode');
       drop.classList.remove('open');
     });
   }
 
+  // Nilai yang DISIMPAN/DIPILIH adalah KODE (kolom B) — Kategori (kolom C) cuma informasi
+  // tambahan yang ditampilkan di dropdown, bukan yang tersimpan di field.
   function renderOtMemberRepairDrop(mid, query) {
     var drop = document.getElementById('ot-member-repair-drop-' + mid);
     if (!masterDataOt.kategoriRepair.length) {
@@ -8375,8 +8377,8 @@
       return;
     }
     drop.innerHTML = show.map(function(k) {
-      var katHL = q ? k.kategori.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k.kategori;
-      return '<div class="spo-ac-item" data-kategori="' + k.kategori + '"><span class="spo-ac-spo">' + katHL + '</span><span class="spo-ac-style">' + k.kode + '</span></div>';
+      var kodeHL = q ? k.kode.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k.kode;
+      return '<div class="spo-ac-item" data-kode="' + k.kode + '"><span class="spo-ac-spo">' + kodeHL + '</span><span class="spo-ac-style">' + k.kategori + '</span></div>';
     }).join('');
     drop.classList.add('open');
   }
@@ -8392,13 +8394,15 @@
       if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
     });
     drop.addEventListener('click', function(e) {
-      var item = e.target.closest('[data-kategori]');
+      var item = e.target.closest('[data-kode]');
       if (!item) return;
-      document.getElementById('ot-member-reject-input-' + mid).value = item.getAttribute('data-kategori');
+      document.getElementById('ot-member-reject-input-' + mid).value = item.getAttribute('data-kode');
       drop.classList.remove('open');
     });
   }
 
+  // Nilai yang DISIMPAN/DIPILIH adalah KODE (kolom B) — Kategori (kolom C) cuma informasi
+  // tambahan yang ditampilkan di dropdown, bukan yang tersimpan di field.
   function renderOtMemberRejectDrop(mid, query) {
     var drop = document.getElementById('ot-member-reject-drop-' + mid);
     if (!masterDataOt.kategoriReject.length) {
@@ -8417,8 +8421,8 @@
       return;
     }
     drop.innerHTML = show.map(function(k) {
-      var katHL = q ? k.kategori.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k.kategori;
-      return '<div class="spo-ac-item" data-kategori="' + k.kategori + '"><span class="spo-ac-spo">' + katHL + '</span><span class="spo-ac-style">' + k.kode + '</span></div>';
+      var kodeHL = q ? k.kode.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : k.kode;
+      return '<div class="spo-ac-item" data-kode="' + k.kode + '"><span class="spo-ac-spo">' + kodeHL + '</span><span class="spo-ac-style">' + k.kategori + '</span></div>';
     }).join('');
     drop.classList.add('open');
   }
