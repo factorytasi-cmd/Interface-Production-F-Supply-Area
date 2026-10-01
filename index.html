@@ -2389,7 +2389,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('Proses Cutting ke Sewing')">
+        <div class="card card-out" onclick="goTo('page-cutting-sewing')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -2398,9 +2398,9 @@
               </div>
             </div>
             <div class="card-title">Proses Cutting ke Sewing</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat perpindahan dari WIP Cutting ke WIP Sewing</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per proses</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -2739,6 +2739,100 @@
       </div>
       <div class="load-time-note" id="pcTodayLoadTime"></div>
       <div id="pcTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: PROSES CUTTING KE SEWING (ACCESSORIES) ==================== -->
+  <div class="page" id="page-cutting-sewing">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-accessories')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:1.5px">PROSES CUTTING KE SEWING</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#1D9E75,#34D399)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › ACCESSORIES › CUTTING KE SEWING</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(29,158,117,0.12);border-color:rgba(29,158,117,0.3)">
+        <i class="ti ti-package-export" style="color:#1D9E75"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#0A5C42">Proses Cutting Ke Sewing</div>
+          <div class="form-header-pill-sub">Accessories Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- TANGGAL -->
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="csTanggal">
+      </div>
+
+      <!-- SPO STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data WIP Cutting (dari REPORT_PERGERAKAN)</label>
+        <span id="csSpoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(234,179,8,0.15);color:#7A5700;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="csSpoLoadTime"></div>
+      <div class="load-error-row" id="csSpoErrorRow" style="display:none">
+        <span id="csSpoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadCsMasterData(true)"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- SPO GROUPS -->
+      <div id="csGroupsContainer"></div>
+
+      <button class="btn-add-group" onclick="addCsGroup()">
+        <i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="csBtnSubmit" onclick="submitCsForm()">
+        <i class="ti ti-send" style="font-size:18px"></i>
+        Kirim
+      </button>
+
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="csTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('csTodayTabs','csTodayList',0,this,loadTodayCs)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('csTodayTabs','csTodayList',1,this,loadTodayCs)">Kemarin</button>
+      </div>
+      <div class="load-time-note" id="csTodayLoadTime"></div>
+      <div id="csTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -3146,6 +3240,7 @@
     if (pageId === "page-penerimaan-logo") initPlForm();
     if (pageId === "page-rak-persiapan") initRpForm();
     if (pageId === "page-persiapan-cutting") initPcForm();
+    if (pageId === "page-cutting-sewing") initCsForm();
     if (pageId === "page-rak-synthetic") initRsynForm();
     if (pageId === "page-out-synthetic") initOutSynForm();
     if (pageId === "page-boros-synthetic") initBorsynForm();
@@ -6951,6 +7046,554 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayPc();
+    });
+  }
+
+  // ===== PROSES CUTTING KE SEWING (ACCESSORIES) =====
+  // Sama pola dengan Rak Ke Proses Persiapan (tanpa Operator), tapi SPO+Size difilter dari
+  // REPORT_PERGERAKAN yang WIP CUTTING != 0 (bukan WIP RAK/WIP PERSIAPAN). Submit memindahkan
+  // WIP CUTTING -> WIP SEWING di REPORT_PERGERAKAN, dan mencatat riwayat ke "Form_Cutting Ke Sewing".
+  var masterDataCs = { receipts: [] };
+  var _csLoadedOnce = false;
+  var csGroupCount = 0, csRowCount = 0;
+  var csGroupsData = {};
+
+  function initCsForm() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth()+1).padStart(2,'0');
+    var dd   = String(today.getDate()).padStart(2,'0');
+    document.getElementById('csTanggal').value = yyyy+'-'+mm+'-'+dd;
+    resetCsForm();
+    loadCsMasterData();
+  }
+
+  function resetCsForm() {
+    document.getElementById('csGroupsContainer').innerHTML = '';
+    csGroupCount = 0;
+    csGroupsData = {};
+    addCsGroup();
+  }
+
+  function loadCsMasterData(force) {
+    if (_csLoadedOnce && !force) { setCsSPOStatus('ok', distinctCsSPOs('').length); return; }
+    setCsSPOStatus('loading');
+    document.getElementById('csSpoLoadTime').textContent = '';
+    _hideLoadError('csSpo');
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=cutting_sewing_master', function(err, data) {
+      _showLoadTime('csSpoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setCsSPOStatus('error');
+        _showLoadError('csSpo', err, data);
+        return;
+      }
+      masterDataCs.receipts = data.receipts || [];
+      _csLoadedOnce = true;
+      setCsSPOStatus('ok', distinctCsSPOs('').length);
+    });
+  }
+
+  function setCsSPOStatus(state, count) {
+    var el = document.getElementById('csSpoStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(29,158,117,0.12)'; el.style.color = '#0A5C42';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function distinctCsSPOs(query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    masterDataCs.receipts.forEach(function(r) {
+      if (seen[r.spo]) return;
+      if (q && r.spo.toLowerCase().indexOf(q) < 0 && (r.style||'').toLowerCase().indexOf(q) < 0) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style || '' });
+    });
+    return out;
+  }
+
+  function csStyleForSPO(spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    for (var i = 0; i < masterDataCs.receipts.length; i++) {
+      if (masterDataCs.receipts[i].spo.toLowerCase() === s) return masterDataCs.receipts[i].style;
+    }
+    return null;
+  }
+
+  function csSizesForSPO(spo, query) {
+    var s = (spo || '').trim().toLowerCase();
+    var q = (query || '').toLowerCase().trim();
+    var out = [];
+    masterDataCs.receipts.forEach(function(r) {
+      if (r.spo.toLowerCase() !== s) return;
+      if (q && r.size.toLowerCase().indexOf(q) < 0) return;
+      out.push(r);
+    });
+    return out;
+  }
+
+  function findCsReceipt(spo, size) {
+    var s = (spo || '').trim().toLowerCase();
+    var z = (size || '').trim().toLowerCase();
+    if (!s || !z) return null;
+    for (var i = 0; i < masterDataCs.receipts.length; i++) {
+      var r = masterDataCs.receipts[i];
+      if (r.spo.toLowerCase() === s && r.size.toLowerCase() === z) return r;
+    }
+    return null;
+  }
+
+  // ---- SPO GROUPS ----
+  function addCsGroup() {
+    csGroupCount++;
+    var gid = csGroupCount;
+    csGroupsData[gid] = { spo: '', style: '' };
+
+    var container = document.getElementById('csGroupsContainer');
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'cs-group-' + gid;
+
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + gid + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteCsGroup(' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="field-input" id="cs-spo-input-' + gid + '" placeholder="Ketik nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="cs-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="cs-style-display-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label">'
+      + '<span>Detail Size</span>'
+      + '<span class="rowCountBadge" id="cs-row-badge-' + gid + '" style="background:rgba(29,158,117,0.15);color:#0A5C42;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 size</span>'
+      + '</div>'
+      + '<div class="rowsContainer" id="cs-rows-container-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addCsRow(' + gid + ')">'
+      + '<i class="ti ti-plus" style="font-size:16px"></i> Tambah Size'
+      + '</button>'
+      + '</div>';
+
+    container.appendChild(div);
+    setupCsSPOInput(gid);
+    addCsRow(gid);
+    updateCsGroupDeleteButtons();
+  }
+
+  function updateCsGroupDeleteButtons() {
+    var groups = document.querySelectorAll('#csGroupsContainer .spo-group');
+    groups.forEach(function(g) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+    });
+  }
+
+  function deleteCsGroup(gid) {
+    var el = document.getElementById('cs-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete csGroupsData[gid];
+    updateCsGroupDeleteButtons();
+  }
+
+  // ---- SPO (manual + suggest, dari REPORT_PERGERAKAN yang WIP CUTTING != 0) ----
+  function setupCsSPOInput(gid) {
+    var input = document.getElementById('cs-spo-input-' + gid);
+    var drop  = document.getElementById('cs-spo-drop-' + gid);
+
+    input.oninput = function() {
+      csGroupsData[gid].spo = input.value.trim();
+      renderCsSPODrop(gid, input.value);
+      matchCsSPOStyle(gid, input.value);
+    };
+    input.onfocus = function() { renderCsSPODrop(gid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      pilihCsSPO(gid, item.getAttribute('data-spo'), item.getAttribute('data-style'));
+    });
+  }
+
+  function renderCsSPODrop(gid, query) {
+    var drop = document.getElementById('cs-spo-drop-' + gid);
+    if (!masterDataCs.receipts.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = distinctCsSPOs(query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan / WIP Cutting sudah habis</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(item) {
+      var spoHL = q ? item.spo.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : item.spo;
+      return '<div class="spo-ac-item" data-spo="' + item.spo + '" data-style="' + item.style + '"><span class="spo-ac-spo">' + spoHL + '</span><span class="spo-ac-style">' + item.style + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihCsSPO(gid, spo, style) {
+    document.getElementById('cs-spo-input-' + gid).value = spo;
+    document.getElementById('cs-spo-drop-' + gid).classList.remove('open');
+    applyCsSPO(gid, spo, style);
+  }
+
+  function matchCsSPOStyle(gid, typedSpo) {
+    var style = csStyleForSPO(typedSpo);
+    if (style !== null) {
+      applyCsSPO(gid, typedSpo.trim(), style);
+    } else {
+      csGroupsData[gid].spo = typedSpo.trim();
+      csGroupsData[gid].style = '';
+      document.getElementById('cs-style-display-' + gid).textContent = 'Pilih atau ketik SPO';
+      document.getElementById('cs-style-display-' + gid).className = 'style-display';
+    }
+  }
+
+  function applyCsSPO(gid, spo, style) {
+    csGroupsData[gid].spo = spo;
+    csGroupsData[gid].style = style;
+    var disp = document.getElementById('cs-style-display-' + gid);
+    disp.textContent = style;
+    disp.className = 'style-display filled';
+    // SPO berubah -> Size & auto-fill di semua baris grup ini sudah tidak relevan
+    document.querySelectorAll('#cs-rows-container-' + gid + ' .row-card').forEach(function(card) {
+      card.querySelector('.cs-size-input').value = '';
+      clearCsRowMatch(card.id.replace('cs-row-', ''));
+    });
+  }
+
+  // ---- ROWS (SIZE) di dalam tiap grup SPO ----
+  function addCsRow(gid) {
+    csRowCount++;
+    var rid = csRowCount;
+    var container = document.getElementById('cs-rows-container-' + gid);
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'cs-row-' + rid;
+
+    div.innerHTML = '<div class="row-num">SIZE '+rid+'</div>'
+      + '<div class="row-delete" onclick="deleteCsRow(\''+gid+'\',\''+rid+'\')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Size</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input cs-size-input" id="cs-size-input-'+rid+'" placeholder="Ketik / pilih Size...">'
+      + '<div class="spo-ac-drop" id="cs-size-drop-'+rid+'"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">WIP Cutting Tersedia</span><input type="text" class="row-field-input cs-avail-display" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input cs-qty-input" id="cs-qty-input-'+rid+'" placeholder="0" min="0"></div>'
+      + '</div></div>';
+
+    container.appendChild(div);
+    setupCsSizeInput(gid, rid);
+    setupCsQtyInput(rid);
+    updateCsRowBadge(gid);
+  }
+
+  function deleteCsRow(gid, rid) {
+    var container = document.getElementById('cs-rows-container-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 Size per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('cs-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    updateCsRowBadge(gid);
+  }
+
+  function updateCsRowBadge(gid) {
+    var container = document.getElementById('cs-rows-container-' + gid);
+    var badge = document.getElementById('cs-row-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' size';
+  }
+
+  // ---- SIZE per baris (manual + suggest, difilter oleh SPO grup — cuma Size yang WIP CUTTING != 0) ----
+  function setupCsSizeInput(gid, rid) {
+    var input = document.getElementById('cs-size-input-' + rid);
+    var drop  = document.getElementById('cs-size-drop-' + rid);
+
+    input.oninput = function() {
+      tryMatchCsRow(gid, rid);
+      renderCsSizeDrop(gid, rid, input.value);
+    };
+    input.onfocus = function() { renderCsSizeDrop(gid, rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-size]');
+      if (!item) return;
+      pilihCsSize(gid, rid, item.getAttribute('data-size'));
+    });
+  }
+
+  function renderCsSizeDrop(gid, rid, query) {
+    var drop = document.getElementById('cs-size-drop-' + rid);
+    var spo = csGroupsData[gid] ? csGroupsData[gid].spo : '';
+    if (!spo) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = csSizesForSPO(spo, query).slice(0, 8);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(r) {
+      var sHL = q ? r.size.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.size;
+      return '<div class="spo-ac-item" data-size="' + r.size + '"><span class="spo-ac-spo">' + sHL + '</span><span class="spo-ac-style">WIP Cutting ' + r.wipCutting + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihCsSize(gid, rid, size) {
+    document.getElementById('cs-size-input-' + rid).value = size;
+    document.getElementById('cs-size-drop-' + rid).classList.remove('open');
+    tryMatchCsRow(gid, rid);
+  }
+
+  function tryMatchCsRow(gid, rid) {
+    var spo  = csGroupsData[gid] ? csGroupsData[gid].spo : '';
+    var size = document.getElementById('cs-size-input-' + rid).value.trim();
+    var match = findCsReceipt(spo, size);
+    var row = document.getElementById('cs-row-' + rid);
+    if (!match) { clearCsRowMatch(rid); return; }
+    row.querySelector('.cs-avail-display').value = match.wipCutting;
+    row.setAttribute('data-max-qty', match.wipCutting);
+    var qtyInput = row.querySelector('.cs-qty-input');
+    if (qtyInput.value && Number(qtyInput.value) > match.wipCutting) {
+      qtyInput.value = match.wipCutting;
+      showToast('⚠️ Qty disesuaikan — WIP Cutting tersedia cuma ' + match.wipCutting, 'error');
+    }
+    checkDupCs();
+  }
+
+  function clearCsRowMatch(rid) {
+    var row = document.getElementById('cs-row-' + rid);
+    if (!row) return;
+    var avail = row.querySelector('.cs-avail-display');
+    if (avail) avail.value = '';
+    row.removeAttribute('data-max-qty');
+  }
+
+  // ---- QTY per baris — tidak boleh melebihi WIP Cutting yang tersedia (data-max-qty di row-card) ----
+  function setupCsQtyInput(rid) {
+    var input = document.getElementById('cs-qty-input-' + rid);
+    input.oninput = function() {
+      var row = document.getElementById('cs-row-' + rid);
+      var maxAttr = row ? row.getAttribute('data-max-qty') : null;
+      var max = maxAttr !== null ? Number(maxAttr) : null;
+      if (max !== null && input.value !== '' && Number(input.value) > max) {
+        input.value = max;
+        showToast('⚠️ Qty tidak bisa melebihi WIP Cutting yang tersedia (' + max + ')', 'error');
+      }
+    };
+  }
+
+  // Peringatan real-time kalau SPO+Size yang sama sudah diisi di baris lain form ini.
+  function checkDupCs() {
+    var cards = document.querySelectorAll('#csGroupsContainer .row-card');
+    var seen = {};
+    var dup = null;
+    cards.forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var gid = group ? group.id.replace('cs-group-', '') : null;
+      var spoInput = gid ? document.getElementById('cs-spo-input-' + gid) : null;
+      var spo = spoInput ? spoInput.value.trim() : '';
+      var size = card.querySelector('.cs-size-input').value.trim();
+      if (!spo || !size) return;
+      var key = [spo.toLowerCase(), size.toLowerCase()].join('|');
+      if (seen[key]) dup = { spo:spo, size:size };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ Data SPO ' + dup.spo + ', Size ' + dup.size + ' sudah diisi di baris lain form ini', 'error');
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectCsData() {
+    var tanggal = document.getElementById('csTanggal').value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+
+    var groups = document.querySelectorAll('#csGroupsContainer .spo-group');
+    if (groups.length === 0) return { error: 'Minimal 1 SPO harus diisi' };
+
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('cs-group-', '');
+      var spo = document.getElementById('cs-spo-input-' + gid).value.trim();
+      var style = csGroupsData[gid] ? csGroupsData[gid].style : '';
+
+      if (!spo) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+
+      var rowCards = group.querySelectorAll('.row-card');
+      if (rowCards.length === 0) { errorMsg = 'Minimal 1 Size harus diisi untuk SPO ' + spo; return; }
+
+      rowCards.forEach(function(card) {
+        if (errorMsg) return;
+        var size   = card.querySelector('.cs-size-input').value.trim();
+        var avail  = card.querySelector('.cs-avail-display').value;
+        var qty    = card.querySelector('.cs-qty-input').value;
+        var maxAttr = card.getAttribute('data-max-qty');
+        if (!size)  { errorMsg = 'Size wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (!avail) { errorMsg = 'Pilih Size dari daftar saran agar WIP Cutting tersedia terbaca (SPO ' + spo + ')'; return; }
+        if (!qty)   { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
+        if (maxAttr !== null && Number(qty) > Number(maxAttr)) {
+          errorMsg = 'Qty SPO ' + spo + ' Size ' + size + ' melebihi WIP Cutting yang tersedia (' + maxAttr + ')';
+          return;
+        }
+
+        allRows.push({ spo:spo, style:style, size:size, qty:qty });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (allRows.length === 0) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal:tanggal, rows:allRows };
+  }
+
+  function submitCsForm() {
+    var data = collectCsData();
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+
+    showLoading(true);
+    var url = GAS_ACCESSORIES_URL + '?type=save_cutting_sewing&payload=' + encodeURIComponent(JSON.stringify(data));
+
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetCsForm();
+        loadTodayCs();
+        loadCsMasterData(true);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
+  var _csDupRowsToDelete = [];
+
+  function _renderCsTodayList(rows, dayOffset) {
+    var el = document.getElementById('csTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    _csDupRowsToDelete = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size].join('|');
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupRowsToDelete = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) dupRowsToDelete.push(g[i].row);
+    });
+    _csDupRowsToDelete = dupRowsToDelete;
+
+    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qty', label: 'Total Qty' }]);
+    var cols = ['SPO', 'Style', 'Size', 'Qty'];
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var key = [r.spo, r.size].join('|');
+      var dupCount = groups[key].length;
+      var isDup = dupCount > 1;
+      html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td>' + _escToday(r.size) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (dupRowsToDelete.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_csCleanupDuplicates()">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + dupRowsToDelete.length + ' Baris Duplikat (sisakan 1)'
+        + '</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodayCs(dayOffset) {
+    var containerId = 'csTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('csTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=today_cutting_sewing&day=' + dayOffset, function(err, data) {
+      _showLoadTime('csTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderCsTodayList(data.rows, dayOffset);
+    });
+  }
+
+  function _csCleanupDuplicates() {
+    if (!_csDupRowsToDelete.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + _csDupRowsToDelete.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan? ' +
+      'Catatan: angka WIP Cutting/WIP Sewing di REPORT_PERGERAKAN TIDAK ikut dikoreksi otomatis oleh pembersihan ini.'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_ACCESSORIES_URL + '?type=cleanup_dup_cutting_sewing&payload=' + encodeURIComponent(JSON.stringify({ rows: _csDupRowsToDelete }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodayCs();
     });
   }
 
