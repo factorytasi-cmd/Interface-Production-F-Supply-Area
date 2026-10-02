@@ -501,6 +501,13 @@
     }
     .today-cleanup-btn:active { background: rgba(220,53,69,0.14); }
 
+    .today-edit-btn {
+      padding: 5px 9px; border-radius: 8px; border: none;
+      background: rgba(29,158,117,0.12); color: #0A5C42;
+      cursor: pointer; font-family: inherit; display: inline-flex; align-items: center;
+    }
+    .today-edit-btn:active { background: rgba(29,158,117,0.22); }
+
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
     #page-gap-cutting .wip-filter-input:focus { border-color: #E11D48; }
@@ -627,6 +634,50 @@
 
 <!-- Lembar surat jalan dirender di sini (off-screen) supaya bisa di-capture jadi gambar oleh html2canvas -->
 <div id="sjSheetOffscreen" style="position:fixed;left:-9999px;top:0;"></div>
+
+<!-- Modal Edit — In Material dari Gudang Synthetic (dari Cek Data Terkirim Hari Ini/Kemarin) -->
+<div class="sj-modal-overlay" id="synEditModalOverlay">
+  <div class="sj-modal-sheet">
+    <div class="sj-modal-header">
+      <span>Edit Data In Material</span>
+      <button type="button" class="sj-modal-close" onclick="_synEditClose()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Tanggal</label>
+      <input type="date" class="field-input" id="synEditTanggal">
+    </div>
+    <div class="row-grid">
+      <div class="field-group"><label class="field-label">SPO</label><input type="text" class="field-input" id="synEditSpo"></div>
+      <div class="field-group"><label class="field-label">Style</label><input type="text" class="field-input" id="synEditStyle"></div>
+    </div>
+    <div class="row-grid">
+      <div class="field-group"><label class="field-label">PRC</label><input type="text" class="field-input" id="synEditPrc"></div>
+      <div class="field-group"><label class="field-label">No. PRC</label><input type="text" class="field-input" id="synEditNoPrc"></div>
+    </div>
+    <div class="row-grid">
+      <div class="field-group"><label class="field-label">Size</label><input type="text" class="field-input" id="synEditSize"></div>
+      <div class="field-group"><label class="field-label">Qty</label><input type="number" class="field-input" id="synEditQty" min="0"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Material</label>
+      <input type="text" class="field-input" id="synEditMaterial">
+    </div>
+    <div class="row-grid">
+      <div class="field-group"><label class="field-label">Meter</label><input type="number" class="field-input" id="synEditMeter" min="0" step="0.01"></div>
+      <div class="field-group"><label class="field-label">No. Roll</label><input type="text" class="field-input" id="synEditNoRoll"></div>
+    </div>
+    <div class="row-grid">
+      <div class="field-group"><label class="field-label">Kategori</label><input type="text" class="field-input" id="synEditKategori"></div>
+      <div class="field-group"><label class="field-label">Potong Boros</label><input type="text" class="field-input" id="synEditBoros"></div>
+    </div>
+
+    <button class="btn-submit" style="background:linear-gradient(135deg,#1D9E75,#34D399);margin-top:10px" onclick="_synEditSubmit()">
+      <i class="ti ti-device-floppy" style="font-size:18px"></i> Simpan Perubahan
+    </button>
+    <button type="button" class="sj-skip-btn" onclick="_synEditClose()">Batal</button>
+  </div>
+</div>
 
 <div class="phone">
 
@@ -5587,11 +5638,13 @@
 
   // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
   var _synDupRowsToDelete = [];
+  var _synTodayRowsCache = []; // dipakai _synEditOpen() untuk ambil field yang tidak ditampilkan di tabel (Style/Kategori/Boros/Tanggal)
 
   function _renderSynTodayList(rows, dayOffset) {
     var el = document.getElementById('synTodayList');
     var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
     _synDupRowsToDelete = [];
+    _synTodayRowsCache = rows || [];
     if (!rows || !rows.length) {
       el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
       return;
@@ -5611,7 +5664,7 @@
     _synDupRowsToDelete = dupRowsToDelete;
 
     var statsHtml = _renderTodayStatsBar(rows, 'prc', 'Jumlah PRC', [{ field: 'qty', label: 'Total Qty' }, { field: 'meter', label: 'Total Meter' }]);
-    var cols = ['SPO', 'Size', 'PRC', 'No. PRC', 'Qty', 'Material', 'Meter', 'No. Roll'];
+    var cols = ['SPO', 'Size', 'PRC', 'No. PRC', 'Qty', 'Material', 'Meter', 'No. Roll', 'Aksi'];
     var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
@@ -5628,6 +5681,7 @@
         + '<td>' + _escToday(r.material) + '</td>'
         + '<td>' + _escToday(r.meter) + '</td>'
         + '<td>' + _escToday(r.noRoll) + '</td>'
+        + '<td><button type="button" class="today-edit-btn" onclick="_synEditOpen(' + r.row + ')"><i class="ti ti-edit" style="font-size:13px"></i></button></td>'
         + '</tr>';
     });
     html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
@@ -5673,6 +5727,88 @@
         return;
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodaySynIn();
+    });
+  }
+
+  // ---- EDIT BARIS — In Material dari Gudang Synthetic (dari Cek Data Terkirim Hari Ini/Kemarin) ----
+  var _synEditOriginal = null;
+  var _synEditLabels = {
+    tanggal: 'Tanggal', spo: 'SPO', style: 'Style', prc: 'PRC', noPrc: 'No. PRC', size: 'Size',
+    qty: 'Qty', material: 'Material', meter: 'Meter', noRoll: 'No. Roll', kategori: 'Kategori', boros: 'Potong Boros'
+  };
+
+  function _synEditOpen(rowNum) {
+    var r = _synTodayRowsCache.filter(function(x) { return x.row === rowNum; })[0];
+    if (!r) { showToast('Data tidak ditemukan, coba muat ulang.', 'error'); return; }
+    _synEditOriginal = r;
+    document.getElementById('synEditTanggal').value  = r.tanggal || '';
+    document.getElementById('synEditSpo').value      = r.spo || '';
+    document.getElementById('synEditStyle').value    = r.style || '';
+    document.getElementById('synEditPrc').value      = r.prc || '';
+    document.getElementById('synEditNoPrc').value    = r.noPrc || '';
+    document.getElementById('synEditSize').value     = r.size || '';
+    document.getElementById('synEditQty').value      = r.qty;
+    document.getElementById('synEditMaterial').value = r.material || '';
+    document.getElementById('synEditMeter').value    = r.meter;
+    document.getElementById('synEditNoRoll').value   = r.noRoll || '';
+    document.getElementById('synEditKategori').value = r.kategori || '';
+    document.getElementById('synEditBoros').value    = r.boros || '';
+    document.getElementById('synEditModalOverlay').classList.add('show');
+  }
+
+  function _synEditClose() {
+    document.getElementById('synEditModalOverlay').classList.remove('show');
+    _synEditOriginal = null;
+  }
+
+  function _synEditSubmit() {
+    if (!_synEditOriginal) return;
+    var newData = {
+      row: _synEditOriginal.row,
+      tanggal: document.getElementById('synEditTanggal').value,
+      spo: document.getElementById('synEditSpo').value.trim(),
+      style: document.getElementById('synEditStyle').value.trim(),
+      prc: document.getElementById('synEditPrc').value.trim(),
+      noPrc: document.getElementById('synEditNoPrc').value.trim(),
+      size: document.getElementById('synEditSize').value.trim(),
+      qty: document.getElementById('synEditQty').value,
+      material: document.getElementById('synEditMaterial').value.trim(),
+      meter: document.getElementById('synEditMeter').value,
+      noRoll: document.getElementById('synEditNoRoll').value.trim(),
+      kategori: document.getElementById('synEditKategori').value.trim(),
+      boros: document.getElementById('synEditBoros').value.trim()
+    };
+
+    if (!newData.tanggal || !newData.spo || !newData.style || !newData.prc || !newData.noPrc || !newData.size || !newData.qty) {
+      showToast('⚠️ Tanggal/SPO/Style/PRC/No.PRC/Size/Qty wajib diisi', 'error');
+      return;
+    }
+
+    var changes = [];
+    Object.keys(_synEditLabels).forEach(function(key) {
+      var oldVal = (_synEditOriginal[key] == null ? '' : _synEditOriginal[key]).toString();
+      var newVal = (newData[key] == null ? '' : newData[key]).toString();
+      if (oldVal !== newVal) changes.push(_synEditLabels[key] + ': "' + oldVal + '" → "' + newVal + '"');
+    });
+    if (!changes.length) { showToast('Tidak ada perubahan', 'error'); return; }
+
+    var ok = window.confirm(
+      'Konfirmasi perubahan data:\n\n' + changes.join('\n') +
+      '\n\nData terkait (rentang PRC per Style & ringkasan Set PRC lengkap di "In Set Material") akan otomatis disesuaikan. Lanjutkan simpan?'
+    );
+    if (!ok) return;
+
+    showLoading(true);
+    var url = GAS_SYNTHETIC_URL + '?type=edit_synthetic_in&payload=' + encodeURIComponent(JSON.stringify(newData));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal menyimpan perubahan: ' + (data ? data.message : 'Coba lagi'), 'error');
+        return;
+      }
+      showToast('✓ Perubahan data berhasil disimpan', 'success');
+      _synEditClose();
       loadTodaySynIn();
     });
   }
