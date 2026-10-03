@@ -2312,6 +2312,10 @@
         <input type="text" class="wip-filter-input" id="wipFilterSpo" placeholder="Filter SPO..." oninput="applyWipFilter()">
         <input type="text" class="wip-filter-input" id="wipFilterSize" placeholder="Filter Size..." oninput="applyWipFilter()">
       </div>
+      <!-- FILTER OPERATOR (cuma muncul di tab WIP Proses Operator — cuma tab itu yang punya data operator) -->
+      <div class="wip-filter" id="wipFilterOperatorRow" style="display:none">
+        <input type="text" class="wip-filter-input" id="wipFilterOperator" placeholder="Filter Nama Operator..." oninput="applyWipFilter()">
+      </div>
 
       <!-- WIP RAK VIEW -->
       <div id="wipViewRak" class="wip-view">
@@ -12463,6 +12467,7 @@
   function initWipCuttingPage() {
     document.getElementById('wipFilterSpo').value = '';
     document.getElementById('wipFilterSize').value = '';
+    document.getElementById('wipFilterOperator').value = '';
     showWipView('rak');
     loadWipCuttingData();
   }
@@ -12521,13 +12526,16 @@
   function getWipFilterValues() {
     var spoEl  = document.getElementById('wipFilterSpo');
     var sizeEl = document.getElementById('wipFilterSize');
+    var opEl   = document.getElementById('wipFilterOperator');
     return {
-      spo:  (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
-      size: (sizeEl ? sizeEl.value : '').toLowerCase().trim()
+      spo:      (spoEl  ? spoEl.value  : '').toLowerCase().trim(),
+      size:     (sizeEl ? sizeEl.value : '').toLowerCase().trim(),
+      operator: (opEl   ? opEl.value   : '').toLowerCase().trim()
     };
   }
 
-  // Filter SPO & Size berlaku untuk ketiga tampilan sekaligus (tetap ikut saat toggle tab)
+  // Filter SPO & Size berlaku untuk keempat tampilan sekaligus (tetap ikut saat toggle tab);
+  // filter Operator cuma berlaku di tampilan WIP Proses Operator (satu-satunya yang punya operator)
   function applyWipFilter() {
     renderWipTable('rak');
     renderWipTable('rakOpck');
@@ -12593,6 +12601,7 @@
     var rows = wipData[which].filter(function(r) {
       if (f.spo  && r.spo.toLowerCase().indexOf(f.spo) < 0) return false;
       if (f.size && (r.size || '').toLowerCase().indexOf(f.size) < 0) return false;
+      if (which === 'prosesOperator' && f.operator && (r.operator || '').toLowerCase().indexOf(f.operator) < 0) return false;
       return true;
     });
     var cfg = WIP_VIEW_CONFIG[which];
@@ -12621,6 +12630,7 @@
     document.getElementById('wipTabRakOpck').classList.toggle('active', which === 'rakOpck');
     document.getElementById('wipTabProses').classList.toggle('active', which === 'proses');
     document.getElementById('wipTabProsesOperator').classList.toggle('active', which === 'prosesOperator');
+    document.getElementById('wipFilterOperatorRow').style.display = which === 'prosesOperator' ? 'flex' : 'none';
   }
 
   // ===== DATA WIP ACCESSORIES =====
