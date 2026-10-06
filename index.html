@@ -3525,6 +3525,19 @@
     el.textContent = 'Waktu memuat: ' + sec + ' detik';
   }
 
+  // Urutkan hasil dropdown suggest dari terkecil ke terbesar (angka dibaca sebagai angka, huruf
+  // alfabetis, tanpa membedakan huruf besar/kecil) dan TANPA batas jumlah — kotak dropdown sudah
+  // bisa di-scroll. field = nama properti yang jadi kunci urut; null kalau itemnya string biasa.
+  function _acSort(arr, field) {
+    var copy = (arr || []).slice();
+    copy.sort(function(a, b) {
+      var ka = String(field ? a[field] : a == null ? '' : a);
+      var kb = String(field ? b[field] : b == null ? '' : b);
+      return ka.localeCompare(kb, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    return copy;
+  }
+
   // ---- PAGE NAVIGATION ----
   function goTo(pageId) {
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
@@ -3729,7 +3742,7 @@
     var filtered = q
       ? masterData.spo.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
       : masterData.spo;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -4121,7 +4134,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctRakSPOs(query).slice(0, 8);
+    var show = _acSort(distinctRakSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -4285,7 +4298,7 @@
     var row = document.getElementById('rk-row-' + rid);
     var size = row.querySelector('.rk-size-select').value;
     var q = (query || '').toLowerCase().trim();
-    var show = rakReceiptsFor(spo, size, query).slice(0, 8);
+    var show = _acSort(rakReceiptsFor(spo, size, query), 'opck');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
       drop.classList.add('open');
@@ -4340,7 +4353,7 @@
     var filtered = q
       ? masterDataRak.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataRak.operators;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
       drop.classList.add('open');
@@ -4762,7 +4775,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctOutSPOs(query).slice(0, 8);
+    var show = _acSort(distinctOutSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -4900,7 +4913,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctOutOperators(spo, query).slice(0, 8);
+    var show = _acSort(distinctOutOperators(spo, query), 'operator');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
       drop.classList.add('open');
@@ -4954,7 +4967,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctOutSizes(spo, operator, query).slice(0, 8);
+    var show = _acSort(distinctOutSizes(spo, operator, query), null);
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
       drop.classList.add('open');
@@ -5377,7 +5390,7 @@
     var filtered = q
       ? synMasterData.spo.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
       : synMasterData.spo;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -5507,7 +5520,7 @@
     var filtered = q
       ? synMaterialList.filter(function(m) { return m.toLowerCase().indexOf(q) >= 0; })
       : synMaterialList;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, null);
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Material tidak ditemukan — akan ditambahkan sebagai material baru</div>';
       drop.classList.add('open');
@@ -6016,7 +6029,7 @@
     var filtered = q
       ? plMasterData.spo.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
       : plMasterData.spo;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -6461,7 +6474,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctRpSPOs(query).slice(0, 8);
+    var show = _acSort(distinctRpSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan / WIP Rak sudah habis</div>';
       drop.classList.add('open');
@@ -6583,7 +6596,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = rpSizesForSPO(spo, query).slice(0, 8);
+    var show = _acSort(rpSizesForSPO(spo, query), 'size');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
       drop.classList.add('open');
@@ -7011,7 +7024,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctPcSPOs(query).slice(0, 8);
+    var show = _acSort(distinctPcSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan / WIP Persiapan sudah habis</div>';
       drop.classList.add('open');
@@ -7146,7 +7159,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = pcSizesForSPO(spo, query).slice(0, 8);
+    var show = _acSort(pcSizesForSPO(spo, query), 'size');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
       drop.classList.add('open');
@@ -7230,7 +7243,7 @@
     var filtered = q
       ? masterDataPc.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataPc.operators;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
       drop.classList.add('open');
@@ -7623,7 +7636,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctCsSPOs(query).slice(0, 8);
+    var show = _acSort(distinctCsSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan / WIP Cutting sudah habis</div>';
       drop.classList.add('open');
@@ -7745,7 +7758,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = csSizesForSPO(spo, query).slice(0, 8);
+    var show = _acSort(csSizesForSPO(spo, query), 'size');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
       drop.classList.add('open');
@@ -8067,7 +8080,7 @@
     var filtered = q
       ? masterDataOt.operatorsQC.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataOt.operatorsQC;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator QC tidak ditemukan</div>';
       drop.classList.add('open');
@@ -8258,7 +8271,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctOtSPOs(query).slice(0, 8);
+    var show = _acSort(distinctOtSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan / WIP Sewing sudah habis</div>';
       drop.classList.add('open');
@@ -8394,7 +8407,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = otSizesForSPO(spo, query).slice(0, 8);
+    var show = _acSort(otSizesForSPO(spo, query), 'size');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Size tidak ditemukan</div>';
       drop.classList.add('open');
@@ -8592,7 +8605,7 @@
     var filtered = q
       ? masterDataOt.operatorsSewing.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataOt.operatorsSewing;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
       drop.classList.add('open');
@@ -8642,7 +8655,7 @@
     var filtered = q
       ? masterDataOt.kategoriRepair.filter(function(k) { return k.kategori.toLowerCase().indexOf(q) >= 0 || k.kode.toLowerCase().indexOf(q) >= 0; })
       : masterDataOt.kategoriRepair;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'kode');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Jenis repair tidak ditemukan</div>';
       drop.classList.add('open');
@@ -8686,7 +8699,7 @@
     var filtered = q
       ? masterDataOt.kategoriReject.filter(function(k) { return k.kategori.toLowerCase().indexOf(q) >= 0 || k.kode.toLowerCase().indexOf(q) >= 0; })
       : masterDataOt.kategoriReject;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'kode');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Jenis reject tidak ditemukan</div>';
       drop.classList.add('open');
@@ -9249,7 +9262,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctRsynSPOs(query).slice(0, 8);
+    var show = _acSort(distinctRsynSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -9479,7 +9492,7 @@
     var filtered = q
       ? masterDataRsyn.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataRsyn.operators;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
       drop.classList.add('open');
@@ -9534,7 +9547,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = rsynPrcsForSPO(spo, query).slice(0, 8);
+    var show = _acSort(rsynPrcsForSPO(spo, query), null);
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">PRC tidak ditemukan</div>';
       drop.classList.add('open');
@@ -9584,7 +9597,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = rsynNoPrcsFor(spo, prc, query).slice(0, 8);
+    var show = _acSort(rsynNoPrcsFor(spo, prc, query), 'noPrc');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">No. PRC tidak ditemukan</div>';
       drop.classList.add('open');
@@ -9656,7 +9669,7 @@
     var filtered = q
       ? masterDataRsyn.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataRsyn.operators;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Operator tidak ditemukan</div>';
       drop.classList.add('open');
@@ -9976,7 +9989,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctOutSynSPOs(query).slice(0, 8);
+    var show = _acSort(distinctOutSynSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -10424,7 +10437,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctBorsynSPOs(query).slice(0, 8);
+    var show = _acSort(distinctBorsynSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -10575,7 +10588,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = borsynPrcsForSPO(spo, query).slice(0, 8);
+    var show = _acSort(borsynPrcsForSPO(spo, query), null);
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">PRC tidak ditemukan</div>';
       drop.classList.add('open');
@@ -10625,7 +10638,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = borsynNoPrcsFor(spo, prc, query).slice(0, 8);
+    var show = _acSort(borsynNoPrcsFor(spo, prc, query), 'noPrc');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">No. PRC tidak ditemukan</div>';
       drop.classList.add('open');
@@ -11168,7 +11181,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctOutSPOs(query).slice(0, 8);
+    var show = _acSort(distinctOutSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -11366,7 +11379,7 @@
     var row = document.getElementById('pk-row-' + rid);
     var size = row.querySelector('.pk-size-select').value;
     var q = (query || '').toLowerCase().trim();
-    var show = pkRecordsForOPCK(spo, size, query).slice(0, 8);
+    var show = _acSort(pkRecordsForOPCK(spo, size, query), 'opck');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
       drop.classList.add('open');
@@ -11708,7 +11721,7 @@
 
   function renderPkTglKirimDrop(query) {
     var drop = document.getElementById('pkTglKirimDrop');
-    var show = distinctPkTanggal(query).slice(0, 10);
+    var show = _acSort(distinctPkTanggal(query), null);
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Tidak ada tanggal pengiriman yang masih pending</div>';
       drop.classList.add('open');
@@ -11993,7 +12006,7 @@
     var filtered = q
       ? masterDataRak.operators.filter(function(o) { return o.nama.toLowerCase().indexOf(q) >= 0; })
       : masterDataRak.operators;
-    var show = filtered.slice(0, 8);
+    var show = _acSort(filtered, 'nama');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">Checker tidak ditemukan</div>';
       drop.classList.add('open');
@@ -12101,7 +12114,7 @@
       return;
     }
     var q = (query || '').toLowerCase().trim();
-    var show = distinctRakSPOs(query).slice(0, 8);
+    var show = _acSort(distinctRakSPOs(query), 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open');
@@ -12269,7 +12282,7 @@
     var row = document.getElementById('tc-row-' + rid);
     var size = row.querySelector('.tc-size-select').value;
     var q = (query || '').toLowerCase().trim();
-    var show = rakReceiptsFor(spo, size, query).slice(0, 8);
+    var show = _acSort(rakReceiptsFor(spo, size, query), 'opck');
     if (show.length === 0) {
       drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
       drop.classList.add('open');
@@ -13125,7 +13138,7 @@
     diFilteredItems = q
       ? diMasterItems.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; })
       : diMasterItems;
-    var show = diFilteredItems.slice(0, 8);
+    var show = _acSort(diFilteredItems, 'spo');
     if (show.length === 0) {
       drop.innerHTML = '<div class="di-ac-empty">SPO tidak ditemukan</div>';
       drop.classList.add('open'); return;
