@@ -1571,8 +1571,12 @@
 
       <!-- FILTER SPO & SIZE (berlaku untuk kedua tampilan) -->
       <div class="wip-filter">
-        <input type="text" class="wip-filter-input" id="ioSetFilterSpo" placeholder="Filter SPO..." oninput="applyIoSetFilter()">
-        <input type="text" class="wip-filter-input" id="ioSetFilterSize" placeholder="Filter Size..." oninput="applyIoSetFilter()">
+        <select class="wip-filter-input" id="ioSetFilterSpo" onchange="onIoSetSpoChange()">
+          <option value="">— Semua SPO —</option>
+        </select>
+        <select class="wip-filter-input" id="ioSetFilterSize" onchange="applyIoSetFilter()">
+          <option value="">— Semua Size —</option>
+        </select>
       </div>
 
       <div id="ioSetViewIn" class="wip-view">
@@ -11124,9 +11128,45 @@
       ioSetData['in']  = data.inRows  || [];
       ioSetData['out'] = data.outRows || [];
       setIoSetStatus('ok', ioSetData['in'].length + ioSetData['out'].length);
+      populateIoSetFilters();
       renderIoSetView('in');
       renderIoSetView('out');
     });
+  }
+
+  // Filter berupa dropdown (pilihan persis, bukan "mengandung") — SPO dari gabungan data IN+OUT;
+  // pilihan Size menyesuaikan SPO yang dipilih (semua Size kalau SPO belum dipilih). Pilihan yang
+  // sedang aktif dipertahankan kalau masih tersedia setelah data dimuat ulang.
+  function _ioSetFillSelect(sel, values, allLabel) {
+    var prev = sel.value;
+    sel.innerHTML = '<option value="">' + allLabel + '</option>' + _acSort(values, null).map(function(v) {
+      return '<option value="' + _escWip(v) + '">' + _escWip(v) + '</option>';
+    }).join('');
+    if (values.indexOf(prev) >= 0) sel.value = prev;
+  }
+
+  function _ioSetDistinct(field, spoFilter) {
+    var seen = {};
+    var out = [];
+    ioSetData['in'].concat(ioSetData['out']).forEach(function(r) {
+      if (spoFilter && r.spo !== spoFilter) return;
+      var v = r[field];
+      if (!v || seen[v]) return;
+      seen[v] = true;
+      out.push(v);
+    });
+    return out;
+  }
+
+  function populateIoSetFilters() {
+    var spoSel = document.getElementById('ioSetFilterSpo');
+    _ioSetFillSelect(spoSel, _ioSetDistinct('spo', ''), '— Semua SPO —');
+    _ioSetFillSelect(document.getElementById('ioSetFilterSize'), _ioSetDistinct('size', spoSel.value), '— Semua Size —');
+  }
+
+  function onIoSetSpoChange() {
+    _ioSetFillSelect(document.getElementById('ioSetFilterSize'), _ioSetDistinct('size', document.getElementById('ioSetFilterSpo').value), '— Semua Size —');
+    applyIoSetFilter();
   }
 
   function setIoSetStatus(state, count) {
@@ -11150,13 +11190,13 @@
   }
 
   function renderIoSetView(which) {
-    var spoF  = document.getElementById('ioSetFilterSpo').value.toLowerCase().trim();
-    var sizeF = document.getElementById('ioSetFilterSize').value.toLowerCase().trim();
+    var spoF  = document.getElementById('ioSetFilterSpo').value;
+    var sizeF = document.getElementById('ioSetFilterSize').value;
     var cfg = IO_SET_VIEW_CONFIG[which];
     var container = document.getElementById(cfg.containerId);
     var rows = ioSetData[which].filter(function(r) {
-      if (spoF  && r.spo.toLowerCase().indexOf(spoF) < 0) return false;
-      if (sizeF && (r.size || '').toLowerCase().indexOf(sizeF) < 0) return false;
+      if (spoF  && r.spo !== spoF) return false;
+      if (sizeF && r.size !== sizeF) return false;
       return true;
     });
     if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
@@ -11174,7 +11214,8 @@
       g.sizes[sk] = (g.sizes[sk] || 0) + q;
     });
     var qtyLabel = which === 'in' ? 'IN' : 'OUT';
-    var perSizeHtml = '<div class="today-label" style="margin-top:10px">Total Qty Per Size (Per SPO Per Style)</div>'
+    // "Total Qty Per Size" cuma tampil kalau user memilih Filter Size
+    var perSizeHtml = !sizeF ? '' : '<div class="today-label" style="margin-top:10px">Total Qty Per Size (Per SPO Per Style)</div>'
       + _acSort(Object.keys(bySpo).map(function(k) { return bySpo[k]; }), 'spo').map(function(g) {
         return '<div class="today-tablewrap" style="margin-bottom:8px"><table class="today-table"><thead>'
           + '<tr><th colspan="2" style="color:#111;font-size:11px">SPO ' + _escWip(g.spo) + ' · Style ' + _escWip(g.style || '-') + '</th></tr>'
