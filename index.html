@@ -11154,6 +11154,7 @@
     document.getElementById('pkTerimaTanggal').value = yyyy+'-'+mm+'-'+dd;
     resetPkForm();
     loadOutMasterData();
+    loadPkExtraOpckData();
     showPenukaranView('input');
     pkSelectedTglKirim = '';
     document.getElementById('pkTglKirimInput').value = '';
@@ -11316,6 +11317,7 @@
       card.querySelector('.pk-opck-input').value = '';
       card.querySelector('.pk-operator-display').value = '';
       card.querySelector('.pk-absen-input').value = '';
+      resetPkExtraOpcks(card.id.replace('pk-row-', ''));
     });
   }
 
@@ -11394,6 +11396,19 @@
       + '<input type="text" class="row-field-input pk-absen-input" readonly placeholder="Otomatis">'
       + '</div>'
       + '<div class="row-field" style="margin-top:8px">'
+      + '<span class="row-field-label">Apakah aktualnya dari beberapa OPCK?</span>'
+      + '<div class="keterangan-chip-group">'
+      + '<button type="button" class="keterangan-chip pk-multi-chip selected" data-val="tidak" onclick="setPkMulti(\''+rid+'\',false)">Tidak</button>'
+      + '<button type="button" class="keterangan-chip pk-multi-chip" data-val="ya" onclick="setPkMulti(\''+rid+'\',true)">Ya</button>'
+      + '</div>'
+      + '<div id="pk-extra-wrap-'+rid+'" style="display:none;margin-top:8px">'
+      + '<div id="pk-extra-list-'+rid+'"></div>'
+      + '<button type="button" class="btn-add-row" id="pk-extra-add-'+rid+'" onclick="addPkExtraOpck(\''+rid+'\')">'
+      + '<i class="ti ti-plus" style="font-size:14px"></i> Tambah OPCK'
+      + '</button>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-field" style="margin-top:8px">'
       + '<span class="row-field-label">Keterangan</span>'
       + '<div class="keterangan-chip-group">'+chips+'</div>'
       + '</div></div>';
@@ -11401,6 +11416,174 @@
     container.appendChild(div);
     setupPkOPCKInput(gid, rid);
     updatePkRowBadge(gid);
+  }
+
+  // ---- OPCK TAMBAHAN (kalau aktualnya dari beberapa OPCK; maks 3, ditulis ke kolom OPCK 1/2/3) ----
+  // Sumber suggest: "Form Keluar Kulit Dari Rak" (semua baris, TERMASUK yang sudah SUDAH FULL) lewat
+  // endpoint penukaran_opck_master, difilter Operator + Size dari OPCK utama baris ini.
+  var pkExtraOpckData = { records: [], loaded: false };
+  var pkExtraSeq = 0;
+  var PK_EXTRA_MAX = 3;
+
+  function loadPkExtraOpckData() {
+    jsonp(GAS_URL + '?type=penukaran_opck_master', function(err, data) {
+      if (err || !data || data.status !== 'ok') return;
+      pkExtraOpckData.records = data.records || [];
+      pkExtraOpckData.loaded = true;
+    });
+  }
+
+  function _pkExtraIds(rid) {
+    var items = document.querySelectorAll('#pk-extra-list-' + rid + ' .pk-extra-item');
+    return Array.prototype.map.call(items, function(el) { return el.id.replace('pk-extra-item-', ''); });
+  }
+
+  function setPkMulti(rid, yes) {
+    var row = document.getElementById('pk-row-' + rid);
+    Array.prototype.forEach.call(row.querySelectorAll('.pk-multi-chip'), function(c) {
+      c.classList.toggle('selected', (c.getAttribute('data-val') === 'ya') === yes);
+    });
+    document.getElementById('pk-extra-wrap-' + rid).style.display = yes ? 'block' : 'none';
+    if (yes) {
+      if (!pkExtraOpckData.loaded) loadPkExtraOpckData();
+      if (!_pkExtraIds(rid).length) addPkExtraOpck(rid);
+    } else {
+      document.getElementById('pk-extra-list-' + rid).innerHTML = '';
+    }
+  }
+
+  function addPkExtraOpck(rid) {
+    var list = document.getElementById('pk-extra-list-' + rid);
+    if (list.querySelectorAll('.pk-extra-item').length >= PK_EXTRA_MAX) {
+      showToast('Maksimal ' + PK_EXTRA_MAX + ' OPCK tambahan', 'error');
+      return;
+    }
+    pkExtraSeq++;
+    var xid = rid + '-' + pkExtraSeq;
+    var div = document.createElement('div');
+    div.className = 'row-field pk-extra-item';
+    div.id = 'pk-extra-item-' + xid;
+    div.style.marginBottom = '8px';
+    div.innerHTML = '<span class="row-field-label"><span class="pk-extra-label"></span>'
+      + ' <span class="pk-extra-remove" style="float:right;cursor:pointer;color:#DC3545" onclick="removePkExtraOpck(\''+rid+'\',\''+xid+'\')"><i class="ti ti-x"></i></span></span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input pk-extra-input" id="pk-extra-input-'+xid+'" placeholder="Ketik / pilih No. OPCK..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="pk-extra-drop-'+xid+'"></div>'
+      + '</div>';
+    list.appendChild(div);
+    setupPkExtraInput(rid, xid);
+    refreshPkExtraUI(rid);
+  }
+
+  function removePkExtraOpck(rid, xid) {
+    var el = document.getElementById('pk-extra-item-' + xid);
+    if (el) el.parentNode.removeChild(el);
+    var ids = _pkExtraIds(rid);
+    if (!ids.length) {
+      setPkMulti(rid, false);
+      return;
+    }
+    refreshPkExtraUI(rid);
+  }
+
+  function refreshPkExtraUI(rid) {
+    var items = document.querySelectorAll('#pk-extra-list-' + rid + ' .pk-extra-item');
+    Array.prototype.forEach.call(items, function(el, idx) {
+      el.querySelector('.pk-extra-label').textContent = 'OPCK Tambahan ' + (idx + 1);
+    });
+    var addBtn = document.getElementById('pk-extra-add-' + rid);
+    if (addBtn) addBtn.style.display = items.length >= PK_EXTRA_MAX ? 'none' : 'flex';
+  }
+
+  // OPCK utama baris ini berubah -> Operator/Size bisa berubah -> OPCK tambahan yang sudah diisi tidak relevan lagi
+  function resetPkExtraOpcks(rid) {
+    Array.prototype.forEach.call(document.querySelectorAll('#pk-extra-list-' + rid + ' .pk-extra-input'), function(inp) {
+      inp.value = '';
+    });
+  }
+
+  function _pkExtraBaseRecords(rid) {
+    var row = document.getElementById('pk-row-' + rid);
+    var operator = row.querySelector('.pk-operator-display').value.trim().toLowerCase();
+    var size = row.querySelector('.pk-size-select').value.trim().toLowerCase();
+    if (!operator || !size) return null;
+    return pkExtraOpckData.records.filter(function(r) {
+      return r.operator.toLowerCase() === operator && r.size.toLowerCase() === size;
+    });
+  }
+
+  function pkExtraCandidates(rid, xid, query) {
+    var base = _pkExtraBaseRecords(rid);
+    if (!base) return null;
+    var row = document.getElementById('pk-row-' + rid);
+    var mainOpck = _normNum(row.querySelector('.pk-opck-input').value).toLowerCase();
+    var taken = {};
+    _pkExtraIds(rid).forEach(function(otherId) {
+      if (otherId === xid) return;
+      var v = document.getElementById('pk-extra-input-' + otherId).value.trim();
+      if (v) taken[_normNum(v).toLowerCase()] = true;
+    });
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    base.forEach(function(r) {
+      var n = _normNum(r.opck).toLowerCase();
+      if (n === mainOpck || taken[n]) return;
+      if (q && r.opck.toLowerCase().indexOf(q) < 0) return;
+      var key = r.spo.toLowerCase() + '|' + n;
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push(r);
+    });
+    return out;
+  }
+
+  function setupPkExtraInput(rid, xid) {
+    var input = document.getElementById('pk-extra-input-' + xid);
+    var drop  = document.getElementById('pk-extra-drop-' + xid);
+    input.oninput = function() { renderPkExtraDrop(rid, xid, input.value); };
+    input.onfocus = function() { renderPkExtraDrop(rid, xid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-opck]');
+      if (!item) return;
+      input.value = item.getAttribute('data-opck');
+      drop.classList.remove('open');
+    });
+  }
+
+  function renderPkExtraDrop(rid, xid, query) {
+    var drop = document.getElementById('pk-extra-drop-' + xid);
+    if (!pkExtraOpckData.loaded) {
+      drop.innerHTML = '<div class="spo-ac-empty">Data OPCK belum dimuat / kosong</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var list = pkExtraCandidates(rid, xid, query);
+    if (list === null) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih No. OPCK utama dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var show = _acSort(list, 'opck');
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    drop.innerHTML = show.map(function(r) {
+      var oHL = q ? r.opck.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : r.opck;
+      return '<div class="spo-ac-item" data-opck="' + r.opck + '"><span class="spo-ac-spo">' + oHL + '</span><span class="spo-ac-style">SPO ' + r.spo + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  // Semua OPCK yang tampil untuk 1 baris data: OPCK utama + OPCK 1/2/3 (kalau ada), digabung " / "
+  function _pkOpckLabel(r) {
+    return [r.opck, r.opck1, r.opck2, r.opck3].filter(function(x) { return x; }).join(' / ');
   }
 
   function deletePkRow(gid, rid) {
@@ -11427,6 +11610,7 @@
     row.querySelector('.pk-opck-input').value = '';
     row.querySelector('.pk-operator-display').value = '';
     row.querySelector('.pk-absen-input').value = '';
+    resetPkExtraOpcks(rid);
   }
 
   // ---- NO. OPCK per baris (manual + suggest) — pilih OPCK otomatis isi Size + Operator + No.Absen ----
@@ -11438,6 +11622,7 @@
       var row = document.getElementById('pk-row-' + rid);
       row.querySelector('.pk-operator-display').value = '';
       row.querySelector('.pk-absen-input').value = '';
+      resetPkExtraOpcks(rid);
       renderPkOPCKDrop(gid, rid, input.value);
     };
     input.onfocus = function() { renderPkOPCKDrop(gid, rid, input.value); };
@@ -11486,6 +11671,7 @@
     if (!sizeSel.value && size) sizeSel.value = size;
     row.querySelector('.pk-operator-display').value = operator;
     row.querySelector('.pk-absen-input').value = absen;
+    resetPkExtraOpcks(rid);
     checkDupPk();
   }
 
@@ -11539,7 +11725,7 @@
         var qtyLembar = card.querySelector('.pk-qtylembar-input').value;
         var operator  = card.querySelector('.pk-operator-display').value.trim();
         var absen     = card.querySelector('.pk-absen-input').value;
-        var keterangan = Array.prototype.map.call(card.querySelectorAll('.keterangan-chip.selected'), function(c) { return c.textContent; }).join(', ');
+        var keterangan = Array.prototype.map.call(card.querySelectorAll('.keterangan-chip.selected:not(.pk-multi-chip)'), function(c) { return c.textContent; }).join(', ');
         if (!size)     { errorMsg = 'Size wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
         if (!opck)     { errorMsg = 'No. OPCK wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!qty)      { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
@@ -11547,7 +11733,26 @@
         if (!qtyLembar){ errorMsg = 'Qty Lembar wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!operator || !absen) { errorMsg = 'Pilih No. OPCK dari daftar saran agar Operator & No. Absen terisi (SPO ' + spo + ')'; return; }
         if (!keterangan) { errorMsg = 'Pilih minimal 1 Keterangan di setiap baris (SPO ' + spo + ')'; return; }
-        allRows.push({ spo:spo, style:style, opck:opck, size:size, qty:qty, sf:sf, qtyLembar:qtyLembar, absen:absen, operator:operator, keterangan:keterangan });
+
+        var rid = card.id.replace('pk-row-', '');
+        var multiYes = card.querySelector('.pk-multi-chip.selected').getAttribute('data-val') === 'ya';
+        var extras = [];
+        if (multiYes) {
+          extras = Array.prototype.map.call(card.querySelectorAll('.pk-extra-input'), function(inp) { return inp.value.trim(); }).filter(Boolean);
+          if (!extras.length) { errorMsg = 'Pilih minimal 1 OPCK tambahan, atau ubah jawaban jadi "Tidak" (SPO ' + spo + ', OPCK ' + opck + ')'; return; }
+          var base = _pkExtraBaseRecords(rid) || [];
+          var seenExtra = {};
+          seenExtra[_normNum(opck).toLowerCase()] = true;
+          for (var xi = 0; xi < extras.length; xi++) {
+            var xn = _normNum(extras[xi]).toLowerCase();
+            if (seenExtra[xn]) { errorMsg = 'OPCK tambahan ' + extras[xi] + ' sama dengan OPCK lain di baris ini (SPO ' + spo + ', OPCK ' + opck + ')'; return; }
+            seenExtra[xn] = true;
+            var found = base.some(function(r) { return _normNum(r.opck).toLowerCase() === xn; });
+            if (!found) { errorMsg = 'OPCK tambahan ' + extras[xi] + ' tidak ditemukan untuk operator ' + operator + ' Size ' + size + ' — pilih dari daftar saran (SPO ' + spo + ')'; return; }
+          }
+        }
+        allRows.push({ spo:spo, style:style, opck:opck, size:size, qty:qty, sf:sf, qtyLembar:qtyLembar, absen:absen, operator:operator, keterangan:keterangan,
+          opck1: extras[0] || '', opck2: extras[1] || '', opck3: extras[2] || '' });
       });
     });
 
@@ -11630,7 +11835,7 @@
         + '<td class="center">' + (i + 1) + '</td>'
         + '<td>' + _escWip(r.spo) + '</td>'
         + '<td>' + _escWip(r.style) + '</td>'
-        + '<td>' + _escWip(r.opck) + '</td>'
+        + '<td>' + _escWip(_pkOpckLabel(r)) + '</td>'
         + '<td>' + _escWip(r.size) + '</td>'
         + '<td class="num">' + _escWip(r.qty) + '</td>'
         + '<td class="num">' + _escWip(r.sf) + '</td>'
@@ -11763,7 +11968,7 @@
       return '<div class="wip-item">'
         + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
         + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
-        + '<div class="wip-item-meta">No. OPCK ' + _escWip(r.opck) + ' · Tanggal ' + _escWip(r.tanggal) + ' · ' + _escWip(r.operator) + '</div>'
+        + '<div class="wip-item-meta">No. OPCK ' + _escWip(_pkOpckLabel(r)) + ' · Tanggal ' + _escWip(r.tanggal) + ' · ' + _escWip(r.operator) + '</div>'
         + '<div class="wip-item-meta">Keterangan: ' + _escWip(r.keterangan) + '</div>'
         + '<div class="wip-item-qty"><span class="wip-item-qty-label">Qty</span><span class="wip-item-qty-value">' + _escWip(r.qty) + '</span></div>'
         + '</div>';
@@ -11838,7 +12043,7 @@
       html += '<tr>'
         + '<td>' + _escWip(r.spo) + '</td>'
         + '<td>' + _escWip(r.style) + '</td>'
-        + '<td>' + _escWip(r.opck) + '</td>'
+        + '<td>' + _escWip(_pkOpckLabel(r)) + '</td>'
         + '<td>' + _escWip(r.size) + '</td>'
         + '<td>' + _escWip(r.qty) + '</td>'
         + '<td>' + _escWip(r.operator) + '</td>'
@@ -11918,7 +12123,7 @@
       html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
         + '<td>' + _escToday(r.spo) + (isDup ? '<span class="today-dup-badge">' + dupCount + 'x</span>' : '') + '</td>'
         + '<td>' + _escToday(r.size) + '</td>'
-        + '<td>' + _escToday(r.opck) + '</td>'
+        + '<td>' + _escToday(_pkOpckLabel(r)) + '</td>'
         + '<td>' + _escToday(r.qty) + '</td>'
         + '<td>' + _escToday(r.sf) + '</td>'
         + '<td>' + _escToday(r.qtyLembar) + '</td>'
@@ -11991,7 +12196,7 @@
       html += '<tr>'
         + '<td>' + _escToday(r.spo) + '</td>'
         + '<td>' + _escToday(r.size) + '</td>'
-        + '<td>' + _escToday(r.opck) + '</td>'
+        + '<td>' + _escToday(_pkOpckLabel(r)) + '</td>'
         + '<td>' + _escToday(r.qty) + '</td>'
         + '<td>' + _escToday(r.qtyLembar) + '</td>'
         + '<td>' + _escToday(r.keterangan) + '</td>'
