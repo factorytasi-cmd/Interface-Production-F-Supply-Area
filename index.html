@@ -739,7 +739,7 @@
             <div class="card-title">Cutting Synthetic Section</div>
             <div class="card-desc">Input data penerimaan material dan pengeluaran pola dari cutting synthetic</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 6 menu tersedia</span>
+              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 7 menu tersedia</span>
               <span class="card-btn btn-synthetic">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1090,6 +1090,23 @@
             <div class="card-desc">Pantau WIP Rak &amp; WIP Proses secara real-time</div>
             <div class="card-footer">
               <span class="card-hint"><i class="ti ti-chart-bar" style="font-size:13px"></i> Monitoring</span>
+              <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-wip" onclick="goTo('page-inout-set-synthetic')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-wip">Report</span>
+              <div class="card-icon-wrap icon-wip">
+                <i class="ti ti-arrows-exchange" style="font-size:20px;color:#0EA5E9"></i>
+              </div>
+            </div>
+            <div class="card-title">IN/OUT Set Material</div>
+            <div class="card-desc">Report Set PRC lengkap: IN Set Material &amp; OUT Set Material</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-chart-bar" style="font-size:13px"></i> Report</span>
               <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1480,6 +1497,95 @@
       </div>
       <div class="load-time-note" id="borsynTodayLoadTime"></div>
       <div id="borsynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: IN/OUT SET MATERIAL (CUTTING SYNTHETIC) ==================== -->
+  <div class="page" id="page-inout-set-synthetic">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting-synthetic')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">IN/OUT SET MATERIAL</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING SYNTHETIC › IN/OUT SET MATERIAL</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(14,165,233,0.12);border-color:rgba(14,165,233,0.3)">
+        <i class="ti ti-arrows-exchange" style="color:#0EA5E9"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#075985">IN/OUT Set Material</div>
+          <div class="form-header-pill-sub">Cutting Synthetic Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari Form_Data IN Material Per SPO &amp; Form_Data Out Pola Per SPO)</label>
+        <span id="ioSetStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="ioSetLoadTime"></div>
+      <div class="load-error-row" id="ioSetErrorRow" style="display:none">
+        <span id="ioSetErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadIoSetData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="ioSetTabIn" onclick="showIoSetView('in')">IN Set Material</button>
+        <button type="button" class="wip-toggle-btn" id="ioSetTabOut" onclick="showIoSetView('out')">OUT Set Material</button>
+      </div>
+
+      <!-- FILTER SPO & SIZE (berlaku untuk kedua tampilan) -->
+      <div class="wip-filter">
+        <input type="text" class="wip-filter-input" id="ioSetFilterSpo" placeholder="Filter SPO..." oninput="applyIoSetFilter()">
+        <input type="text" class="wip-filter-input" id="ioSetFilterSize" placeholder="Filter Size..." oninput="applyIoSetFilter()">
+      </div>
+
+      <div id="ioSetViewIn" class="wip-view">
+        <div class="wip-list" id="ioSetInList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <div id="ioSetViewOut" class="wip-view" style="display:none">
+        <div class="wip-list" id="ioSetOutList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
 
     </div>
 
@@ -3555,6 +3661,7 @@
     if (pageId === "page-out-synthetic") initOutSynForm();
     if (pageId === "page-boros-synthetic") initBorsynForm();
     if (pageId === "page-wip-synthetic") initWipSynPage();
+    if (pageId === "page-inout-set-synthetic") initIoSetPage();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
@@ -10984,6 +11091,104 @@
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayBorsyn();
     });
+  }
+
+  // ===== IN/OUT SET MATERIAL (CUTTING SYNTHETIC) =====
+  // Report read-only: IN dari "Form_Data IN Material Per SPO", OUT dari "Form_Data Out Pola Per SPO"
+  // (ringkasan Set PRC lengkap, 1 baris per Set). Selalu dimuat ulang tiap buka menu (real-time).
+  var ioSetData = { in: [], out: [] };
+  var IO_SET_VIEW_CONFIG = {
+    in:  { containerId: 'ioSetInList',  qtyLabel: 'Qty IN Set' },
+    out: { containerId: 'ioSetOutList', qtyLabel: 'Qty OUT Set' }
+  };
+
+  function initIoSetPage() {
+    document.getElementById('ioSetFilterSpo').value = '';
+    document.getElementById('ioSetFilterSize').value = '';
+    showIoSetView('in');
+    loadIoSetData();
+  }
+
+  function loadIoSetData() {
+    setIoSetStatus('loading');
+    document.getElementById('ioSetLoadTime').textContent = '';
+    _hideLoadError('ioSet');
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=inout_set_synthetic_data', function(err, data) {
+      _showLoadTime('ioSetLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setIoSetStatus('error');
+        _showLoadError('ioSet', err, data);
+        return;
+      }
+      ioSetData['in']  = data.inRows  || [];
+      ioSetData['out'] = data.outRows || [];
+      setIoSetStatus('ok', ioSetData['in'].length + ioSetData['out'].length);
+      renderIoSetView('in');
+      renderIoSetView('out');
+    });
+  }
+
+  function setIoSetStatus(state, count) {
+    var el = document.getElementById('ioSetStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(14,165,233,0.12)'; el.style.color = '#075985';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function applyIoSetFilter() {
+    renderIoSetView('in');
+    renderIoSetView('out');
+  }
+
+  function renderIoSetView(which) {
+    var spoF  = document.getElementById('ioSetFilterSpo').value.toLowerCase().trim();
+    var sizeF = document.getElementById('ioSetFilterSize').value.toLowerCase().trim();
+    var cfg = IO_SET_VIEW_CONFIG[which];
+    var container = document.getElementById(cfg.containerId);
+    var rows = ioSetData[which].filter(function(r) {
+      if (spoF  && r.spo.toLowerCase().indexOf(spoF) < 0) return false;
+      if (sizeF && (r.size || '').toLowerCase().indexOf(sizeF) < 0) return false;
+      return true;
+    });
+    if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qty', label: 'Total Qty ' + (which === 'in' ? 'IN' : 'OUT') }]);
+
+    // Total Qty per Size (ikut filter SPO/Size yang sedang aktif), diurutkan natural kecil -> besar
+    var sizeTotals = {};
+    rows.forEach(function(r) {
+      var key = r.size || '-';
+      sizeTotals[key] = (sizeTotals[key] || 0) + (parseFloat(r.qty) || 0);
+    });
+    var sizeList = _acSort(Object.keys(sizeTotals), null);
+    var perSizeHtml = '<div class="today-label" style="margin-top:10px">Total Qty Per Size</div>'
+      + '<div class="today-tablewrap"><table class="today-table"><thead><tr><th>Size</th><th>Total Qty ' + (which === 'in' ? 'IN' : 'OUT') + '</th></tr></thead><tbody>'
+      + sizeList.map(function(s) { return '<tr><td>' + _escWip(s) + '</td><td>' + sizeTotals[s] + '</td></tr>'; }).join('')
+      + '</tbody></table></div><div style="height:10px"></div>';
+
+    container.innerHTML = statsHtml + perSizeHtml + rows.map(function(r) {
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
+        + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
+        + '<div class="wip-item-meta">No. PRC ' + _escWip(r.noPrc) + ' · Tanggal ' + _escWip(r.tanggal) + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + _escWip(r.qty) + '</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function showIoSetView(which) {
+    document.getElementById('ioSetViewIn').style.display  = which === 'in'  ? 'block' : 'none';
+    document.getElementById('ioSetViewOut').style.display = which === 'out' ? 'block' : 'none';
+    document.getElementById('ioSetTabIn').classList.toggle('active', which === 'in');
+    document.getElementById('ioSetTabOut').classList.toggle('active', which === 'out');
   }
 
   // ===== DATA WIP CUTTING SYNTHETIC =====
