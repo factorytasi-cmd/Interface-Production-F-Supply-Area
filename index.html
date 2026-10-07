@@ -4730,6 +4730,12 @@
       return;
     }
     var list = outBarcodesFor(spo, operator, size);
+    // Kalau No. OPCK yang diketik/dipilih persis salah satu OPCK yang tersedia, daftar barcode
+    // dipersempit ke OPCK itu saja (OPCK yang masih diketik sebagian tidak memfilter apa pun).
+    var typedOpck = _normNum(row.querySelector('.of-opck-input').value).toLowerCase();
+    if (typedOpck && list.some(function(b) { return _normNum(b.opck).toLowerCase() === typedOpck; })) {
+      list = list.filter(function(b) { return _normNum(b.opck).toLowerCase() === typedOpck; });
+    }
     if (list.length === 0) {
       sel.innerHTML = '<option value="">— Tidak ada No. Barcode —</option>';
       return;
@@ -4743,7 +4749,7 @@
     var row = document.getElementById('of-row-' + rid);
     var sel = row.querySelector('.of-barcode-select');
     var opt = sel.options[sel.selectedIndex];
-    row.querySelector('.of-opck-input').value = opt ? (opt.getAttribute('data-opck') || '') : '';
+    if (opt && opt.value) row.querySelector('.of-opck-input').value = opt.getAttribute('data-opck') || '';
     checkDupOut();
   }
 
@@ -4852,13 +4858,18 @@
       + '<select class="row-field-select of-barcode-select" onchange="onOfBarcodeChange(\''+rid+'\')"><option value="">— Pilih Operator &amp; Size dahulu —</option></select>'
       + '</div>'
       + '<div class="row-grid">'
-      + '<div class="row-field"><span class="row-field-label">No. OPCK</span><input type="text" class="row-field-input of-opck-input" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">No. OPCK</span>'
+      + '<div class="spo-ac-wrap">'
+      + '<input type="text" class="row-field-input of-opck-input" id="of-opck-input-'+rid+'" placeholder="Ketik / pilih OPCK..." autocomplete="off">'
+      + '<div class="spo-ac-drop of-opck-drop" id="of-opck-drop-'+rid+'"></div>'
+      + '</div></div>'
       + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input of-qty-input" placeholder="0" min="0"></div>'
       + '</div></div>';
 
     container.appendChild(div);
     setupOfOperatorInput(rid);
     setupOfSizeInput(rid);
+    setupOfOpckInput(rid);
     updateOfRowBadge(gid);
   }
 
@@ -4986,6 +4997,73 @@
     resetOfRowFromSize(rid);
   }
 
+  // ---- NO. OPCK per baris (manual + suggest, difilter SPO grup + Operator + Size baris; kalau No.
+  // Barcode dipilih, OPCK otomatis terisi dari barcode itu lewat onOfBarcodeChange) ----
+  function distinctOutOpcks(spo, operator, size, query) {
+    var q = (query || '').toLowerCase().trim();
+    var seen = {};
+    var out = [];
+    outBarcodesFor(spo, operator, size).forEach(function(b) {
+      if (seen[b.opck]) return;
+      if (q && b.opck.toLowerCase().indexOf(q) < 0) return;
+      seen[b.opck] = true;
+      out.push(b.opck);
+    });
+    return out;
+  }
+
+  function setupOfOpckInput(rid) {
+    var input = document.getElementById('of-opck-input-' + rid);
+    var drop  = document.getElementById('of-opck-drop-' + rid);
+
+    input.oninput = function() {
+      refreshOfBarcodeOptions(rid);
+      renderOfOpckDrop(rid, input.value);
+    };
+    input.onfocus = function() { renderOfOpckDrop(rid, input.value); };
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-opck]');
+      if (!item) return;
+      pilihOfOpck(rid, item.getAttribute('data-opck'));
+    });
+  }
+
+  function renderOfOpckDrop(rid, query) {
+    var drop = document.getElementById('of-opck-drop-' + rid);
+    var row  = document.getElementById('of-row-' + rid);
+    var gid  = row.closest('.spo-group').id.replace('of-group-', '');
+    var spo  = ofGroupsData[gid] ? ofGroupsData[gid].spo : '';
+    var operator = row.querySelector('.of-operator-input').value.trim();
+    var size = row.querySelector('.of-size-input').value.trim();
+    if (!spo || !operator || !size) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih SPO, Operator &amp; Size dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var show = _acSort(distinctOutOpcks(spo, operator, size, query), null);
+    if (show.length === 0) {
+      drop.innerHTML = '<div class="spo-ac-empty">No. OPCK tidak ditemukan</div>';
+      drop.classList.add('open');
+      return;
+    }
+    drop.innerHTML = show.map(function(o) {
+      var oHL = q ? o.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : o;
+      return '<div class="spo-ac-item" data-opck="' + o + '"><span class="spo-ac-spo">' + oHL + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+  }
+
+  function pilihOfOpck(rid, opck) {
+    document.getElementById('of-opck-input-' + rid).value = opck;
+    document.getElementById('of-opck-drop-' + rid).classList.remove('open');
+    refreshOfBarcodeOptions(rid);
+    checkDupOut();
+  }
+
   // ---- COLLECT + SUBMIT ----
   function collectOutData() {
     var tanggal = document.getElementById('ofTanggal').value;
@@ -5022,6 +5100,11 @@
         if (!size)     { errorMsg = 'Size wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         if (!barcode)  { errorMsg = 'No. Barcode wajib dipilih di setiap baris (SPO ' + spo + ')'; return; }
         if (!opck)     { errorMsg = 'No. OPCK tidak terisi — pilih ulang No. Barcode (SPO ' + spo + ')'; return; }
+        var barcodeSel = card.querySelector('.of-barcode-select');
+        var barcodeOpck = barcodeSel.options[barcodeSel.selectedIndex].getAttribute('data-opck') || '';
+        if (_normNum(opck).toLowerCase() !== _normNum(barcodeOpck).toLowerCase()) {
+          errorMsg = 'No. OPCK tidak sesuai dengan No. Barcode ' + barcode + ' (seharusnya ' + barcodeOpck + ') — SPO ' + spo; return;
+        }
         if (!qty)      { errorMsg = 'Qty wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
 
         allRows.push({ spo:spo, style:style, operator:operator, absen:absen, size:size, barcode:barcode, opck:opck, qty:qty });
