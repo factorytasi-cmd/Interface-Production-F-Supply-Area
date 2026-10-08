@@ -347,6 +347,10 @@
     .wip-item-qty { display: flex; align-items: baseline; justify-content: space-between; padding-top: 8px; border-top: 1px dashed #E8E8E6; }
     .wip-item-qty-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
     .wip-item-qty-value { font-size: 18px; font-weight: 700; color: #0EA5E9; font-variant-numeric: tabular-nums; }
+    .wip-item-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; padding-top: 8px; border-top: 1px dashed #E8E8E6; margin-bottom: 8px; }
+    .wip-item-grid .full { grid-column: 1 / -1; }
+    .wip-item-k { font-size: 9.5px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .wip-item-v { font-size: 12.5px; color: #111; font-weight: 600; word-break: break-word; }
 
     /* Grup Operator (WIP Proses Operator) untuk operator dengan >1 OPCK — bisa expand/collapse */
     .wip-group { background: white; border: 1px solid #E0E2E0; border-radius: 12px; overflow: hidden; }
@@ -11392,27 +11396,22 @@
     var rows = prcIoData[which].filter(function(r) { return _prcIoRowMatches(r, prcIoApplied[which], null); });
     if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
     var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qty', label: 'Total Qty ' + cfg.qtyLabel }]);
-    var cols = ['Tanggal', 'SPO', 'Style', 'Size', 'PRC', 'Material', 'No. PRC', 'No. Roll', 'Qty'];
-    if (cfg.showOperator) cols.push('Operator Cutting');
-    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
-      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
-      + '</tr></thead><tbody>';
-    rows.forEach(function(r) {
-      html += '<tr>'
-        + '<td>' + _escWip(r.tanggal) + '</td>'
-        + '<td>' + _escWip(r.spo) + '</td>'
-        + '<td>' + _escWip(r.style) + '</td>'
-        + '<td>' + _escWip(r.size) + '</td>'
-        + '<td>' + _escWip(r.prc) + '</td>'
-        + '<td>' + _escWip(r.material) + '</td>'
-        + '<td>' + _escWip(r.noPrc) + '</td>'
-        + '<td>' + _escWip(r.noRoll) + '</td>'
-        + '<td>' + _escWip(r.qty) + '</td>'
-        + (cfg.showOperator ? '<td>' + _escWip(r.operator) + '</td>' : '')
-        + '</tr>';
-    });
-    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
-    container.innerHTML = html;
+    var dash = function(v) { return (v == null || v === '') ? '-' : _escWip(v); };
+    container.innerHTML = statsHtml + rows.map(function(r) {
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + dash(r.size) + '</span></div>'
+        + '<div class="wip-item-style">' + dash(r.style) + '</div>'
+        + '<div class="wip-item-grid">'
+        + '<div><div class="wip-item-k">Tanggal</div><div class="wip-item-v">' + dash(r.tanggal) + '</div></div>'
+        + '<div><div class="wip-item-k">PRC</div><div class="wip-item-v">' + dash(r.prc) + '</div></div>'
+        + '<div><div class="wip-item-k">No. PRC</div><div class="wip-item-v">' + dash(r.noPrc) + '</div></div>'
+        + '<div><div class="wip-item-k">No. Roll</div><div class="wip-item-v">' + dash(r.noRoll) + '</div></div>'
+        + '<div class="full"><div class="wip-item-k">Material</div><div class="wip-item-v">' + dash(r.material) + '</div></div>'
+        + (cfg.showOperator ? '<div class="full"><div class="wip-item-k">Operator Cutting</div><div class="wip-item-v">' + dash(r.operator) + '</div></div>' : '')
+        + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">Qty ' + cfg.qtyLabel + '</span><span class="wip-item-qty-value">' + dash(r.qty) + '</span></div>'
+        + '</div>';
+    }).join('');
   }
 
   function showPrcIoView(which) {
