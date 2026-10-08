@@ -739,7 +739,7 @@
             <div class="card-title">Cutting Synthetic Section</div>
             <div class="card-desc">Input data penerimaan material dan pengeluaran pola dari cutting synthetic</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 7 menu tersedia</span>
+              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 8 menu tersedia</span>
               <span class="card-btn btn-synthetic">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1105,6 +1105,23 @@
             </div>
             <div class="card-title">IN/OUT Set Material</div>
             <div class="card-desc">Report Set PRC lengkap: IN Set Material &amp; OUT Set Material</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-chart-bar" style="font-size:13px"></i> Report</span>
+              <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-wip" onclick="goTo('page-inout-prc-synthetic')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-wip">Report</span>
+              <div class="card-icon-wrap icon-wip">
+                <i class="ti ti-list-details" style="font-size:20px;color:#0EA5E9"></i>
+              </div>
+            </div>
+            <div class="card-title">IN/OUT PRC Material</div>
+            <div class="card-desc">Report rincian per PRC: IN PRC Material &amp; OUT PRC Material</div>
             <div class="card-footer">
               <span class="card-hint"><i class="ti ti-chart-bar" style="font-size:13px"></i> Report</span>
               <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
@@ -1508,6 +1525,93 @@
     </div>
   </div>
 
+  <!-- ==================== PAGE: IN/OUT PRC MATERIAL (CUTTING SYNTHETIC) ==================== -->
+  <div class="page" id="page-inout-prc-synthetic">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting-synthetic')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">IN/OUT PRC MATERIAL</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING SYNTHETIC › IN/OUT PRC MATERIAL</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill" style="background:rgba(14,165,233,0.12);border-color:rgba(14,165,233,0.3)">
+        <i class="ti ti-list-details" style="color:#0EA5E9"></i>
+        <div>
+          <div class="form-header-pill-txt" style="color:#075985">IN/OUT PRC Material</div>
+          <div class="form-header-pill-sub">Cutting Synthetic Section — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari Form_Penerimaan Synthetic &amp; Form_Output Operator)</label>
+        <span id="prcIoStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(14,165,233,0.12);color:#075985;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="prcIoLoadTime"></div>
+      <div class="load-error-row" id="prcIoErrorRow" style="display:none">
+        <span id="prcIoErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadPrcIoData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <!-- TOGGLE (hide/unhide, bukan menu bar) -->
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="prcIoTabIn" onclick="showPrcIoView('in')">IN PRC Material</button>
+        <button type="button" class="wip-toggle-btn" id="prcIoTabOut" onclick="showPrcIoView('out')">OUT PRC Material</button>
+      </div>
+
+      <!-- TAB IN PRC MATERIAL -->
+      <div id="prcIoViewIn" class="wip-view">
+        <div id="prcIoFilters-in"></div>
+        <div class="wip-list" id="prcIoInList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+      <!-- TAB OUT PRC MATERIAL -->
+      <div id="prcIoViewOut" class="wip-view" style="display:none">
+        <div id="prcIoFilters-out"></div>
+        <div class="wip-list" id="prcIoOutList">
+          <div class="wip-empty">Memuat data...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== PAGE: IN/OUT SET MATERIAL (CUTTING SYNTHETIC) ==================== -->
   <div class="page" id="page-inout-set-synthetic">
     <div class="header-zone">
@@ -1571,12 +1675,18 @@
 
       <!-- FILTER SPO & SIZE (berlaku untuk kedua tampilan) -->
       <div class="wip-filter">
-        <select class="wip-filter-input" id="ioSetFilterSpo" onchange="onIoSetSpoChange()">
-          <option value="">— Semua SPO —</option>
-        </select>
-        <select class="wip-filter-input" id="ioSetFilterSize" onchange="applyIoSetFilter()">
-          <option value="">— Semua Size —</option>
-        </select>
+        <div class="spo-ac-wrap" style="flex:1">
+          <input type="text" class="wip-filter-input" id="ioSetFilterSpo" placeholder="Ketik / pilih SPO..." autocomplete="off" style="width:100%;box-sizing:border-box">
+          <div class="spo-ac-drop" id="ioSetSpoDrop"></div>
+        </div>
+        <div class="spo-ac-wrap" style="flex:1">
+          <input type="text" class="wip-filter-input" id="ioSetFilterSize" placeholder="Ketik / pilih Size..." autocomplete="off" style="width:100%;box-sizing:border-box">
+          <div class="spo-ac-drop" id="ioSetSizeDrop"></div>
+        </div>
+      </div>
+      <div class="wip-filter">
+        <input type="date" class="wip-filter-input" id="ioSetFilterTanggal" onchange="onIoSetTanggalChange()">
+        <button type="button" class="retry-btn" style="flex:0 0 auto" onclick="clearIoSetTanggal()"><i class="ti ti-x" style="font-size:13px"></i> Hapus Tanggal</button>
       </div>
 
       <div id="ioSetViewIn" class="wip-view">
@@ -3666,6 +3776,7 @@
     if (pageId === "page-boros-synthetic") initBorsynForm();
     if (pageId === "page-wip-synthetic") initWipSynPage();
     if (pageId === "page-inout-set-synthetic") initIoSetPage();
+    if (pageId === "page-inout-prc-synthetic") initPrcIoPage();
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
@@ -11097,6 +11208,220 @@
     });
   }
 
+  // ===== IN/OUT PRC MATERIAL (CUTTING SYNTHETIC) =====
+  // Report read-only rincian per PRC: IN dari "Form_Penerimaan Synthetic", OUT dari "Form_Output
+  // Operator". Filter diketik manual + dropdown suggest; tampilan baru berubah kalau teksnya sudah
+  // persis salah satu pilihan (diketik penuh / dipilih dari saran) atau dikosongkan. Pilihan suggest
+  // tiap filter menyesuaikan filter lain yang sedang aktif. Selalu dimuat ulang tiap buka menu.
+  var prcIoData = { 'in': [], 'out': [] };
+  var prcIoApplied = { 'in': {}, 'out': {} };
+  var PRC_IO_FIELDS = {
+    spo:      { label: 'SPO',              ph: 'Ketik / pilih SPO...' },
+    prc:      { label: 'PRC',              ph: 'Ketik / pilih PRC...' },
+    noPrc:    { label: 'No. PRC',          ph: 'Ketik / pilih No. PRC...' },
+    material: { label: 'Material',         ph: 'Ketik / pilih Material...' },
+    operator: { label: 'Operator Cutting', ph: 'Ketik / pilih Operator...' }
+  };
+  var PRC_IO_CFG = {
+    'in':  { listId: 'prcIoInList',  qtyLabel: 'IN',  filters: ['spo', 'prc', 'noPrc', 'material'],             showOperator: false },
+    'out': { listId: 'prcIoOutList', qtyLabel: 'OUT', filters: ['spo', 'prc', 'noPrc', 'material', 'operator'], showOperator: true }
+  };
+
+  function initPrcIoPage() {
+    ['in', 'out'].forEach(function(which) {
+      prcIoApplied[which] = {};
+      buildPrcIoFilters(which);
+    });
+    showPrcIoView('in');
+    loadPrcIoData();
+  }
+
+  function buildPrcIoFilters(which) {
+    var host = document.getElementById('prcIoFilters-' + which);
+    var keys = PRC_IO_CFG[which].filters;
+    var html = '';
+    for (var i = 0; i < keys.length; i += 2) {
+      html += '<div class="wip-filter">';
+      for (var j = i; j < Math.min(i + 2, keys.length); j++) {
+        var k = keys[j];
+        html += '<div class="spo-ac-wrap" style="flex:1">'
+          + '<input type="text" class="wip-filter-input" id="prcIoF-' + which + '-' + k + '" placeholder="' + PRC_IO_FIELDS[k].ph + '" autocomplete="off" style="width:100%;box-sizing:border-box">'
+          + '<div class="spo-ac-drop" id="prcIoD-' + which + '-' + k + '"></div>'
+          + '</div>';
+      }
+      html += '</div>';
+    }
+    host.innerHTML = html;
+    keys.forEach(function(k) { setupPrcIoFilterInput(which, k); });
+  }
+
+  function loadPrcIoData() {
+    setPrcIoStatus('loading');
+    document.getElementById('prcIoLoadTime').textContent = '';
+    _hideLoadError('prcIo');
+    var t0 = Date.now();
+    jsonp(GAS_SYNTHETIC_URL + '?type=inout_prc_synthetic_data', function(err, data) {
+      _showLoadTime('prcIoLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setPrcIoStatus('error');
+        _showLoadError('prcIo', err, data);
+        return;
+      }
+      prcIoData['in']  = data.inRows  || [];
+      prcIoData['out'] = data.outRows || [];
+      setPrcIoStatus('ok', prcIoData['in'].length + prcIoData['out'].length);
+      ['in', 'out'].forEach(function(w) { prcIoRevalidate(w); renderPrcIoView(w); });
+    });
+  }
+
+  function setPrcIoStatus(state, count) {
+    var el = document.getElementById('prcIoStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(14,165,233,0.12)'; el.style.color = '#075985';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' data dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'error') {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function _prcIoRowMatches(r, applied, skipKey) {
+    var keys = Object.keys(applied);
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      if (k === skipKey || !applied[k]) continue;
+      if (String(r[k] == null ? '' : r[k]) !== applied[k]) return false;
+    }
+    return true;
+  }
+
+  // Pilihan suggest satu filter = nilai unik di tab itu, dibatasi filter LAIN yang aktif
+  // (ignoreOthers=true: semua nilai di tab itu, dipakai untuk mencocokkan ketikan yang persis)
+  function prcIoOptions(which, key, ignoreOthers) {
+    var seen = {};
+    var out = [];
+    prcIoData[which].forEach(function(r) {
+      if (!ignoreOthers && !_prcIoRowMatches(r, prcIoApplied[which], key)) return;
+      var v = String(r[key] == null ? '' : r[key]).trim();
+      if (!v || seen[v]) return;
+      seen[v] = true;
+      out.push(v);
+    });
+    return _acSort(out, null);
+  }
+
+  // Filter aktif yang sudah tidak ada di pilihan (setelah filter lain berubah / data dimuat ulang)
+  // dikosongkan supaya tidak ada filter "hantu" yang diam-diam menghasilkan data kosong.
+  // keepKey = filter yang baru saja diubah user (tidak ikut dikosongkan, filter LAIN yang mengalah).
+  function prcIoRevalidate(which, keepKey) {
+    for (var pass = 0; pass < 4; pass++) {
+      var changed = false;
+      PRC_IO_CFG[which].filters.forEach(function(k) {
+        if (k === keepKey) return;
+        var v = prcIoApplied[which][k];
+        if (v && prcIoOptions(which, k).indexOf(v) < 0) {
+          prcIoApplied[which][k] = '';
+          var inp = document.getElementById('prcIoF-' + which + '-' + k);
+          if (inp) inp.value = '';
+          changed = true;
+        }
+      });
+      if (!changed) break;
+    }
+  }
+
+  function setupPrcIoFilterInput(which, key) {
+    var input = document.getElementById('prcIoF-' + which + '-' + key);
+    var drop  = document.getElementById('prcIoD-' + which + '-' + key);
+
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      var list = prcIoOptions(which, key).filter(function(v) { return !q || v.toLowerCase().indexOf(q) >= 0; });
+      if (!prcIoData[which].length) {
+        drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      } else if (!list.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">' + PRC_IO_FIELDS[key].label + ' tidak ditemukan</div>';
+      } else {
+        drop.innerHTML = list.map(function(v) {
+          var hl = q ? _escWip(v).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>') : _escWip(v);
+          return '<div class="spo-ac-item" data-val="' + _escWip(v) + '"><span class="spo-ac-spo">' + hl + '</span></div>';
+        }).join('');
+      }
+      drop.classList.add('open');
+    }
+
+    function applyValue(val) {
+      prcIoApplied[which][key] = val;
+      prcIoRevalidate(which, key);
+      renderPrcIoView(which);
+    }
+
+    input.oninput = function() {
+      renderDrop();
+      var raw = input.value.trim();
+      if (!raw) { applyValue(''); return; }
+      var t = raw.toLowerCase();
+      var match = null;
+      var list = prcIoOptions(which, key, true);
+      for (var i = 0; i < list.length; i++) if (list[i].toLowerCase() === t) { match = list[i]; break; }
+      if (!match) return; // belum persis salah satu pilihan -> tampilan belum berubah
+      input.value = match;
+      applyValue(match);
+    };
+    input.onfocus = renderDrop;
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-val]');
+      if (!item) return;
+      var val = item.getAttribute('data-val');
+      input.value = val;
+      drop.classList.remove('open');
+      applyValue(val);
+    });
+  }
+
+  function renderPrcIoView(which) {
+    var cfg = PRC_IO_CFG[which];
+    var container = document.getElementById(cfg.listId);
+    var rows = prcIoData[which].filter(function(r) { return _prcIoRowMatches(r, prcIoApplied[which], null); });
+    if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qty', label: 'Total Qty ' + cfg.qtyLabel }]);
+    var cols = ['Tanggal', 'SPO', 'Style', 'Size', 'PRC', 'Material', 'No. PRC', 'No. Roll', 'Qty'];
+    if (cfg.showOperator) cols.push('Operator Cutting');
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>'
+        + '<td>' + _escWip(r.tanggal) + '</td>'
+        + '<td>' + _escWip(r.spo) + '</td>'
+        + '<td>' + _escWip(r.style) + '</td>'
+        + '<td>' + _escWip(r.size) + '</td>'
+        + '<td>' + _escWip(r.prc) + '</td>'
+        + '<td>' + _escWip(r.material) + '</td>'
+        + '<td>' + _escWip(r.noPrc) + '</td>'
+        + '<td>' + _escWip(r.noRoll) + '</td>'
+        + '<td>' + _escWip(r.qty) + '</td>'
+        + (cfg.showOperator ? '<td>' + _escWip(r.operator) + '</td>' : '')
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    container.innerHTML = html;
+  }
+
+  function showPrcIoView(which) {
+    document.getElementById('prcIoViewIn').style.display  = which === 'in'  ? 'block' : 'none';
+    document.getElementById('prcIoViewOut').style.display = which === 'out' ? 'block' : 'none';
+    document.getElementById('prcIoTabIn').classList.toggle('active', which === 'in');
+    document.getElementById('prcIoTabOut').classList.toggle('active', which === 'out');
+  }
+
   // ===== IN/OUT SET MATERIAL (CUTTING SYNTHETIC) =====
   // Report read-only: IN dari "Form_Data IN Material Per SPO", OUT dari "Form_Data Out Pola Per SPO"
   // (ringkasan Set PRC lengkap, 1 baris per Set). Selalu dimuat ulang tiap buka menu (real-time).
@@ -11106,9 +11431,18 @@
     out: { containerId: 'ioSetOutList', qtyLabel: 'Qty OUT Set' }
   };
 
+  // Filter yang SEDANG DITERAPKAN. SPO/Size diketik manual dengan dropdown suggest — tampilan baru
+  // berubah kalau teksnya sudah persis salah satu pilihan (diketik penuh atau dipilih dari saran),
+  // atau dikosongkan; ketikan setengah jalan tidak mengubah tampilan. Tanggal = 1 hari persis.
+  var ioSetApplied = { spo: '', size: '', tanggal: '' };
+
   function initIoSetPage() {
+    ioSetApplied = { spo: '', size: '', tanggal: '' };
     document.getElementById('ioSetFilterSpo').value = '';
     document.getElementById('ioSetFilterSize').value = '';
+    document.getElementById('ioSetFilterTanggal').value = '';
+    setupIoSetFilterInput('ioSetFilterSpo', 'ioSetSpoDrop', 'spo');
+    setupIoSetFilterInput('ioSetFilterSize', 'ioSetSizeDrop', 'size');
     showIoSetView('in');
     loadIoSetData();
   }
@@ -11128,45 +11462,107 @@
       ioSetData['in']  = data.inRows  || [];
       ioSetData['out'] = data.outRows || [];
       setIoSetStatus('ok', ioSetData['in'].length + ioSetData['out'].length);
-      populateIoSetFilters();
-      renderIoSetView('in');
-      renderIoSetView('out');
+      ioSetRevalidateFilters();
+      applyIoSetFilter();
     });
   }
 
-  // Filter berupa dropdown (pilihan persis, bukan "mengandung") — SPO dari gabungan data IN+OUT;
-  // pilihan Size menyesuaikan SPO yang dipilih (semua Size kalau SPO belum dipilih). Pilihan yang
-  // sedang aktif dipertahankan kalau masih tersedia setelah data dimuat ulang.
-  function _ioSetFillSelect(sel, values, allLabel) {
-    var prev = sel.value;
-    sel.innerHTML = '<option value="">' + allLabel + '</option>' + _acSort(values, null).map(function(v) {
-      return '<option value="' + _escWip(v) + '">' + _escWip(v) + '</option>';
-    }).join('');
-    if (values.indexOf(prev) >= 0) sel.value = prev;
-  }
-
-  function _ioSetDistinct(field, spoFilter) {
+  // Pilihan suggest per jenis filter: SPO dibatasi Tanggal yang aktif; Size dibatasi Tanggal + SPO yang aktif.
+  function ioSetOptions(kind) {
     var seen = {};
     var out = [];
     ioSetData['in'].concat(ioSetData['out']).forEach(function(r) {
-      if (spoFilter && r.spo !== spoFilter) return;
-      var v = r[field];
+      if (ioSetApplied.tanggal && r.tanggal !== ioSetApplied.tanggal) return;
+      if (kind === 'size' && ioSetApplied.spo && r.spo !== ioSetApplied.spo) return;
+      var v = r[kind];
       if (!v || seen[v]) return;
       seen[v] = true;
       out.push(v);
     });
-    return out;
+    return _acSort(out, null);
   }
 
-  function populateIoSetFilters() {
-    var spoSel = document.getElementById('ioSetFilterSpo');
-    _ioSetFillSelect(spoSel, _ioSetDistinct('spo', ''), '— Semua SPO —');
-    _ioSetFillSelect(document.getElementById('ioSetFilterSize'), _ioSetDistinct('size', spoSel.value), '— Semua Size —');
+  function _ioSetMatchOption(kind, text) {
+    var t = (text || '').trim().toLowerCase();
+    if (!t) return null;
+    var list = ioSetOptions(kind);
+    for (var i = 0; i < list.length; i++) if (list[i].toLowerCase() === t) return list[i];
+    return null;
   }
 
-  function onIoSetSpoChange() {
-    _ioSetFillSelect(document.getElementById('ioSetFilterSize'), _ioSetDistinct('size', document.getElementById('ioSetFilterSpo').value), '— Semua Size —');
+  // Setelah Tanggal/SPO berubah atau data dimuat ulang: SPO/Size terpilih yang sudah tidak ada di
+  // pilihan baru dikosongkan supaya tidak ada filter "hantu".
+  function ioSetRevalidateFilters() {
+    ['spo', 'size'].forEach(function(kind) {
+      var inputId = kind === 'spo' ? 'ioSetFilterSpo' : 'ioSetFilterSize';
+      if (ioSetApplied[kind] && ioSetOptions(kind).indexOf(ioSetApplied[kind]) < 0) {
+        ioSetApplied[kind] = '';
+        document.getElementById(inputId).value = '';
+      }
+    });
+  }
+
+  function setupIoSetFilterInput(inputId, dropId, kind) {
+    var input = document.getElementById(inputId);
+    var drop  = document.getElementById(dropId);
+    if (input._ioWired) return;
+    input._ioWired = true;
+
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      var list = ioSetOptions(kind).filter(function(v) { return !q || v.toLowerCase().indexOf(q) >= 0; });
+      if (!ioSetData['in'].length && !ioSetData['out'].length) {
+        drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      } else if (!list.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">' + (kind === 'spo' ? 'SPO' : 'Size') + ' tidak ditemukan</div>';
+      } else {
+        drop.innerHTML = list.map(function(v) {
+          var hl = q ? _escWip(v).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>') : _escWip(v);
+          return '<div class="spo-ac-item" data-val="' + _escWip(v) + '"><span class="spo-ac-spo">' + hl + '</span></div>';
+        }).join('');
+      }
+      drop.classList.add('open');
+    }
+
+    input.oninput = function() {
+      renderDrop();
+      var raw = input.value.trim();
+      if (!raw) {
+        ioSetApplied[kind] = '';
+      } else {
+        var match = _ioSetMatchOption(kind, raw);
+        if (!match) return; // belum persis salah satu pilihan -> tampilan belum berubah
+        ioSetApplied[kind] = match;
+        input.value = match;
+      }
+      if (kind === 'spo') ioSetRevalidateFilters();
+      applyIoSetFilter();
+    };
+    input.onfocus = renderDrop;
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-val]');
+      if (!item) return;
+      var val = item.getAttribute('data-val');
+      input.value = val;
+      ioSetApplied[kind] = val;
+      drop.classList.remove('open');
+      if (kind === 'spo') ioSetRevalidateFilters();
+      applyIoSetFilter();
+    });
+  }
+
+  function onIoSetTanggalChange() {
+    ioSetApplied.tanggal = document.getElementById('ioSetFilterTanggal').value;
+    ioSetRevalidateFilters();
     applyIoSetFilter();
+  }
+
+  function clearIoSetTanggal() {
+    document.getElementById('ioSetFilterTanggal').value = '';
+    onIoSetTanggalChange();
   }
 
   function setIoSetStatus(state, count) {
@@ -11190,33 +11586,37 @@
   }
 
   function renderIoSetView(which) {
-    var spoF  = document.getElementById('ioSetFilterSpo').value;
-    var sizeF = document.getElementById('ioSetFilterSize').value;
+    var f = ioSetApplied;
     var cfg = IO_SET_VIEW_CONFIG[which];
     var container = document.getElementById(cfg.containerId);
     var rows = ioSetData[which].filter(function(r) {
-      if (spoF  && r.spo !== spoF) return false;
-      if (sizeF && r.size !== sizeF) return false;
+      if (f.spo && r.spo !== f.spo) return false;
+      if (f.size && r.size !== f.size) return false;
+      if (f.tanggal && r.tanggal !== f.tanggal) return false;
       return true;
     });
     if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
-    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qty', label: 'Total Qty ' + (which === 'in' ? 'IN' : 'OUT') }]);
+    var qtyLabel = which === 'in' ? 'IN' : 'OUT';
+    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qty', label: 'Total Qty ' + qtyLabel }]);
 
-    // Total Qty per Size DI DALAM tiap SPO (ikut filter SPO/Size yang sedang aktif); SPO dan Size
-    // diurutkan natural kecil -> besar. Subtotal per SPO ditampilkan di kanan judul SPO.
-    var bySpo = {};
+    // Sebelum SPO dipilih cuma total keseluruhan yang tampil; rincian muncul setelah SPO dipilih.
+    if (!f.spo) {
+      container.innerHTML = statsHtml + '<div class="wip-empty">Pilih SPO untuk melihat Total Qty Per Size dan kartu per No. PRC</div>';
+      return;
+    }
+
+    // Total Qty per Size per (SPO + Style); ikut filter Size/Tanggal yang aktif
+    var byStyle = {};
     rows.forEach(function(r) {
       var gk = r.spo + '||' + (r.style || '');
-      var g = bySpo[gk] || (bySpo[gk] = { spo: r.spo, style: r.style || '', total: 0, sizes: {} });
+      var g = byStyle[gk] || (byStyle[gk] = { spo: r.spo, style: r.style || '', total: 0, sizes: {} });
       var q = parseFloat(r.qty) || 0;
       g.total += q;
       var sk = r.size || '-';
       g.sizes[sk] = (g.sizes[sk] || 0) + q;
     });
-    var qtyLabel = which === 'in' ? 'IN' : 'OUT';
-    // "Total Qty Per Size" cuma tampil kalau user memilih Filter Size
-    var perSizeHtml = !sizeF ? '' : '<div class="today-label" style="margin-top:10px">Total Qty Per Size (Per SPO Per Style)</div>'
-      + _acSort(Object.keys(bySpo).map(function(k) { return bySpo[k]; }), 'spo').map(function(g) {
+    var perSizeHtml = '<div class="today-label" style="margin-top:10px">Total Qty Per Size (Per SPO Per Style)</div>'
+      + _acSort(Object.keys(byStyle).map(function(k) { return byStyle[k]; }), 'style').map(function(g) {
         return '<div class="today-tablewrap" style="margin-bottom:8px"><table class="today-table"><thead>'
           + '<tr><th colspan="2" style="color:#111;font-size:11px">SPO ' + _escWip(g.spo) + ' · Style ' + _escWip(g.style || '-') + '</th></tr>'
           + '<tr><th>Size</th><th>Total Qty ' + qtyLabel + '</th></tr></thead><tbody>'
@@ -11226,7 +11626,7 @@
       }).join('')
       + '<div style="height:6px"></div>';
 
-    container.innerHTML = statsHtml + perSizeHtml + rows.map(function(r) {
+    container.innerHTML = statsHtml + perSizeHtml + _acSort(rows, 'noPrc').map(function(r) {
       return '<div class="wip-item">'
         + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
         + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
