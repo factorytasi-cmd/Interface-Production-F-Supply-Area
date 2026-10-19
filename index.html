@@ -148,6 +148,10 @@
     .badge-boros  { background: rgba(219,39,119,0.15); color: #9D174D; }
     .icon-boros   { background: rgba(219,39,119,0.15); }
     .btn-boros    { background: rgba(219,39,119,0.1); color: #9D174D; border-color: rgba(219,39,119,0.32); }
+    .card-spa     { background: rgba(101,163,13,0.1); border: 0.5px solid rgba(101,163,13,0.26); }
+    .badge-spa    { background: rgba(101,163,13,0.15); color: #3F6212; }
+    .icon-spa     { background: rgba(101,163,13,0.15); }
+    .btn-spa      { background: rgba(101,163,13,0.1); color: #3F6212; border-color: rgba(101,163,13,0.34); }
     .btn-in      { background: rgba(234,179,8,0.1);   color: #7A5700; border-color: rgba(234,179,8,0.35); }
     .btn-rak     { background: rgba(234,88,12,0.1);   color: #9A3E0A; border-color: rgba(234,88,12,0.32); }
     .btn-out     { background: rgba(29,158,117,0.1);  color: #0A5C42; border-color: rgba(29,158,117,0.3); }
@@ -762,6 +766,23 @@
             <div class="card-footer">
               <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 7 menu tersedia</span>
               <span class="card-btn btn-accessories">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-spa" onclick="goTo('page-spa-factory')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-spa">Section</span>
+              <div class="card-icon-wrap icon-spa">
+                <i class="ti ti-building-warehouse" style="font-size:20px;color:#65A30D"></i>
+              </div>
+            </div>
+            <div class="card-title">SPA Factory</div>
+            <div class="card-desc">Inventory masuk, distribusi, line, accessories, dan data 3%</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 5 menu</span>
+              <span class="card-btn btn-spa">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
         </div>
@@ -1519,6 +1540,140 @@
       <div class="load-time-note" id="borsynTodayLoadTime"></div>
       <div id="borsynTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: SPA FACTORY ==================== -->
+  <div class="page" id="page-spa-factory">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-home')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:18px;letter-spacing:2px">SPA FACTORY</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#65A30D,#A3E635)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › SPA FACTORY</div>
+    </div>
+
+    <div class="content-zone">
+      <div class="section-lbl">Pilih Menu</div>
+      <div class="cards">
+
+        <div class="card card-syn-placeholder" onclick="comingSoon('IN INVENTORY')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-in">Penerimaan</span>
+              <div class="card-icon-wrap icon-in">
+                <i class="ti ti-package-import" style="font-size:20px;color:#CA8A04"></i>
+              </div>
+            </div>
+            <div class="card-title">IN INVENTORY</div>
+            <div class="card-desc">Segera hadir</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-btn btn-in">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-syn-placeholder" onclick="comingSoon('INV OUT DISTRIBUSI')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-out">Pengeluaran</span>
+              <div class="card-icon-wrap icon-out">
+                <i class="ti ti-truck-delivery" style="font-size:20px;color:#1D9E75"></i>
+              </div>
+            </div>
+            <div class="card-title">INV OUT DISTRIBUSI</div>
+            <div class="card-desc">Segera hadir</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-syn-placeholder" onclick="comingSoon('INV OUT LINE')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-out">Pengeluaran</span>
+              <div class="card-icon-wrap icon-out">
+                <i class="ti ti-building-factory-2" style="font-size:20px;color:#1D9E75"></i>
+              </div>
+            </div>
+            <div class="card-title">INV OUT LINE</div>
+            <div class="card-desc">Segera hadir</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-syn-placeholder" onclick="comingSoon('INV OUT ACCESSORIES')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-out">Pengeluaran</span>
+              <div class="card-icon-wrap icon-out">
+                <i class="ti ti-tag" style="font-size:20px;color:#1D9E75"></i>
+              </div>
+            </div>
+            <div class="card-title">INV OUT ACCESSORIES</div>
+            <div class="card-desc">Segera hadir</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-syn-placeholder" onclick="comingSoon('DATA 3%')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-wip">Data</span>
+              <div class="card-icon-wrap icon-wip">
+                <i class="ti ti-percentage" style="font-size:20px;color:#0EA5E9"></i>
+              </div>
+            </div>
+            <div class="card-title">DATA 3%</div>
+            <div class="card-desc">Segera hadir</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <div class="footer-zone">
