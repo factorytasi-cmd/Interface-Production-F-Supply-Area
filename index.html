@@ -11517,8 +11517,9 @@
   // ===== IN INVENTORY (SPA FACTORY) =====
   // Spreadsheet & project Apps Script terpisah (GAS_SPA_URL / CodeSpa.gs). Sumber SPO/Style/QTY PLAN:
   // "MASTER DATA_SPO STYLE"; saran Material/Komponen + Unit per Style: "DATABASE_INVENTORY"; cetak ke
-  // "IN INVENTORY". Con's Pcs = Qty / sum QTY PLAN SPO (dihitung di sini untuk tampilan, dan dihitung
-  // ULANG di server saat disimpan). Material/Komponen baru otomatis masuk DATABASE_INVENTORY.
+  // "IN INVENTORY". Con's Pcs diisi manual oleh user. Unit = dropdown (MTR, PCS, Yard, Roll; otomatis
+  // terpilih kalau Style+Material ada di database). Server juga memperbarui sheet REKAP OUTSTANDING.
+  // Material/Komponen baru otomatis masuk DATABASE_INVENTORY.
   var spMaster = { spo: [], inventory: [] };
   var _spLoadedOnce = false;
   var spGroupCount = 0, spRowCount = 0;
@@ -11619,24 +11620,7 @@
     return null;
   }
 
-  function spAllUnits() {
-    var seen = {};
-    var out = [];
-    spMaster.inventory.forEach(function(r) {
-      var u = (r.unit || '').trim();
-      if (!u || seen[u.toLowerCase()]) return;
-      seen[u.toLowerCase()] = true;
-      out.push(u);
-    });
-    return out;
-  }
-
-  function spCalcCons(gid, qty) {
-    var plan = spGroupsData[gid] ? spGroupsData[gid].plan : 0;
-    var q = parseFloat(qty);
-    if (!plan || !(plan > 0) || isNaN(q)) return '';
-    return Math.round((q / plan) * 10000) / 10000;
-  }
+  var SP_UNITS = ['MTR', 'PCS', 'Yard', 'Roll'];
 
   // ---- SPO GROUPS ----
   function addSpGroup() {
@@ -11665,7 +11649,7 @@
       + '<div class="style-display" id="sp-style-display-' + gid + '">Pilih atau ketik SPO</div>'
       + '</div>'
       + '<div class="field-group" style="margin-bottom:10px">'
-      + '<label class="field-label">Sum QTY Plan <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(pembagi Con\'s Pcs)</span></label>'
+      + '<label class="field-label">Sum QTY Plan <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(Qty Plan Pcs di REKAP OUTSTANDING)</span></label>'
       + '<div class="style-display" id="sp-plan-display-' + gid + '">-</div>'
       + '</div>'
       + '<div class="rows-section">'
@@ -11746,7 +11730,7 @@
   }
 
   // Style & QTY Plan terisi otomatis begitu SPO persis cocok dengan master; baris material yang sudah
-  // ada dievaluasi ulang (Unit otomatis & Con's Pcs ikut Style/QTY Plan SPO yang baru).
+  // ada dievaluasi ulang (Unit otomatis ikut Style SPO yang baru).
   function matchSpSPO(gid, typedSpo) {
     var found = findSpSPO(typedSpo);
     var disp = document.getElementById('sp-style-display-' + gid);
@@ -11770,7 +11754,6 @@
     document.querySelectorAll('#sp-rows-container-' + gid + ' .row-card').forEach(function(card) {
       var rid = card.id.replace('sp-row-', '');
       spApplyUnitForRow(rid);
-      spRecalcRowCons(rid);
     });
   }
 
@@ -11795,22 +11778,21 @@
       + '</div>'
       + '</div>'
       + '<div class="row-field" style="margin-bottom:8px">'
-      + '<span class="row-field-label">Unit <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0" id="sp-unit-hint-' + rid + '">(isi manual kalau belum ada di database)</span></span>'
-      + '<div class="spo-ac-wrap">'
-      + '<input type="text" class="row-field-input sp-unit-input" id="sp-unit-input-' + rid + '" placeholder="Ketik / pilih Unit..." autocomplete="off">'
-      + '<div class="spo-ac-drop" id="sp-unit-drop-' + rid + '"></div>'
-      + '</div>'
+      + '<span class="row-field-label">Unit <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0" id="sp-unit-hint-' + rid + '">(pilih satuan)</span></span>'
+      + '<select class="row-field-input sp-unit-input" id="sp-unit-input-' + rid + '">'
+      + '<option value="">Pilih Unit...</option>'
+      + SP_UNITS.map(function(u) { return '<option value="' + u + '">' + u + '</option>'; }).join('')
+      + '</select>'
       + '</div>'
       + '<div class="row-grid">'
       + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input sp-qty-input" id="sp-qty-input-' + rid + '" placeholder="0" min="0" step="any"></div>'
-      + '<div class="row-field"><span class="row-field-label">Con\'s Pcs</span><input type="text" class="row-field-input sp-cons-input" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Con\'s Pcs</span><input type="number" class="row-field-input sp-cons-input" id="sp-cons-input-' + rid + '" placeholder="0" min="0" step="any"></div>'
       + '</div>'
       + '</div>';
 
     container.appendChild(div);
     setupSpMaterialInput(gid, rid);
-    setupSpUnitInput(rid);
-    document.getElementById('sp-qty-input-' + rid).oninput = function() { spRecalcRowCons(rid); };
+    document.getElementById('sp-unit-input-' + rid).onchange = function() { this.setAttribute('data-auto', ''); };
     updateSpRowBadge(gid);
   }
 
@@ -11838,32 +11820,33 @@
     return group ? group.id.replace('sp-group-', '') : null;
   }
 
-  function spRecalcRowCons(rid) {
-    var row = document.getElementById('sp-row-' + rid);
-    if (!row) return;
-    var gid = _spGidOfRow(rid);
-    var v = spCalcCons(gid, row.querySelector('.sp-qty-input').value);
-    row.querySelector('.sp-cons-input').value = v === '' ? '' : String(v);
-  }
-
-  // Unit otomatis (dan terkunci) kalau Style+Material sudah ada di database; kalau tidak, Unit diisi
-  // manual dengan saran dari semua unit yang pernah tercatat.
+  // Unit terpilih otomatis (masih bisa diganti) kalau Style+Material sudah ada di database; kalau
+  // tidak, pilihan otomatis sebelumnya dikosongkan dan user memilih manual dari dropdown.
   function spApplyUnitForRow(rid) {
     var row = document.getElementById('sp-row-' + rid);
     if (!row) return;
     var gid = _spGidOfRow(rid);
     var style = spGroupsData[gid] ? spGroupsData[gid].style : '';
-    var unitInput = row.querySelector('.sp-unit-input');
+    var unitSel = row.querySelector('.sp-unit-input');
     var hint = document.getElementById('sp-unit-hint-' + rid);
     var found = spFindUnit(style, row.querySelector('.sp-material-input').value);
     if (found) {
-      unitInput.value = found;
-      unitInput.readOnly = true;
-      hint.textContent = '(otomatis dari database)';
+      var match = '';
+      for (var i = 0; i < unitSel.options.length; i++) {
+        if (unitSel.options[i].value && unitSel.options[i].value.toLowerCase() === found.toLowerCase()) { match = unitSel.options[i].value; break; }
+      }
+      if (!match) {
+        var opt = document.createElement('option');
+        opt.value = found; opt.textContent = found;
+        unitSel.appendChild(opt);
+        match = found;
+      }
+      unitSel.value = match;
+      unitSel.setAttribute('data-auto', '1');
+      hint.textContent = '(otomatis dari database, bisa diganti)';
     } else {
-      if (unitInput.readOnly) unitInput.value = '';
-      unitInput.readOnly = false;
-      hint.textContent = '(isi manual kalau belum ada di database)';
+      if (unitSel.getAttribute('data-auto') === '1') { unitSel.value = ''; unitSel.setAttribute('data-auto', ''); }
+      hint.textContent = '(pilih satuan)';
     }
   }
 
@@ -11915,40 +11898,6 @@
     drop.classList.add('open');
   }
 
-  // ---- UNIT per baris (suggest dari semua unit di database; terkunci kalau otomatis) ----
-  function setupSpUnitInput(rid) {
-    var input = document.getElementById('sp-unit-input-' + rid);
-    var drop  = document.getElementById('sp-unit-drop-' + rid);
-
-    function renderDrop() {
-      if (input.readOnly) { drop.classList.remove('open'); return; }
-      var q = input.value.toLowerCase().trim();
-      var list = spAllUnits().filter(function(u) { return !q || u.toLowerCase().indexOf(q) >= 0; });
-      var show = _acSort(list, null);
-      if (show.length === 0) {
-        drop.innerHTML = '<div class="spo-ac-empty">' + (q ? 'Unit baru — isi manual, akan tersimpan otomatis' : 'Belum ada Unit di database — isi manual') + '</div>';
-      } else {
-        drop.innerHTML = show.map(function(u) {
-          var hl = q ? _escWip(u).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>') : _escWip(u);
-          return '<div class="spo-ac-item" data-unit="' + _escWip(u) + '"><span class="spo-ac-spo">' + hl + '</span></div>';
-        }).join('');
-      }
-      drop.classList.add('open');
-    }
-
-    input.oninput = renderDrop;
-    input.onfocus = renderDrop;
-    document.addEventListener('click', function(e) {
-      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
-    });
-    drop.addEventListener('click', function(e) {
-      var item = e.target.closest('[data-unit]');
-      if (!item) return;
-      input.value = item.getAttribute('data-unit');
-      drop.classList.remove('open');
-    });
-  }
-
   // Peringatan real-time kalau SPO+Material/Komponen yang sama sudah diisi di baris lain form ini.
   function checkDupSp() {
     var cards = document.querySelectorAll('#spGroupsContainer .row-card');
@@ -11997,9 +11946,11 @@
         var unit     = card.querySelector('.sp-unit-input').value.trim();
         var qty      = card.querySelector('.sp-qty-input').value;
         if (!material) { errorMsg = 'Material/Komponen wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
-        if (!unit)     { errorMsg = 'Unit wajib diisi untuk ' + material + ' (SPO ' + spo + ')'; return; }
+        var cons     = card.querySelector('.sp-cons-input').value;
+        if (!unit)     { errorMsg = 'Unit wajib dipilih untuk ' + material + ' (SPO ' + spo + ')'; return; }
         if (!qty || !(parseFloat(qty) > 0)) { errorMsg = 'Qty wajib diisi (lebih dari 0) untuk ' + material + ' (SPO ' + spo + ')'; return; }
-        allRows.push({ spo: spo, style: style, material: material, unit: unit, qty: qty });
+        if (!cons || !(parseFloat(cons) > 0)) { errorMsg = "Con's Pcs wajib diisi (lebih dari 0) untuk " + material + ' (SPO ' + spo + ')'; return; }
+        allRows.push({ spo: spo, style: style, material: material, unit: unit, qty: qty, cons: cons });
       });
     });
 
