@@ -3379,6 +3379,8 @@
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayOt)">Kemarin</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayKapasitasQc)">Kapasitas QC Harian</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayKapasitasQc)">Kapasitas QC Kemarin</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayOutPerSpo)">Out Per SPO Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayOutPerSpo)">Out Per SPO Kemarin</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',0,this,loadTodayOperatorRR)">Operator Repair & Reject Hari Ini</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('otTodayTabs','otTodayList',1,this,loadTodayOperatorRR)">Operator Repair & Reject Kemarin</button>
       </div>
@@ -9369,6 +9371,53 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodayOt();
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM — Out Per SPO (rekap Qty OK per SPO untuk Hari Ini / Kemarin) ----
+  // Dihitung di client dari data yang sama dengan tab Hari Ini/Kemarin ("Form_Out Tab QC" lewat
+  // today_out_tab): semua baris hari itu dijumlahkan per SPO (Jam Ke & Size digabung). Repair dan
+  // Reject tidak ikut — yang direkap cuma Qty OK.
+  function _renderOutPerSpoList(rows, dayOffset) {
+    var el = document.getElementById('otTodayList');
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data Out ' + dayLabel + '.</div>';
+      return;
+    }
+    var bySpo = {};
+    rows.forEach(function(r) {
+      var g = bySpo[r.spo] || (bySpo[r.spo] = { spo: r.spo, style: r.style || '', qtyOk: 0 });
+      g.qtyOk += parseFloat(r.qtyOk) || 0;
+      if (!g.style && r.style) g.style = r.style;
+    });
+    var list = _acSort(Object.keys(bySpo).map(function(k) { return bySpo[k]; }), 'spo');
+    var statsHtml = _renderTodayStatsBar(list, 'spo', 'Jumlah SPO', [{ field: 'qtyOk', label: 'Total Qty OK' }]);
+    var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + '<th>SPO</th><th>Style</th><th>Qty OK</th>'
+      + '</tr></thead><tbody>'
+      + list.map(function(g) {
+        return '<tr><td>' + _escToday(g.spo) + '</td><td>' + _escToday(g.style) + '</td><td>' + g.qtyOk + '</td></tr>';
+      }).join('')
+      + '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  function loadTodayOutPerSpo(dayOffset) {
+    var containerId = 'otTodayList';
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('otTodayLoadTime').textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_ACCESSORIES_URL + '?type=today_out_tab&day=' + dayOffset, function(err, data) {
+      _showLoadTime('otTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderOutPerSpoList(data.rows, dayOffset);
     });
   }
 
