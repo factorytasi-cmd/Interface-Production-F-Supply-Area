@@ -515,6 +515,12 @@
       cursor: pointer; font-family: inherit; display: inline-flex; align-items: center;
     }
     .today-edit-btn:active { background: rgba(29,158,117,0.22); }
+    .today-del-btn {
+      padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(220,53,69,0.4);
+      background: rgba(220,53,69,0.08); color: #DC3545; font-size: 11px; font-weight: 700;
+      cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+    }
+    .today-del-btn:active { background: rgba(220,53,69,0.18); }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -9501,11 +9507,13 @@
 
   // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
   var _otDupRowsToDelete = [];
+  var _otTodayRows = [];
 
   function _renderOtTodayList(rows, dayOffset) {
     var el = document.getElementById('otTodayList');
     var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
     _otDupRowsToDelete = [];
+    _otTodayRows = rows || [];
     if (!rows || !rows.length) {
       el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
       return;
@@ -9526,11 +9534,11 @@
     _otDupRowsToDelete = dupRowsToDelete;
 
     var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [{ field: 'qtyOk', label: 'Total OK' }, { field: 'qtyRepair', label: 'Total Repair' }, { field: 'qtyReject', label: 'Total Reject' }]);
-    var cols = ['Jam Ke', 'SPO', 'Style', 'Size', 'Qty OK', 'Qty Repair', 'Qty Reject', 'Operator QC'];
+    var cols = ['Jam Ke', 'SPO', 'Style', 'Size', 'Qty OK', 'Qty Repair', 'Qty Reject', 'Operator QC', 'Aksi'];
     var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
-    rows.forEach(function(r) {
+    rows.forEach(function(r, idx) {
       var key = [r.spo, r.size, r.jamKe].join('|');
       var dupCount = groups[key].length;
       var isDup = dupCount > 1;
@@ -9543,6 +9551,7 @@
         + '<td>' + _escToday(r.qtyRepair) + '</td>'
         + '<td>' + _escToday(r.qtyReject) + '</td>'
         + '<td>' + _escToday(r.operatorQC) + '</td>'
+        + '<td><button type="button" class="today-del-btn" onclick="_otDeleteRow(' + idx + ')"><i class="ti ti-trash" style="font-size:13px"></i> Delete Data</button></td>'
         + '</tr>';
     });
     html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
@@ -9569,6 +9578,42 @@
         return;
       }
       _renderOtTodayList(data.rows, dayOffset);
+    });
+  }
+
+  // Delete Data: batalkan SEMUA efek 1 baris Out Tab (WIP Sewing & Out Tab di REPORT_PERGERAKAN,
+  // rincian Operator Repair & Reject, Kapasitas QC, dan barisnya sendiri) — lihat delete_out_tab di CodeAccessories.gs.
+  function _otDeleteRow(idx) {
+    var r = _otTodayRows[idx];
+    if (!r) return;
+    var ok = window.confirm(
+      'Hapus data Out Tab ini?\n\n'
+      + 'SPO ' + r.spo + ' · Size ' + r.size + ' · Jam Ke ' + r.jamKe + '\n'
+      + 'Qty OK ' + r.qtyOk + ' · Repair ' + r.qtyRepair + ' · Reject ' + r.qtyReject + ' · QC ' + r.operatorQC + '\n\n'
+      + 'Yang ikut dibatalkan:\n'
+      + '• REPORT_PERGERAKAN: WIP Sewing +' + r.qtyOk + ', Out Tab −' + r.qtyOk + '\n'
+      + '• Rincian Operator Repair & Reject milik data ini dihapus\n'
+      + '• Kapasitas QC Harian QC tersebut dikurangi sesuai Qty data ini\n\n'
+      + 'TIDAK BISA dikembalikan. Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var payload = { row: r.row, jamKe: r.jamKe, spo: r.spo, size: r.size, qtyOk: r.qtyOk, absenQC: r.absenQC };
+    var url = GAS_ACCESSORIES_URL + '?type=delete_out_tab&payload=' + encodeURIComponent(JSON.stringify(payload));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Muat ulang daftar untuk memastikan data sudah terhapus atau belum.', 'error');
+        loadTodayOt();
+        return;
+      }
+      if (!data || data.status !== 'ok') {
+        showToast('Gagal: ' + (data && data.message ? data.message : 'Coba lagi'), 'error');
+        loadTodayOt();
+        return;
+      }
+      showToast('✓ Data dihapus — WIP Sewing +' + data.restoredQty + ', ' + data.detailDeleted + ' rincian operator dihapus', 'success');
+      loadTodayOt();
     });
   }
 
