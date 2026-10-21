@@ -11520,7 +11520,7 @@
   // "IN INVENTORY". Con's Pcs diisi manual oleh user. Unit = dropdown (MTR, PCS, Yard, Roll; otomatis
   // terpilih kalau Style+Material ada di database). Server juga memperbarui sheet REKAP OUTSTANDING.
   // Material/Komponen baru otomatis masuk DATABASE_INVENTORY.
-  var spMaster = { spo: [], inventory: [] };
+  var spMaster = { spo: [], inventory: [], cons: [] };
   var _spLoadedOnce = false;
   var spGroupCount = 0, spRowCount = 0;
   var spGroupsData = {};
@@ -11564,6 +11564,7 @@
       }
       spMaster.spo = data.spo || [];
       spMaster.inventory = data.inventory || [];
+      spMaster.cons = data.cons || [];
       _spLoadedOnce = true;
       setSpStatus('ok', spMaster.spo.length);
     });
@@ -11622,6 +11623,18 @@
 
   var SP_UNITS = ['MTR', 'PCS', 'Yard', 'Roll'];
 
+  // Con's terakhir untuk Style+Material (dari kolom M "REKAP OUTSTANDING"); null kalau belum pernah ada.
+  function spFindCons(style, material) {
+    var s = (style || '').trim().toLowerCase();
+    var m = (material || '').trim().toLowerCase();
+    if (!s || !m) return null;
+    for (var i = 0; i < spMaster.cons.length; i++) {
+      var r = spMaster.cons[i];
+      if (r.style.toLowerCase() === s && r.material.toLowerCase() === m) return r.cons;
+    }
+    return null;
+  }
+
   // ---- SPO GROUPS ----
   function addSpGroup() {
     spGroupCount++;
@@ -11649,7 +11662,7 @@
       + '<div class="style-display" id="sp-style-display-' + gid + '">Pilih atau ketik SPO</div>'
       + '</div>'
       + '<div class="field-group" style="margin-bottom:10px">'
-      + '<label class="field-label">Sum QTY Plan <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(Qty Plan Pcs di REKAP OUTSTANDING)</span></label>'
+      + '<label class="field-label">Sum QTY Plan <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(Qty Plan Pcs)</span></label>'
       + '<div class="style-display" id="sp-plan-display-' + gid + '">-</div>'
       + '</div>'
       + '<div class="rows-section">'
@@ -11785,7 +11798,7 @@
       + '</select>'
       + '</div>'
       + '<div class="row-grid">'
-      + '<div class="row-field"><span class="row-field-label">Qty</span><input type="number" class="row-field-input sp-qty-input" id="sp-qty-input-' + rid + '" placeholder="0" min="0" step="any"></div>'
+      + '<div class="row-field"><span class="row-field-label">Qty Unit</span><input type="number" class="row-field-input sp-qty-input" id="sp-qty-input-' + rid + '" placeholder="0" min="0" step="any"></div>'
       + '<div class="row-field"><span class="row-field-label">Con\'s Pcs</span><input type="number" class="row-field-input sp-cons-input" id="sp-cons-input-' + rid + '" placeholder="0" min="0" step="any"></div>'
       + '</div>'
       + '</div>';
@@ -11793,6 +11806,7 @@
     container.appendChild(div);
     setupSpMaterialInput(gid, rid);
     document.getElementById('sp-unit-input-' + rid).onchange = function() { this.setAttribute('data-auto', ''); };
+    document.getElementById('sp-cons-input-' + rid).oninput = function() { this.setAttribute('data-auto', ''); };
     updateSpRowBadge(gid);
   }
 
@@ -11847,6 +11861,26 @@
     } else {
       if (unitSel.getAttribute('data-auto') === '1') { unitSel.value = ''; unitSel.setAttribute('data-auto', ''); }
       hint.textContent = '(pilih satuan)';
+    }
+    spApplyConsForRow(rid, style);
+  }
+
+  // Con's terisi otomatis dari REKAP OUTSTANDING untuk Style+Material yang sama (masih bisa diubah).
+  // Isian manual user tidak ditimpa; isian otomatis lama dikosongkan kalau Material berganti ke yang belum ada.
+  function spApplyConsForRow(rid, style) {
+    var row = document.getElementById('sp-row-' + rid);
+    if (!row) return;
+    var consInput = row.querySelector('.sp-cons-input');
+    var found = spFindCons(style, row.querySelector('.sp-material-input').value);
+    var isAuto = consInput.getAttribute('data-auto') === '1';
+    if (found !== null) {
+      if (consInput.value === '' || isAuto) {
+        consInput.value = String(found);
+        consInput.setAttribute('data-auto', '1');
+      }
+    } else if (isAuto) {
+      consInput.value = '';
+      consInput.setAttribute('data-auto', '');
     }
   }
 
@@ -11948,7 +11982,7 @@
         if (!material) { errorMsg = 'Material/Komponen wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         var cons     = card.querySelector('.sp-cons-input').value;
         if (!unit)     { errorMsg = 'Unit wajib dipilih untuk ' + material + ' (SPO ' + spo + ')'; return; }
-        if (!qty || !(parseFloat(qty) > 0)) { errorMsg = 'Qty wajib diisi (lebih dari 0) untuk ' + material + ' (SPO ' + spo + ')'; return; }
+        if (!qty || !(parseFloat(qty) > 0)) { errorMsg = 'Qty Unit wajib diisi (lebih dari 0) untuk ' + material + ' (SPO ' + spo + ')'; return; }
         if (!cons || !(parseFloat(cons) > 0)) { errorMsg = "Con's Pcs wajib diisi (lebih dari 0) untuk " + material + ' (SPO ' + spo + ')'; return; }
         allRows.push({ spo: spo, style: style, material: material, unit: unit, qty: qty, cons: cons });
       });
@@ -11995,7 +12029,7 @@
       el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
       return;
     }
-    // Duplikat = SPO + Material/Komponen + Unit + Qty yang persis sama
+    // Duplikat = SPO + Material/Komponen + Unit + Qty Unit yang persis sama
     var groups = {};
     rows.forEach(function(r) {
       var key = [r.spo, r.material, r.unit, r.qty].join('|').toLowerCase();
@@ -12011,7 +12045,7 @@
     _spDupRowsToDelete = dupRowsToDelete;
 
     var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', []);
-    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Qty', "Con's Pcs"];
+    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Qty Unit', "Con's Pcs"];
     var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
