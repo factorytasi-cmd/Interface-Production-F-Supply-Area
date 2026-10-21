@@ -781,7 +781,7 @@
             <div class="card-title">SPA Factory</div>
             <div class="card-desc">Inventory masuk, distribusi, line, accessories, dan data 3%</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 5 menu</span>
+              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 6 menu</span>
               <span class="card-btn btn-spa">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -1673,7 +1673,124 @@
           </div>
         </div>
 
+        <div class="card card-wip" onclick="goTo('page-spa-rekap')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-wip">Report</span>
+              <div class="card-icon-wrap icon-wip">
+                <i class="ti ti-report-analytics" style="font-size:20px;color:#0EA5E9"></i>
+              </div>
+            </div>
+            <div class="card-title">REKAP OUTSTANDING</div>
+            <div class="card-desc">Rekap Qty plan, IN, OUT, dan WIP per SPO + material yang belum diterima</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-filter" style="font-size:13px"></i> Filter SPO &amp; Material</span>
+              <span class="card-btn btn-wip">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
       </div>
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: REKAP OUTSTANDING (SPA FACTORY) ==================== -->
+  <div class="page" id="page-spa-rekap">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-spa-factory')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">REKAP OUTSTANDING</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#65A30D,#A3E635)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › SPA FACTORY › REKAP OUTSTANDING</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill">
+        <i class="ti ti-report-analytics"></i>
+        <div>
+          <div class="form-header-pill-txt">REKAP OUTSTANDING</div>
+          <div class="form-header-pill-sub">SPA Factory — Supply Area</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data (dari REKAP OUTSTANDING &amp; DATABASE_INVENTORY)</label>
+        <span id="rkStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(101,163,13,0.15);color:#3F6212;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="rkLoadTime"></div>
+      <div class="load-error-row" id="rkErrorRow" style="display:none">
+        <span id="rkErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadRkData()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="rkTabRek" onclick="showRkView('rek')">Rekap Outstanding</button>
+        <button type="button" class="wip-toggle-btn" id="rkTabMiss" onclick="showRkView('miss')">Belum Diterima</button>
+      </div>
+
+      <div id="rkViewRek" class="wip-view">
+        <div class="wip-filter">
+          <div class="spo-ac-wrap" style="flex:1">
+            <input type="text" class="wip-filter-input" id="rkRekSpo" placeholder="Ketik / pilih SPO..." autocomplete="off" style="width:100%;box-sizing:border-box">
+            <div class="spo-ac-drop" id="rkRekSpoDrop"></div>
+          </div>
+          <div class="spo-ac-wrap" style="flex:1">
+            <input type="text" class="wip-filter-input" id="rkRekMaterial" placeholder="Ketik / pilih Material/Komponen..." autocomplete="off" style="width:100%;box-sizing:border-box">
+            <div class="spo-ac-drop" id="rkRekMaterialDrop"></div>
+          </div>
+        </div>
+        <div class="wip-list" id="rkRekList"><div class="wip-empty">Memuat data...</div></div>
+      </div>
+
+      <div id="rkViewMiss" class="wip-view" style="display:none">
+        <div class="today-label" style="margin-top:0"><i class="ti ti-package-off" style="font-size:15px"></i> MATERIAL/KOMPONEN YANG BELUM DITERIMA</div>
+        <div style="font-size:10.5px;color:#999;margin:-4px 0 10px">Dihitung dari Style tiap SPO yang sudah pernah di-IN INVENTORY, dibandingkan dengan daftar Material/Komponen Style itu di DATABASE_INVENTORY.</div>
+        <div class="wip-filter">
+          <div class="spo-ac-wrap" style="flex:1">
+            <input type="text" class="wip-filter-input" id="rkMissSpo" placeholder="Ketik / pilih SPO..." autocomplete="off" style="width:100%;box-sizing:border-box">
+            <div class="spo-ac-drop" id="rkMissSpoDrop"></div>
+          </div>
+          <div class="spo-ac-wrap" style="flex:1">
+            <input type="text" class="wip-filter-input" id="rkMissMaterial" placeholder="Ketik / pilih Material/Komponen..." autocomplete="off" style="width:100%;box-sizing:border-box">
+            <div class="spo-ac-drop" id="rkMissMaterialDrop"></div>
+          </div>
+        </div>
+        <div class="wip-list" id="rkMissList"><div class="wip-empty">Memuat data...</div></div>
+      </div>
+
     </div>
 
     <div class="footer-zone">
@@ -4036,6 +4153,7 @@
     if (pageId === "page-inout-set-synthetic") initIoSetPage();
     if (pageId === "page-inout-prc-synthetic") initPrcIoPage();
     if (pageId === "page-spa-in") initSpForm();
+    if (pageId === "page-spa-rekap") initSpRekapPage();
     if (pageId === "page-spa-out-dist") initSoPage('dist');
     if (pageId === "page-spa-out-line") initSoPage('line');
     if (pageId === "page-spa-out-acc") initSoPage('acc');
@@ -12126,6 +12244,268 @@
     });
   }
 
+  // ===== REKAP OUTSTANDING (SPA FACTORY) =====
+  // Report read-only, 2 tab. Tab 1 "Rekap Outstanding": isi sheet REKAP OUTSTANDING (1 kartu per
+  // SPO + Material + Divisi Tujuan). Tab 2 "Belum Diterima": Material/Komponen Style tiap SPO (dari
+  // DATABASE_INVENTORY) yang sama sekali belum pernah di-IN INVENTORY untuk SPO itu. Filter SPO &
+  // Material/Komponen diketik manual + dropdown suggest; tampilan baru berubah kalau teksnya persis
+  // salah satu pilihan atau dikosongkan. Pilihan saling menyesuaikan; dimuat ulang tiap buka menu.
+  var rkRows = [];
+  var rkSpos = [];
+  var rkApplied = { rek: { spo: '', material: '' }, miss: { spo: '', material: '' } };
+  var RK_IDS = {
+    rek:  { spo: 'rkRekSpo',  spoDrop: 'rkRekSpoDrop',  material: 'rkRekMaterial',  materialDrop: 'rkRekMaterialDrop',  list: 'rkRekList' },
+    miss: { spo: 'rkMissSpo', spoDrop: 'rkMissSpoDrop', material: 'rkMissMaterial', materialDrop: 'rkMissMaterialDrop', list: 'rkMissList' }
+  };
+
+  function initSpRekapPage() {
+    ['rek', 'miss'].forEach(function(which) {
+      rkApplied[which] = { spo: '', material: '' };
+      document.getElementById(RK_IDS[which].spo).value = '';
+      document.getElementById(RK_IDS[which].material).value = '';
+      setupRkFilterInput(which, 'spo');
+      setupRkFilterInput(which, 'material');
+    });
+    showRkView('rek');
+    loadRkData();
+  }
+
+  function loadRkData() {
+    if (!GAS_SPA_URL) { setRkStatus('nourl'); return; }
+    setRkStatus('loading');
+    document.getElementById('rkLoadTime').textContent = '';
+    _hideLoadError('rk');
+    var t0 = Date.now();
+    var pending = 2, failed = null;
+    function done() {
+      if (--pending > 0) return;
+      _showLoadTime('rkLoadTime', Date.now() - t0);
+      if (failed) { setRkStatus('error'); _showLoadError('rk', failed.err, failed.data); return; }
+      setRkStatus('ok', rkRows.length);
+      ['rek', 'miss'].forEach(function(w) { rkRevalidate(w, null); });
+      renderRkView('rek');
+      renderRkView('miss');
+    }
+    jsonp(GAS_SPA_URL + '?type=spa_rekap_data', function(err, data) {
+      if (err || !data || data.status !== 'ok') failed = failed || { err: err, data: data };
+      else rkRows = data.rows || [];
+      done();
+    });
+    jsonp(GAS_SPA_URL + '?type=spa_missing_data', function(err, data) {
+      if (err || !data || data.status !== 'ok') failed = failed || { err: err, data: data };
+      else rkSpos = data.spos || [];
+      done();
+    });
+  }
+
+  function setRkStatus(state, count) {
+    var el = document.getElementById('rkStatus');
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(101,163,13,0.15)'; el.style.color = '#3F6212';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' baris rekap dimuat';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'nourl') {
+      el.textContent = '✕ URL backend belum diisi';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    } else {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  function showRkView(which) {
+    document.getElementById('rkViewRek').style.display  = which === 'rek'  ? 'block' : 'none';
+    document.getElementById('rkViewMiss').style.display = which === 'miss' ? 'block' : 'none';
+    document.getElementById('rkTabRek').classList.toggle('active', which === 'rek');
+    document.getElementById('rkTabMiss').classList.toggle('active', which === 'miss');
+  }
+
+  // Pilihan suggest 1 filter (kind = spo | material), dibatasi filter lainnya yang sedang aktif.
+  // ignoreOther = true: abaikan filter lainnya (dipakai saat mencocokkan ketikan, supaya filter yang
+  // baru diubah selalu menang dan filter lain yang jadi tidak cocok dikosongkan oleh rkRevalidate).
+  function rkOptions(which, kind, ignoreOther) {
+    var f = ignoreOther ? { spo: '', material: '' } : rkApplied[which];
+    var seen = {};
+    var out = [];
+    function add(v) { if (v && !seen[v]) { seen[v] = true; out.push(v); } }
+    if (which === 'rek') {
+      var other = kind === 'spo' ? 'material' : 'spo';
+      rkRows.forEach(function(r) {
+        if (f[other] && r[other] !== f[other]) return;
+        add(r[kind]);
+      });
+    } else {
+      rkSpos.forEach(function(s) {
+        if (kind === 'spo') {
+          if (f.material && !s.missing.some(function(m) { return m.material === f.material; })) return;
+          add(s.spo);
+        } else {
+          if (f.spo && s.spo !== f.spo) return;
+          s.missing.forEach(function(m) { add(m.material); });
+        }
+      });
+    }
+    return _acSort(out, null);
+  }
+
+  function _rkMatch(which, kind, text) {
+    var t = (text || '').trim().toLowerCase();
+    if (!t) return null;
+    var list = rkOptions(which, kind, true);
+    for (var i = 0; i < list.length; i++) if (list[i].toLowerCase() === t) return list[i];
+    return null;
+  }
+
+  // Filter lain yang pilihannya sudah tidak ada setelah satu filter berubah dikosongkan (filter yang baru diubah menang).
+  function rkRevalidate(which, keepKind) {
+    ['spo', 'material'].forEach(function(kind) {
+      if (kind === keepKind) return;
+      var cur = rkApplied[which][kind];
+      if (cur && rkOptions(which, kind).indexOf(cur) < 0) {
+        rkApplied[which][kind] = '';
+        document.getElementById(RK_IDS[which][kind]).value = '';
+      }
+    });
+  }
+
+  function setupRkFilterInput(which, kind) {
+    var ids = RK_IDS[which];
+    var input = document.getElementById(ids[kind]);
+    var drop  = document.getElementById(ids[kind + 'Drop']);
+    if (input._rkWired) return;
+    input._rkWired = true;
+
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      var list = rkOptions(which, kind).filter(function(v) { return !q || v.toLowerCase().indexOf(q) >= 0; });
+      if (!rkRows.length && !rkSpos.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      } else if (!list.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">' + (kind === 'spo' ? 'SPO' : 'Material/Komponen') + ' tidak ditemukan</div>';
+      } else {
+        drop.innerHTML = list.map(function(v) {
+          return '<div class="spo-ac-item" data-val="' + _escWip(v) + '"><span class="spo-ac-spo">' + _soHl(v, q) + '</span></div>';
+        }).join('');
+      }
+      drop.classList.add('open');
+    }
+    function apply(val) {
+      rkApplied[which][kind] = val;
+      rkRevalidate(which, kind);
+      renderRkView(which);
+    }
+
+    input.oninput = function() {
+      renderDrop();
+      var raw = input.value.trim();
+      if (!raw) { apply(''); return; }
+      var match = _rkMatch(which, kind, raw);
+      if (!match) return; // belum persis salah satu pilihan -> tampilan belum berubah
+      input.value = match;
+      apply(match);
+    };
+    input.onfocus = renderDrop;
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-val]');
+      if (!item) return;
+      input.value = item.getAttribute('data-val');
+      drop.classList.remove('open');
+      apply(input.value);
+    });
+  }
+
+  function renderRkView(which) {
+    if (which === 'rek') renderRkRekap(); else renderRkMissing();
+  }
+
+  function _rkFmt(v) { return (v === '' || v == null) ? '-' : _escWip(v); }
+
+  function renderRkRekap() {
+    var f = rkApplied.rek;
+    var container = document.getElementById(RK_IDS.rek.list);
+    var rows = rkRows.filter(function(r) {
+      return (!f.spo || r.spo === f.spo) && (!f.material || r.material === f.material);
+    });
+    if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+    rows = rows.slice().sort(function(a, b) {
+      return a.spo.localeCompare(b.spo, undefined, { numeric: true, sensitivity: 'base' })
+        || a.material.localeCompare(b.material, undefined, { numeric: true, sensitivity: 'base' })
+        || a.divisi.localeCompare(b.divisi);
+    });
+    var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', []);
+    container.innerHTML = statsHtml + rows.map(function(r) {
+      var gapStyle = (r.gap !== '' && r.gap < 0) ? ' style="color:#DC2626"' : '';
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _rkFmt(r.divisi) + '</span></div>'
+        + '<div class="wip-item-style">' + _rkFmt(r.style) + '</div>'
+        + '<div class="wip-item-grid">'
+        + '<div class="full"><div class="wip-item-k">Material/Komponen</div><div class="wip-item-v">' + _rkFmt(r.material) + '</div></div>'
+        + '<div><div class="wip-item-k">Unit</div><div class="wip-item-v">' + _rkFmt(r.unit) + '</div></div>'
+        + '<div><div class="wip-item-k">Con\'s Pcs</div><div class="wip-item-v">' + _rkFmt(r.cons) + '</div></div>'
+        + '<div><div class="wip-item-k">Qty Plan Pcs</div><div class="wip-item-v">' + _rkFmt(r.plan) + '</div></div>'
+        + '<div><div class="wip-item-k">Qty Plan Unit</div><div class="wip-item-v">' + _rkFmt(r.planUnit) + '</div></div>'
+        + '<div><div class="wip-item-k">Qty In Unit</div><div class="wip-item-v">' + _rkFmt(r.qtyIn) + '</div></div>'
+        + '<div><div class="wip-item-k">Gap In Unit</div><div class="wip-item-v"' + gapStyle + '>' + _rkFmt(r.gap) + '</div></div>'
+        + '<div><div class="wip-item-k">Qty Out Unit</div><div class="wip-item-v">' + _rkFmt(r.qtyOut) + '</div></div>'
+        + '<div><div class="wip-item-k">WIP Pcs</div><div class="wip-item-v">' + _rkFmt(r.wipPcs) + '</div></div>'
+        + '</div>'
+        + '<div class="wip-item-qty"><span class="wip-item-qty-label">WIP Unit</span><span class="wip-item-qty-value">' + _rkFmt(r.wip) + '</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function renderRkMissing() {
+    var f = rkApplied.miss;
+    var container = document.getElementById(RK_IDS.miss.list);
+    if (!rkSpos.length) { container.innerHTML = '<div class="wip-empty">Belum ada SPO yang di-IN INVENTORY</div>'; return; }
+    var cards = [];
+    rkSpos.forEach(function(s) {
+      if (f.spo && s.spo !== f.spo) return;
+      var missing = f.material ? s.missing.filter(function(m) { return m.material === f.material; }) : s.missing;
+      // Tanpa pilihan SPO: hanya SPO yang masih ada yang belum diterima; dengan pilihan SPO: tampil walau lengkap
+      if (!f.spo && !missing.length) return;
+      cards.push({ s: s, missing: missing });
+    });
+    if (!cards.length) {
+      container.innerHTML = '<div class="wip-empty">' + (f.spo || f.material ? 'Tidak ada data' : '✓ Semua Material/Komponen sudah diterima untuk semua SPO') + '</div>';
+      return;
+    }
+    cards.sort(function(a, b) { return a.s.spo.localeCompare(b.s.spo, undefined, { numeric: true, sensitivity: 'base' }); });
+    var flat = [];
+    cards.forEach(function(c) { c.missing.forEach(function(m) { flat.push({ spo: c.s.spo, one: 1 }); }); });
+    var statsHtml = flat.length ? _renderTodayStatsBar(flat, 'spo', 'Jumlah SPO', [{ field: 'one', label: 'Total Belum Diterima' }]) : '';
+    container.innerHTML = statsHtml + cards.map(function(c) {
+      var s = c.s;
+      var meta, badge;
+      if (!s.total) {
+        meta = 'Belum ada daftar Material/Komponen untuk Style ini di DATABASE_INVENTORY';
+        badge = '-';
+      } else if (!c.missing.length) {
+        meta = '✓ Semua Material/Komponen sudah diterima (' + s.received + ' dari ' + s.total + ')';
+        badge = 'Lengkap';
+      } else {
+        meta = 'Sudah diterima ' + s.received + ' dari ' + s.total + ' Material/Komponen';
+        badge = c.missing.length + ' belum';
+      }
+      return '<div class="wip-item">'
+        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(s.spo) + '</span><span class="wip-item-size">' + badge + '</span></div>'
+        + '<div class="wip-item-style">' + _rkFmt(s.style) + '</div>'
+        + '<div class="wip-item-meta">' + meta + '</div>'
+        + c.missing.map(function(m) {
+            return '<div style="display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #E8E8E6;font-size:12.5px">'
+              + '<span style="font-weight:600;color:#111;word-break:break-word">' + _escWip(m.material) + '</span>'
+              + '<span style="color:#999;white-space:nowrap">' + _escWip(m.unit) + '</span></div>';
+          }).join('')
+        + '</div>';
+    }).join('');
+  }
+
   // ===== INV OUT DISTRIBUSI / INV OUT LINE / INV OUT ACCESSORIES (SPA FACTORY) =====
   // 3 menu dengan pola yang sama (dibedakan kunci menu k = dist | line | acc). SPO & Material/Komponen
   // yang bisa dipilih berasal dari "REKAP OUTSTANDING" untuk Divisi Tujuan menu itu (hasil IN INVENTORY);
@@ -12184,11 +12564,21 @@
         + '<button class="btn-submit" onclick="submitSoForm(\'' + k + '\')"><i class="ti ti-send" style="font-size:18px"></i> Kirim</button>'
         + '<div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>'
         + '<div class="today-tabs" id="soTodayTabs-' + k + '">'
-        + '<button type="button" class="today-tab-btn active" onclick="_todayTabClick(\'soTodayTabs-' + k + '\',\'soTodayList-' + k + '\',0,this,function(d){loadTodaySo(\'' + k + '\',d);})">Hari Ini</button>'
-        + '<button type="button" class="today-tab-btn" onclick="_todayTabClick(\'soTodayTabs-' + k + '\',\'soTodayList-' + k + '\',1,this,function(d){loadTodaySo(\'' + k + '\',d);})">Kemarin</button>'
+        + '<button type="button" class="today-tab-btn active" onclick="soTab(\'' + k + '\',0,this)">Hari Ini</button>'
+        + '<button type="button" class="today-tab-btn" onclick="soTab(\'' + k + '\',1,this)">Kemarin</button>'
+        + '<button type="button" class="today-tab-btn" onclick="soTab(\'' + k + '\',\'hist\',this)">SPO, Material/Komponen</button>'
         + '</div>'
         + '<div class="load-time-note" id="soTodayLoadTime-' + k + '"></div>'
         + '<div id="soTodayList-' + k + '" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>'
+        + '<div id="soHistPanel-' + k + '" style="display:none">'
+        + '<div style="font-size:10.5px;color:#999;margin-bottom:8px">Cek histori: material/komponen SPO ini sudah dikirim ke mana saja dan berapa banyak di setiap tanggal.</div>'
+        + '<div class="wip-filter">'
+        + '<div class="spo-ac-wrap so-ac-wrap" style="flex:1"><input type="text" class="wip-filter-input" id="soHistSpo-' + k + '" placeholder="Ketik / pilih SPO..." autocomplete="off" style="width:100%;box-sizing:border-box"><div class="spo-ac-drop" id="soHistSpoDrop-' + k + '"></div></div>'
+        + '<div class="spo-ac-wrap so-ac-wrap" style="flex:1"><input type="text" class="wip-filter-input" id="soHistMaterial-' + k + '" placeholder="Ketik / pilih Material/Komponen..." autocomplete="off" style="width:100%;box-sizing:border-box"><div class="spo-ac-drop" id="soHistMaterialDrop-' + k + '"></div></div>'
+        + '</div>'
+        + '<div class="load-time-note" id="soHistLoadTime-' + k + '"></div>'
+        + '<div id="soHistList-' + k + '" class="today-list"><div class="wip-empty">Pilih SPO untuk melihat histori pengiriman.</div></div>'
+        + '</div>'
         + '</div>'
         + '<div class="footer-zone"><div class="live-row"><div class="live-dot"></div><div class="live-txt">Sistem aktif — PT. ASI Supply Division</div></div></div>'
         + '</div>';
@@ -12211,7 +12601,172 @@
     loadSoMaster(k);
     var tabs = document.getElementById('soTodayTabs-' + k);
     Array.prototype.forEach.call(tabs.querySelectorAll('.today-tab-btn'), function(b, i) { b.classList.toggle('active', i === 0); });
-    document.getElementById('soTodayList-' + k).innerHTML = '<div class="wip-empty">Pilih tab di atas untuk memuat data.</div>';
+    var list = document.getElementById('soTodayList-' + k);
+    list.innerHTML = '<div class="wip-empty">Pilih tab di atas untuk memuat data.</div>';
+    list.style.display = '';
+    document.getElementById('soTodayLoadTime-' + k).style.display = '';
+    document.getElementById('soHistPanel-' + k).style.display = 'none';
+    soHist[k] = { spo: '', material: '', rows: [] };
+    document.getElementById('soHistSpo-' + k).value = '';
+    document.getElementById('soHistMaterial-' + k).value = '';
+    document.getElementById('soHistLoadTime-' + k).textContent = '';
+    soHistRender(k);
+  }
+
+  // ---- Tab "SPO, Material/Komponen" di Cek Data Terkirim: histori pengiriman per tanggal & tujuan ----
+  // Filter SPO & Material/Komponen: manual + dropdown suggest; tampilan baru berubah kalau teksnya
+  // persis salah satu pilihan atau dikosongkan. Pilih SPO memuat semua pengiriman SPO itu (semua tanggal);
+  // Material/Komponen menyaring hasilnya.
+  var soHist = { dist: { spo: '', material: '', rows: [] }, line: { spo: '', material: '', rows: [] }, acc: { spo: '', material: '', rows: [] } };
+
+  function soTab(k, which, btn) {
+    var tabs = document.getElementById('soTodayTabs-' + k);
+    Array.prototype.forEach.call(tabs.querySelectorAll('.today-tab-btn'), function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var hist = which === 'hist';
+    document.getElementById('soTodayList-' + k).style.display = hist ? 'none' : '';
+    document.getElementById('soTodayLoadTime-' + k).style.display = hist ? 'none' : '';
+    document.getElementById('soHistPanel-' + k).style.display = hist ? 'block' : 'none';
+    if (hist) {
+      setupSoHistInput(k, 'spo');
+      setupSoHistInput(k, 'material');
+      if (soHist[k].spo) soHistFetch(k); // data bisa sudah berubah sejak terakhir dilihat
+    } else {
+      loadTodaySo(k, which);
+    }
+  }
+
+  function soHistOptions(k, kind) {
+    var seen = {};
+    var out = [];
+    if (kind === 'spo') {
+      soSpoList(k).forEach(function(s) { out.push(s.spo); });
+    } else {
+      soHist[k].rows.forEach(function(r) {
+        if (r.material && !seen[r.material]) { seen[r.material] = true; out.push(r.material); }
+      });
+    }
+    return _acSort(out, null);
+  }
+
+  function setupSoHistInput(k, kind) {
+    var input = document.getElementById(kind === 'spo' ? 'soHistSpo-' + k : 'soHistMaterial-' + k);
+    var drop  = document.getElementById(kind === 'spo' ? 'soHistSpoDrop-' + k : 'soHistMaterialDrop-' + k);
+    if (input._soWired) return;
+    input._soWired = true;
+
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      if (kind === 'material' && !soHist[k].spo) {
+        drop.innerHTML = '<div class="spo-ac-empty">Pilih SPO dahulu</div>';
+      } else {
+        var list = soHistOptions(k, kind).filter(function(v) { return !q || v.toLowerCase().indexOf(q) >= 0; });
+        drop.innerHTML = list.length
+          ? list.map(function(v) { return '<div class="spo-ac-item" data-val="' + _escWip(v) + '"><span class="spo-ac-spo">' + _soHl(v, q) + '</span></div>'; }).join('')
+          : '<div class="spo-ac-empty">' + (kind === 'spo' ? 'SPO' : 'Material/Komponen') + ' tidak ditemukan</div>';
+      }
+      drop.classList.add('open');
+    }
+    function apply(val) {
+      if (kind === 'spo') {
+        if (val === soHist[k].spo) return;
+        soHist[k].spo = val;
+        soHist[k].material = '';
+        soHist[k].rows = [];
+        document.getElementById('soHistMaterial-' + k).value = '';
+        if (val) soHistFetch(k); else soHistRender(k);
+      } else {
+        soHist[k].material = val;
+        soHistRender(k);
+      }
+    }
+    function exact(text) {
+      var t = text.trim().toLowerCase();
+      var list = soHistOptions(k, kind);
+      for (var i = 0; i < list.length; i++) if (list[i].toLowerCase() === t) return list[i];
+      return null;
+    }
+
+    input.oninput = function() {
+      renderDrop();
+      var raw = input.value.trim();
+      if (!raw) { apply(''); return; }
+      var match = exact(raw);
+      if (!match) return;
+      input.value = match;
+      apply(match);
+    };
+    input.onfocus = renderDrop;
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-val]');
+      if (!item) return;
+      input.value = item.getAttribute('data-val');
+      drop.classList.remove('open');
+      apply(input.value);
+    });
+  }
+
+  function soHistFetch(k) {
+    var spo = soHist[k].spo;
+    var el = document.getElementById('soHistList-' + k);
+    if (!GAS_SPA_URL) { el.innerHTML = '<div class="wip-empty">URL backend SPA Factory belum diisi.</div>'; return; }
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('soHistLoadTime-' + k).textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_SPA_URL + '?type=history_spa_out&menu=' + k + '&spo=' + encodeURIComponent(spo), function(err, data) {
+      if (soHist[k].spo !== spo) return; // SPO sudah diganti selagi memuat
+      _showLoadTime('soHistLoadTime-' + k, Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      soHist[k].rows = data.rows || [];
+      if (soHist[k].material && soHistOptions(k, 'material').indexOf(soHist[k].material) < 0) {
+        soHist[k].material = '';
+        document.getElementById('soHistMaterial-' + k).value = '';
+      }
+      soHistRender(k);
+    });
+  }
+
+  function soHistRender(k) {
+    var h = soHist[k];
+    var el = document.getElementById('soHistList-' + k);
+    if (!h.spo) { el.innerHTML = '<div class="wip-empty">Pilih SPO untuk melihat histori pengiriman.</div>'; return; }
+    var rows = h.rows.filter(function(r) { return !h.material || r.material === h.material; });
+    if (!rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada pengiriman ' + _escWip(SPA_OUT_CFG[k].title) + ' untuk SPO ' + _escWip(h.spo) + (h.material ? ' / ' + _escWip(h.material) : '') + '.</div>';
+      return;
+    }
+    rows = rows.slice().sort(function(a, b) {
+      return String(a.tanggal).localeCompare(String(b.tanggal)) || a.material.localeCompare(b.material, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    var picLabel = SPA_OUT_CFG[k].picLabel;
+    // Total per Material + Tujuan (PIC Terima / Line)
+    var agg = {};
+    rows.forEach(function(r) {
+      var key = r.material + '||' + r.pic;
+      var a = agg[key] || (agg[key] = { material: r.material, pic: r.pic, unit: r.unit, total: 0 });
+      a.total += Number(r.qty) || 0;
+    });
+    var aggList = Object.keys(agg).map(function(x) { return agg[x]; }).sort(function(a, b) {
+      return a.material.localeCompare(b.material, undefined, { numeric: true, sensitivity: 'base' }) || a.pic.localeCompare(b.pic, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    var dates = {};
+    rows.forEach(function(r) { dates[r.tanggal] = true; });
+    var html = '<div class="today-label" style="margin-top:4px">Total per Material &amp; ' + _escWip(picLabel) + '</div>'
+      + '<div class="today-tablewrap"><table class="today-table"><thead><tr><th>Material/Komponen</th><th>' + _escWip(picLabel) + '</th><th>Unit</th><th>Total Qty Unit</th></tr></thead><tbody>'
+      + aggList.map(function(a) {
+          return '<tr><td>' + _escToday(a.material) + '</td><td>' + _escToday(a.pic) + '</td><td>' + _escToday(a.unit) + '</td><td>' + _escToday(Math.round(a.total * 10000) / 10000) + '</td></tr>';
+        }).join('')
+      + '</tbody></table></div>'
+      + '<div class="today-label" style="margin-top:12px">Histori per Tanggal (' + Object.keys(dates).length + ' tanggal, ' + rows.length + ' pengiriman)</div>'
+      + '<div class="today-tablewrap"><table class="today-table"><thead><tr><th>Tanggal</th><th>Material/Komponen</th><th>' + _escWip(picLabel) + '</th><th>Unit</th><th>Qty Unit</th></tr></thead><tbody>'
+      + rows.map(function(r) {
+          return '<tr><td>' + _escToday(r.tanggal) + '</td><td>' + _escToday(r.material) + '</td><td>' + _escToday(r.pic) + '</td><td>' + _escToday(r.unit) + '</td><td>' + _escToday(r.qty) + '</td></tr>';
+        }).join('')
+      + '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
   }
 
   function resetSoForm(k) {
