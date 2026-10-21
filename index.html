@@ -1605,7 +1605,7 @@
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('INV OUT DISTRIBUSI')">
+        <div class="card card-out" onclick="goTo('page-spa-out-dist')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -1614,15 +1614,15 @@
               </div>
             </div>
             <div class="card-title">INV OUT DISTRIBUSI</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat pengeluaran material/komponen ke Distribusi per SPO</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per SPO</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('INV OUT LINE')">
+        <div class="card card-out" onclick="goTo('page-spa-out-line')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -1631,15 +1631,15 @@
               </div>
             </div>
             <div class="card-title">INV OUT LINE</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat pengeluaran material/komponen ke Line per SPO</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per SPO</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
         </div>
 
-        <div class="card card-syn-placeholder" onclick="comingSoon('INV OUT ACCESSORIES')">
+        <div class="card card-out" onclick="goTo('page-spa-out-acc')">
           <div class="card-inner">
             <div class="card-top">
               <span class="card-badge badge-out">Pengeluaran</span>
@@ -1648,9 +1648,9 @@
               </div>
             </div>
             <div class="card-title">INV OUT ACCESSORIES</div>
-            <div class="card-desc">Segera hadir</div>
+            <div class="card-desc">Catat pengeluaran material/komponen ke Accessories per SPO</div>
             <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-hint"><i class="ti ti-send" style="font-size:13px"></i> Input per SPO</span>
               <span class="card-btn btn-out">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
             </div>
           </div>
@@ -4036,6 +4036,9 @@
     if (pageId === "page-inout-set-synthetic") initIoSetPage();
     if (pageId === "page-inout-prc-synthetic") initPrcIoPage();
     if (pageId === "page-spa-in") initSpForm();
+    if (pageId === "page-spa-out-dist") initSoPage('dist');
+    if (pageId === "page-spa-out-line") initSoPage('line');
+    if (pageId === "page-spa-out-acc") initSoPage('acc');
     if (pageId === "page-form-rak") initRakForm();
     if (pageId === "page-form-out") initOutForm();
     if (pageId === "page-penukaran-kulit") initPenukaranKulitPage();
@@ -11622,6 +11625,8 @@
   }
 
   var SP_UNITS = ['MTR', 'PCS', 'Yard', 'Roll'];
+  // Divisi Tujuan (kolom H "IN INVENTORY" / kolom N "REKAP OUTSTANDING"); harus sama dengan SPA_OUT_MENUS di CodeSpa.gs.
+  var SPA_DIVISI = ['DISTRIBUSI', 'LINE', 'ACCESSORIES'];
 
   // Con's terakhir untuk Style+Material (dari kolom M "REKAP OUTSTANDING"); null kalau belum pernah ada.
   function spFindCons(style, material) {
@@ -11791,6 +11796,13 @@
       + '</div>'
       + '</div>'
       + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Divisi Tujuan</span>'
+      + '<select class="row-field-input sp-divisi-input" id="sp-divisi-input-' + rid + '" onchange="checkDupSp()">'
+      + '<option value="">Pilih Divisi Tujuan...</option>'
+      + SPA_DIVISI.map(function(d) { return '<option value="' + d + '">' + d + '</option>'; }).join('')
+      + '</select>'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
       + '<span class="row-field-label">Unit <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0" id="sp-unit-hint-' + rid + '">(pilih satuan)</span></span>'
       + '<select class="row-field-input sp-unit-input" id="sp-unit-input-' + rid + '">'
       + '<option value="">Pilih Unit...</option>'
@@ -11943,12 +11955,13 @@
       var spoInput = gid ? document.getElementById('sp-spo-input-' + gid) : null;
       var spo = spoInput ? spoInput.value.trim() : '';
       var mat = card.querySelector('.sp-material-input').value.trim();
-      if (!spo || !mat) return;
-      var key = spo.toLowerCase() + '|' + mat.toLowerCase();
-      if (seen[key]) dup = { spo: spo, mat: mat };
+      var div = card.querySelector('.sp-divisi-input').value;
+      if (!spo || !mat || !div) return;
+      var key = spo.toLowerCase() + '|' + mat.toLowerCase() + '|' + div;
+      if (seen[key]) dup = { spo: spo, mat: mat, div: div };
       seen[key] = true;
     });
-    if (dup) showToast('⚠️ SPO ' + dup.spo + ', ' + dup.mat + ' sudah diisi di baris lain form ini', 'error');
+    if (dup) showToast('⚠️ SPO ' + dup.spo + ', ' + dup.mat + ' (' + dup.div + ') sudah diisi di baris lain form ini', 'error');
   }
 
   // ---- COLLECT + SUBMIT ----
@@ -11981,10 +11994,12 @@
         var qty      = card.querySelector('.sp-qty-input').value;
         if (!material) { errorMsg = 'Material/Komponen wajib diisi di setiap baris (SPO ' + spo + ')'; return; }
         var cons     = card.querySelector('.sp-cons-input').value;
+        var divisi   = card.querySelector('.sp-divisi-input').value;
+        if (!divisi)   { errorMsg = 'Divisi Tujuan wajib dipilih untuk ' + material + ' (SPO ' + spo + ')'; return; }
         if (!unit)     { errorMsg = 'Unit wajib dipilih untuk ' + material + ' (SPO ' + spo + ')'; return; }
         if (!qty || !(parseFloat(qty) > 0)) { errorMsg = 'Qty Unit wajib diisi (lebih dari 0) untuk ' + material + ' (SPO ' + spo + ')'; return; }
         if (!cons || !(parseFloat(cons) > 0)) { errorMsg = "Con's Pcs wajib diisi (lebih dari 0) untuk " + material + ' (SPO ' + spo + ')'; return; }
-        allRows.push({ spo: spo, style: style, material: material, unit: unit, qty: qty, cons: cons });
+        allRows.push({ spo: spo, style: style, material: material, unit: unit, qty: qty, cons: cons, divisi: divisi });
       });
     });
 
@@ -12029,10 +12044,10 @@
       el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
       return;
     }
-    // Duplikat = SPO + Material/Komponen + Unit + Qty Unit yang persis sama
+    // Duplikat = SPO + Material/Komponen + Unit + Qty Unit + Divisi Tujuan yang persis sama
     var groups = {};
     rows.forEach(function(r) {
-      var key = [r.spo, r.material, r.unit, r.qty].join('|').toLowerCase();
+      var key = [r.spo, r.material, r.unit, r.qty, r.divisi].join('|').toLowerCase();
       (groups[key] = groups[key] || []).push(r);
     });
     var dupRowsToDelete = [];
@@ -12045,12 +12060,12 @@
     _spDupRowsToDelete = dupRowsToDelete;
 
     var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', []);
-    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Qty Unit', "Con's Pcs"];
+    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Qty Unit', "Con's Pcs", 'Divisi Tujuan'];
     var html = statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
     rows.forEach(function(r) {
-      var key = [r.spo, r.material, r.unit, r.qty].join('|').toLowerCase();
+      var key = [r.spo, r.material, r.unit, r.qty, r.divisi].join('|').toLowerCase();
       var dupCount = groups[key].length;
       var isDup = dupCount > 1;
       html += '<tr' + (isDup ? ' class="dup"' : '') + '>'
@@ -12060,6 +12075,7 @@
         + '<td>' + _escToday(r.unit) + '</td>'
         + '<td>' + _escToday(r.qty) + '</td>'
         + '<td>' + _escToday(r.cons) + '</td>'
+        + '<td>' + _escToday(r.divisi) + '</td>'
         + '</tr>';
     });
     html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
@@ -12107,6 +12123,607 @@
       }
       showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
       loadTodaySp();
+    });
+  }
+
+  // ===== INV OUT DISTRIBUSI / INV OUT LINE / INV OUT ACCESSORIES (SPA FACTORY) =====
+  // 3 menu dengan pola yang sama (dibedakan kunci menu k = dist | line | acc). SPO & Material/Komponen
+  // yang bisa dipilih berasal dari "REKAP OUTSTANDING" untuk Divisi Tujuan menu itu (hasil IN INVENTORY);
+  // Unit & Con's otomatis dari rekap; Qty diisi manual; PIC Terima/Line manual + suggest dari sheet
+  // "PIC TERIMA" (per menu). Cetak ke sheet "INV OUT ..." dan menambah Qty Out Unit di REKAP OUTSTANDING.
+  var SPA_OUT_CFG = {
+    dist: { page: 'page-spa-out-dist', title: 'INV OUT DISTRIBUSI',  divisi: 'DISTRIBUSI',  picLabel: 'PIC Terima', icon: 'ti-truck-delivery' },
+    line: { page: 'page-spa-out-line', title: 'INV OUT LINE',        divisi: 'LINE',        picLabel: 'Line',       icon: 'ti-building-factory-2' },
+    acc:  { page: 'page-spa-out-acc',  title: 'INV OUT ACCESSORIES', divisi: 'ACCESSORIES', picLabel: 'PIC Terima', icon: 'ti-tag' }
+  };
+  var soState = { dist: { items: [], pics: [] }, line: { items: [], pics: [] }, acc: { items: [], pics: [] } };
+  var soGroupCount = 0, soRowCount = 0;
+  var soGroupsData = {};
+  var soDupRows = { dist: [], line: [], acc: [] };
+
+  function _soReady() {
+    if (GAS_SPA_URL) return true;
+    showToast('URL backend SPA Factory belum diisi di index.html (GAS_SPA_URL)', 'error');
+    return false;
+  }
+
+  function _soHl(text, q) {
+    var safe = _escWip(text);
+    if (!q) return safe;
+    return safe.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>');
+  }
+
+  function _soBuildPages() {
+    var html = '';
+    Object.keys(SPA_OUT_CFG).forEach(function(k) {
+      var c = SPA_OUT_CFG[k];
+      html += '<div class="page" id="' + c.page + '">'
+        + '<div class="header-zone">'
+        + '<div class="status-bar"><span>PT. ASI</span><span class="waktu-el">--:--</span></div>'
+        + '<div class="logo-wrap"><div class="logo-box">L</div><div class="logo-text">LITRA-ASI</div></div>'
+        + '<div class="tagline">Leading Industrial Transformation</div>'
+        + '<div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>'
+        + '<div class="date-pill"><span><i class="ti ti-calendar" style="font-size:13px"></i> <span class="tgl-el">Memuat...</span></span></div>'
+        + '<div style="display:flex;justify-content:center;margin-top:14px"><div class="back-btn" onclick="goTo(\'page-spa-factory\')"><i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali</div></div>'
+        + '</div>'
+        + '<div class="area-label"><div class="area-label-text" style="font-size:16px;letter-spacing:2px">' + c.title + '</div>'
+        + '<div class="area-divider" style="background:linear-gradient(90deg,#65A30D,#A3E635)"></div></div>'
+        + '<div style="text-align:center;margin-top:6px"><div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › SPA FACTORY › ' + c.title + '</div></div>'
+        + '<div class="form-zone">'
+        + '<div class="form-header-pill"><i class="ti ' + c.icon + '"></i><div><div class="form-header-pill-txt">' + c.title + '</div><div class="form-header-pill-sub">SPA Factory — Supply Area</div></div></div>'
+        + '<div class="field-group"><label class="field-label">Tanggal</label><input type="date" class="field-input" id="soTanggal-' + k + '"></div>'
+        + '<div class="field-group" style="display:flex;align-items:center;justify-content:space-between">'
+        + '<label class="field-label" style="margin-bottom:0">SPO &amp; Material (Divisi Tujuan ' + c.divisi + ')</label>'
+        + '<span id="soStatus-' + k + '" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(101,163,13,0.15);color:#3F6212;letter-spacing:0.5px">⏳ Memuat...</span></div>'
+        + '<div class="load-time-note" id="soLoadTime-' + k + '"></div>'
+        + '<div class="load-error-row" id="so' + k + 'ErrorRow" style="display:none"><span id="so' + k + 'ErrorMsg"></span>'
+        + '<button type="button" class="retry-btn" onclick="loadSoMaster(\'' + k + '\')"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button></div>'
+        + '<div id="soGroups-' + k + '"></div>'
+        + '<button class="btn-add-group" onclick="addSoGroup(\'' + k + '\')"><i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO</button>'
+        + '<div class="divider"></div>'
+        + '<button class="btn-submit" onclick="submitSoForm(\'' + k + '\')"><i class="ti ti-send" style="font-size:18px"></i> Kirim</button>'
+        + '<div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>'
+        + '<div class="today-tabs" id="soTodayTabs-' + k + '">'
+        + '<button type="button" class="today-tab-btn active" onclick="_todayTabClick(\'soTodayTabs-' + k + '\',\'soTodayList-' + k + '\',0,this,function(d){loadTodaySo(\'' + k + '\',d);})">Hari Ini</button>'
+        + '<button type="button" class="today-tab-btn" onclick="_todayTabClick(\'soTodayTabs-' + k + '\',\'soTodayList-' + k + '\',1,this,function(d){loadTodaySo(\'' + k + '\',d);})">Kemarin</button>'
+        + '</div>'
+        + '<div class="load-time-note" id="soTodayLoadTime-' + k + '"></div>'
+        + '<div id="soTodayList-' + k + '" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>'
+        + '</div>'
+        + '<div class="footer-zone"><div class="live-row"><div class="live-dot"></div><div class="live-txt">Sistem aktif — PT. ASI Supply Division</div></div></div>'
+        + '</div>';
+    });
+    document.getElementById('page-spa-in').insertAdjacentHTML('afterend', html);
+  }
+  _soBuildPages();
+
+  // Tutup semua dropdown suggest INV OUT kalau klik di luar kotak inputnya
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('.so-ac-wrap .spo-ac-drop.open').forEach(function(d) {
+      if (!d.parentNode.contains(e.target)) d.classList.remove('open');
+    });
+  });
+
+  function initSoPage(k) {
+    var today = new Date();
+    document.getElementById('soTanggal-' + k).value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    resetSoForm(k);
+    loadSoMaster(k);
+    var tabs = document.getElementById('soTodayTabs-' + k);
+    Array.prototype.forEach.call(tabs.querySelectorAll('.today-tab-btn'), function(b, i) { b.classList.toggle('active', i === 0); });
+    document.getElementById('soTodayList-' + k).innerHTML = '<div class="wip-empty">Pilih tab di atas untuk memuat data.</div>';
+  }
+
+  function resetSoForm(k) {
+    var cont = document.getElementById('soGroups-' + k);
+    cont.querySelectorAll('.spo-group').forEach(function(g) { delete soGroupsData[g.id.replace('so-group-', '')]; });
+    cont.innerHTML = '';
+    addSoGroup(k);
+  }
+
+  function loadSoMaster(k) {
+    if (!GAS_SPA_URL) { setSoStatus(k, 'nourl'); return; }
+    setSoStatus(k, 'loading');
+    document.getElementById('soLoadTime-' + k).textContent = '';
+    _hideLoadError('so' + k);
+    var t0 = Date.now();
+    jsonp(GAS_SPA_URL + '?type=spa_out_master&menu=' + k, function(err, data) {
+      _showLoadTime('soLoadTime-' + k, Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        setSoStatus(k, 'error');
+        _showLoadError('so' + k, err, data);
+        return;
+      }
+      soState[k].items = data.items || [];
+      soState[k].pics = data.pics || [];
+      setSoStatus(k, 'ok', soSpoList(k).length);
+      // Data baru masuk: baris yang sudah terisi dievaluasi ulang (Unit/Con's/WIP)
+      document.querySelectorAll('#soGroups-' + k + ' .spo-group').forEach(function(g) {
+        var gid = g.id.replace('so-group-', '');
+        matchSoSPO(gid, document.getElementById('so-spo-' + gid).value);
+      });
+    });
+  }
+
+  function setSoStatus(k, state, count) {
+    var el = document.getElementById('soStatus-' + k);
+    if (!el) return;
+    if (state === 'loading') {
+      el.textContent = '⏳ Memuat...';
+      el.style.background = 'rgba(101,163,13,0.15)'; el.style.color = '#3F6212';
+    } else if (state === 'ok') {
+      el.textContent = '✓ ' + count + ' SPO tersedia';
+      el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42';
+    } else if (state === 'nourl') {
+      el.textContent = '✕ URL backend belum diisi';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    } else {
+      el.textContent = '✕ Gagal memuat data';
+      el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B';
+    }
+  }
+
+  // SPO unik (+ Style) untuk Divisi Tujuan menu k
+  function soSpoList(k) {
+    var seen = {};
+    var out = [];
+    soState[k].items.forEach(function(it) {
+      var key = it.spo.toLowerCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push({ spo: it.spo, style: it.style });
+    });
+    return out;
+  }
+
+  function findSoSPO(k, spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return null;
+    var list = soSpoList(k);
+    for (var i = 0; i < list.length; i++) if (list[i].spo.toLowerCase() === s) return list[i];
+    return null;
+  }
+
+  // Material unik untuk 1 SPO di divisi menu k
+  function soMaterialsForSpo(k, spo) {
+    var s = (spo || '').trim().toLowerCase();
+    if (!s) return [];
+    var seen = {};
+    var out = [];
+    soState[k].items.forEach(function(it) {
+      if (it.spo.toLowerCase() !== s) return;
+      var key = it.material.toLowerCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push(it);
+    });
+    return out;
+  }
+
+  function findSoItem(k, spo, material) {
+    var m = (material || '').trim().toLowerCase();
+    if (!m) return null;
+    var list = soMaterialsForSpo(k, spo);
+    for (var i = 0; i < list.length; i++) if (list[i].material.toLowerCase() === m) return list[i];
+    return null;
+  }
+
+  // ---- SPO GROUPS ----
+  function addSoGroup(k) {
+    soGroupCount++;
+    var gid = soGroupCount;
+    soGroupsData[gid] = { k: k, spo: '', style: '' };
+
+    var div = document.createElement('div');
+    div.className = 'spo-group';
+    div.id = 'so-group-' + gid;
+    div.innerHTML = '<div class="spo-group-header">'
+      + '<span class="spo-group-label">SPO #' + (document.querySelectorAll('#soGroups-' + k + ' .spo-group').length + 1) + '</span>'
+      + '<div class="spo-group-delete" onclick="deleteSoGroup(\'' + k + '\',' + gid + ')" style="display:none"><i class="ti ti-trash"></i></div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap so-ac-wrap">'
+      + '<input type="text" class="field-input" id="so-spo-' + gid + '" placeholder="Ketik / pilih nomor SPO..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="so-spo-drop-' + gid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="field-group" style="margin-bottom:10px">'
+      + '<label class="field-label">Style <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="so-style-' + gid + '">Pilih atau ketik SPO</div>'
+      + '</div>'
+      + '<div class="rows-section">'
+      + '<div class="rows-label"><span>Detail Material/Komponen</span>'
+      + '<span class="rowCountBadge" id="so-badge-' + gid + '" style="background:rgba(101,163,13,0.15);color:#3F6212;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600">0 item</span></div>'
+      + '<div class="rowsContainer" id="so-rows-' + gid + '"></div>'
+      + '<button type="button" class="btn-add-row" onclick="addSoRow(' + gid + ')"><i class="ti ti-plus" style="font-size:16px"></i> Tambah Material/Komponen</button>'
+      + '</div>';
+    document.getElementById('soGroups-' + k).appendChild(div);
+    setupSoSPOInput(k, gid);
+    addSoRow(gid);
+    updateSoGroupDeleteButtons(k);
+  }
+
+  function updateSoGroupDeleteButtons(k) {
+    var groups = document.querySelectorAll('#soGroups-' + k + ' .spo-group');
+    groups.forEach(function(g, i) {
+      var btn = g.querySelector('.spo-group-delete');
+      if (btn) btn.style.display = groups.length > 1 ? 'flex' : 'none';
+      var lbl = g.querySelector('.spo-group-label');
+      if (lbl) lbl.textContent = 'SPO #' + (i + 1);
+    });
+  }
+
+  function deleteSoGroup(k, gid) {
+    var el = document.getElementById('so-group-' + gid);
+    if (el) el.parentNode.removeChild(el);
+    delete soGroupsData[gid];
+    updateSoGroupDeleteButtons(k);
+  }
+
+  function setupSoSPOInput(k, gid) {
+    var input = document.getElementById('so-spo-' + gid);
+    var drop  = document.getElementById('so-spo-drop-' + gid);
+    input.oninput = function() { renderSoSPODrop(k, gid, input.value); matchSoSPO(gid, input.value); };
+    input.onfocus = function() { renderSoSPODrop(k, gid, input.value); };
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      input.value = item.getAttribute('data-spo');
+      drop.classList.remove('open');
+      matchSoSPO(gid, input.value);
+    });
+  }
+
+  function renderSoSPODrop(k, gid, query) {
+    var drop = document.getElementById('so-spo-drop-' + gid);
+    var all = soSpoList(k);
+    if (!all.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Belum ada SPO untuk Divisi Tujuan ' + SPA_OUT_CFG[k].divisi + ' (input IN INVENTORY dulu)</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var filtered = q ? all.filter(function(i) { return i.spo.toLowerCase().indexOf(q) >= 0 || i.style.toLowerCase().indexOf(q) >= 0; }) : all;
+    var show = _acSort(filtered, 'spo');
+    if (!show.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+    } else {
+      drop.innerHTML = show.map(function(item) {
+        return '<div class="spo-ac-item" data-spo="' + _escWip(item.spo) + '"><span class="spo-ac-spo">' + _soHl(item.spo, q) + '</span><span class="spo-ac-style">' + _escWip(item.style) + '</span></div>';
+      }).join('');
+    }
+    drop.classList.add('open');
+  }
+
+  // Style terisi otomatis begitu SPO persis cocok; baris material yang sudah ada dievaluasi ulang.
+  function matchSoSPO(gid, typedSpo) {
+    var data = soGroupsData[gid];
+    if (!data) return;
+    var found = findSoSPO(data.k, typedSpo);
+    var disp = document.getElementById('so-style-' + gid);
+    data.spo = found ? found.spo : (typedSpo || '').trim();
+    data.style = found ? found.style : '';
+    disp.textContent = found ? (found.style || '-') : 'Pilih atau ketik SPO';
+    disp.className = found ? 'style-display filled' : 'style-display';
+    document.querySelectorAll('#so-rows-' + gid + ' .row-card').forEach(function(card) {
+      soApplyRow(card.id.replace('so-row-', ''));
+    });
+  }
+
+  // ---- ROWS (MATERIAL/KOMPONEN) ----
+  function addSoRow(gid) {
+    var data = soGroupsData[gid];
+    if (!data) return;
+    var k = data.k;
+    soRowCount++;
+    var rid = soRowCount;
+    var container = document.getElementById('so-rows-' + gid);
+
+    // PIC Terima/Line: isi dari baris terakhir yang sudah diisi (masih bisa diubah)
+    var prevPic = '';
+    document.querySelectorAll('#soGroups-' + k + ' .so-pic-input').forEach(function(p) { if (p.value.trim()) prevPic = p.value.trim(); });
+
+    var div = document.createElement('div');
+    div.className = 'row-card';
+    div.id = 'so-row-' + rid;
+    div.innerHTML = '<div class="row-num">ITEM ' + (container.querySelectorAll('.row-card').length + 1) + '</div>'
+      + '<div class="row-delete" onclick="deleteSoRow(' + gid + ',' + rid + ')"><i class="ti ti-trash"></i></div>'
+      + '<div style="margin-top:8px">'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">Material/Komponen <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0" id="so-wip-' + rid + '"></span></span>'
+      + '<div class="spo-ac-wrap so-ac-wrap">'
+      + '<input type="text" class="row-field-input so-material-input" id="so-mat-' + rid + '" placeholder="Ketik / pilih Material/Komponen..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="so-mat-drop-' + rid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="row-grid">'
+      + '<div class="row-field"><span class="row-field-label">Unit</span><input type="text" class="row-field-input so-unit-input" readonly placeholder="Otomatis"></div>'
+      + '<div class="row-field"><span class="row-field-label">Con\'s Pcs</span><input type="text" class="row-field-input so-cons-input" readonly placeholder="Otomatis"></div>'
+      + '</div>'
+      + '<div class="row-field" style="margin:8px 0">'
+      + '<span class="row-field-label">Qty Unit</span>'
+      + '<input type="number" class="row-field-input so-qty-input" placeholder="0" min="0" step="any">'
+      + '</div>'
+      + '<div class="row-field" style="margin-bottom:8px">'
+      + '<span class="row-field-label">' + SPA_OUT_CFG[k].picLabel + '</span>'
+      + '<div class="spo-ac-wrap so-ac-wrap">'
+      + '<input type="text" class="row-field-input so-pic-input" id="so-pic-' + rid + '" placeholder="Ketik / pilih ' + SPA_OUT_CFG[k].picLabel + '..." autocomplete="off">'
+      + '<div class="spo-ac-drop" id="so-pic-drop-' + rid + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+    container.appendChild(div);
+    document.getElementById('so-pic-' + rid).value = prevPic;
+    setupSoMaterialInput(k, gid, rid);
+    setupSoPicInput(k, rid);
+    updateSoRowBadge(gid);
+  }
+
+  function deleteSoRow(gid, rid) {
+    var container = document.getElementById('so-rows-' + gid);
+    if (!container) return;
+    if (container.querySelectorAll('.row-card').length <= 1) {
+      showToast('Minimal 1 Material/Komponen per SPO', 'error');
+      return;
+    }
+    var el = document.getElementById('so-row-' + rid);
+    if (el) el.parentNode.removeChild(el);
+    container.querySelectorAll('.row-num').forEach(function(n, i) { n.textContent = 'ITEM ' + (i + 1); });
+    updateSoRowBadge(gid);
+  }
+
+  function updateSoRowBadge(gid) {
+    var container = document.getElementById('so-rows-' + gid);
+    var badge = document.getElementById('so-badge-' + gid);
+    if (container && badge) badge.textContent = container.querySelectorAll('.row-card').length + ' item';
+  }
+
+  function _soGidOfRow(rid) {
+    var row = document.getElementById('so-row-' + rid);
+    var group = row ? row.closest('.spo-group') : null;
+    return group ? group.id.replace('so-group-', '') : null;
+  }
+
+  // Unit, Con's, dan info WIP terisi otomatis kalau SPO + Material persis cocok dengan rekap; kalau tidak, dikosongkan.
+  function soApplyRow(rid) {
+    var row = document.getElementById('so-row-' + rid);
+    if (!row) return;
+    var gid = _soGidOfRow(rid);
+    var data = soGroupsData[gid];
+    if (!data) return;
+    var item = findSoItem(data.k, data.spo, row.querySelector('.so-material-input').value);
+    row.querySelector('.so-unit-input').value = item ? item.unit : '';
+    row.querySelector('.so-cons-input').value = item && item.cons !== null ? String(item.cons) : '';
+    var wip = document.getElementById('so-wip-' + rid);
+    wip.textContent = item ? '(Stok WIP: ' + item.wip + ' ' + item.unit + ')' : '';
+  }
+
+  function setupSoMaterialInput(k, gid, rid) {
+    var input = document.getElementById('so-mat-' + rid);
+    var drop  = document.getElementById('so-mat-drop-' + rid);
+    input.oninput = function() { renderSoMaterialDrop(k, gid, rid, input.value); soApplyRow(rid); checkDupSo(k); };
+    input.onfocus = function() { renderSoMaterialDrop(k, gid, rid, input.value); };
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-material]');
+      if (!item) return;
+      input.value = item.getAttribute('data-material');
+      drop.classList.remove('open');
+      soApplyRow(rid);
+      checkDupSo(k);
+    });
+  }
+
+  function renderSoMaterialDrop(k, gid, rid, query) {
+    var drop = document.getElementById('so-mat-drop-' + rid);
+    var data = soGroupsData[gid];
+    if (!data || !findSoSPO(k, data.spo)) {
+      drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+      drop.classList.add('open');
+      return;
+    }
+    var q = (query || '').toLowerCase().trim();
+    var list = soMaterialsForSpo(k, data.spo).filter(function(it) { return !q || it.material.toLowerCase().indexOf(q) >= 0; });
+    var show = _acSort(list, 'material');
+    if (!show.length) {
+      drop.innerHTML = '<div class="spo-ac-empty">Material/Komponen tidak ditemukan untuk SPO ini</div>';
+    } else {
+      drop.innerHTML = show.map(function(it) {
+        return '<div class="spo-ac-item" data-material="' + _escWip(it.material) + '"><span class="spo-ac-spo">' + _soHl(it.material, q) + '</span><span class="spo-ac-style">' + _escWip(it.unit) + ' · WIP ' + _escWip(it.wip) + '</span></div>';
+      }).join('');
+    }
+    drop.classList.add('open');
+  }
+
+  // PIC Terima / Line: bebas diketik, saran dari sheet PIC TERIMA untuk menu ini
+  function setupSoPicInput(k, rid) {
+    var input = document.getElementById('so-pic-' + rid);
+    var drop  = document.getElementById('so-pic-drop-' + rid);
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      var list = soState[k].pics.filter(function(p) { return !q || p.toLowerCase().indexOf(q) >= 0; });
+      var show = _acSort(list, null);
+      if (!show.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">' + (q ? 'Tidak ada di daftar — isi manual' : 'Belum ada daftar ' + SPA_OUT_CFG[k].picLabel + ' — isi manual') + '</div>';
+      } else {
+        drop.innerHTML = show.map(function(p) {
+          return '<div class="spo-ac-item" data-pic="' + _escWip(p) + '"><span class="spo-ac-spo">' + _soHl(p, q) + '</span></div>';
+        }).join('');
+      }
+      drop.classList.add('open');
+    }
+    input.oninput = renderDrop;
+    input.onfocus = renderDrop;
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-pic]');
+      if (!item) return;
+      input.value = item.getAttribute('data-pic');
+      drop.classList.remove('open');
+    });
+  }
+
+  function checkDupSo(k) {
+    var seen = {};
+    var dup = null;
+    document.querySelectorAll('#soGroups-' + k + ' .row-card').forEach(function(card) {
+      var group = card.closest('.spo-group');
+      var spo = document.getElementById('so-spo-' + group.id.replace('so-group-', '')).value.trim();
+      var mat = card.querySelector('.so-material-input').value.trim();
+      if (!spo || !mat) return;
+      var key = spo.toLowerCase() + '|' + mat.toLowerCase();
+      if (seen[key]) dup = { spo: spo, mat: mat };
+      seen[key] = true;
+    });
+    if (dup) showToast('⚠️ SPO ' + dup.spo + ', ' + dup.mat + ' sudah diisi di baris lain form ini', 'error');
+  }
+
+  // ---- COLLECT + SUBMIT ----
+  function collectSoData(k) {
+    var tanggal = document.getElementById('soTanggal-' + k).value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+    var groups = document.querySelectorAll('#soGroups-' + k + ' .spo-group');
+    if (!groups.length) return { error: 'Minimal 1 SPO harus diisi' };
+    var picLabel = SPA_OUT_CFG[k].picLabel;
+    var allRows = [];
+    var errorMsg = null;
+
+    groups.forEach(function(group) {
+      if (errorMsg) return;
+      var gid = group.id.replace('so-group-', '');
+      var data = soGroupsData[gid];
+      var spoTyped = document.getElementById('so-spo-' + gid).value.trim();
+      if (!spoTyped) { errorMsg = 'SPO harus diisi di setiap grup'; return; }
+      if (!data || !data.style) { errorMsg = 'SPO ' + spoTyped + ' tidak ada di daftar divisi ' + SPA_OUT_CFG[k].divisi + ' — pilih dari saran'; return; }
+
+      group.querySelectorAll('.row-card').forEach(function(card) {
+        if (errorMsg) return;
+        var matTyped = card.querySelector('.so-material-input').value.trim();
+        if (!matTyped) { errorMsg = 'Material/Komponen wajib diisi di setiap baris (SPO ' + data.spo + ')'; return; }
+        var item = findSoItem(k, data.spo, matTyped);
+        if (!item) { errorMsg = 'Pilih Material/Komponen dari daftar saran agar Unit & Con\'s terisi (SPO ' + data.spo + ')'; return; }
+        var qty = card.querySelector('.so-qty-input').value;
+        var pic = card.querySelector('.so-pic-input').value.trim();
+        if (!qty || !(parseFloat(qty) > 0)) { errorMsg = 'Qty Unit wajib diisi (lebih dari 0) untuk ' + item.material + ' (SPO ' + data.spo + ')'; return; }
+        if (!pic) { errorMsg = picLabel + ' wajib diisi untuk ' + item.material + ' (SPO ' + data.spo + ')'; return; }
+        allRows.push({ spo: data.spo, style: data.style, material: item.material, unit: item.unit, cons: item.cons === null ? '' : item.cons, qty: qty, pic: pic });
+      });
+    });
+
+    if (errorMsg) return { error: errorMsg };
+    if (!allRows.length) return { error: 'Minimal 1 baris data harus diisi' };
+    return { tanggal: tanggal, rows: allRows };
+  }
+
+  function submitSoForm(k) {
+    if (!_soReady()) return;
+    var data = collectSoData(k);
+    if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+    showLoading(true);
+    var url = GAS_SPA_URL + '?type=save_spa_out&menu=' + k + '&payload=' + encodeURIComponent(JSON.stringify(data));
+    jsonp(url, function(err, result) {
+      showLoading(false);
+      if (err) {
+        showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek dulu sebelum kirim ulang!', 'error');
+        return;
+      }
+      if (result && result.status === 'ok') {
+        showToast('✓ Data berhasil disimpan!', 'success');
+        resetSoForm(k);
+        loadSoMaster(k);
+        loadTodaySo(k);
+      } else {
+        showToast('Gagal: ' + (result ? result.message : 'Coba lagi'), 'error');
+      }
+    });
+  }
+
+  // ---- CEK DATA TERKIRIM (Hari Ini / Kemarin) ----
+  function _renderSoTodayList(k, rows, dayOffset) {
+    var el = document.getElementById('soTodayList-' + k);
+    var dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+    soDupRows[k] = [];
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
+      return;
+    }
+    // Duplikat = SPO + Material/Komponen + Unit + Qty Unit + PIC yang persis sama
+    var groups = {};
+    rows.forEach(function(r) {
+      var key = [r.spo, r.material, r.unit, r.qty, r.pic].join('|').toLowerCase();
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var del = [];
+    Object.keys(groups).forEach(function(key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      g.sort(function(a, b) { return a.row - b.row; });
+      for (var i = 1; i < g.length; i++) del.push(g[i].row);
+    });
+    soDupRows[k] = del;
+
+    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Qty Unit', "Con's Pcs", SPA_OUT_CFG[k].picLabel];
+    var html = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [])
+      + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      var n = groups[[r.spo, r.material, r.unit, r.qty, r.pic].join('|').toLowerCase()].length;
+      html += '<tr' + (n > 1 ? ' class="dup"' : '') + '>'
+        + '<td>' + _escToday(r.spo) + (n > 1 ? '<span class="today-dup-badge">' + n + 'x</span>' : '') + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td>' + _escToday(r.material) + '</td>'
+        + '<td>' + _escToday(r.unit) + '</td>'
+        + '<td>' + _escToday(r.qty) + '</td>'
+        + '<td>' + _escToday(r.cons) + '</td>'
+        + '<td>' + _escToday(r.pic) + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    if (del.length) {
+      html += '<button type="button" class="today-cleanup-btn" onclick="_soCleanupDuplicates(\'' + k + '\')">'
+        + '<i class="ti ti-trash" style="font-size:14px"></i> Bersihkan ' + del.length + ' Baris Duplikat (sisakan 1)</button>';
+    }
+    el.innerHTML = html;
+  }
+
+  function loadTodaySo(k, dayOffset) {
+    var containerId = 'soTodayList-' + k;
+    if (dayOffset == null) dayOffset = _todayActiveDay[containerId] || 0;
+    _todayActiveDay[containerId] = dayOffset;
+    var el = document.getElementById(containerId);
+    if (!GAS_SPA_URL) { el.innerHTML = '<div class="wip-empty">URL backend SPA Factory belum diisi.</div>'; return; }
+    el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+    document.getElementById('soTodayLoadTime-' + k).textContent = '';
+    var t0 = Date.now();
+    jsonp(GAS_SPA_URL + '?type=today_spa_out&menu=' + k + '&day=' + dayOffset, function(err, data) {
+      _showLoadTime('soTodayLoadTime-' + k, Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      _renderSoTodayList(k, data.rows, dayOffset);
+    });
+  }
+
+  function _soCleanupDuplicates(k) {
+    var rows = soDupRows[k] || [];
+    if (!rows.length) return;
+    var ok = window.confirm(
+      'Akan menghapus ' + rows.length + ' baris duplikat dari sheet (1 baris asli tiap data tetap disimpan). ' +
+      'Baris yang dihapus TIDAK BISA dikembalikan. Sheet akan otomatis rapat kembali (tidak ada baris bolong). Lanjutkan?'
+    );
+    if (!ok) return;
+    showLoading(true);
+    var url = GAS_SPA_URL + '?type=cleanup_dup_spa_out&menu=' + k + '&payload=' + encodeURIComponent(JSON.stringify({ rows: rows }));
+    jsonp(url, function(err, data) {
+      showLoading(false);
+      if (err || !data || data.status !== 'ok') {
+        showToast('Gagal membersihkan duplikat. Coba lagi.', 'error');
+        return;
+      }
+      showToast('✓ ' + data.deleted + ' baris duplikat dibersihkan', 'success');
+      loadTodaySo(k);
+      loadSoMaster(k);
     });
   }
 
