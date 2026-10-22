@@ -2727,6 +2727,7 @@
       <div class="today-tabs" id="tcTodayTabs">
         <button type="button" class="today-tab-btn active" onclick="_todayTabClick('tcTodayTabs','tcTodayList',0,this,loadTodayThickness)">Hari Ini</button>
         <button type="button" class="today-tab-btn" onclick="_todayTabClick('tcTodayTabs','tcTodayList',1,this,loadTodayThickness)">Kemarin</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('tcTodayTabs','tcTodayList',0,this,loadAllThickness)">Semua Data (Filter SPO)</button>
       </div>
       <div class="load-time-note" id="tcTodayLoadTime"></div>
       <div id="tcTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
@@ -15503,6 +15504,131 @@
       }
       _renderTcTodayList(data.rows, dayOffset);
     });
+  }
+
+  // ---- RECAP CEK THICKNESS OPCK — tab "Semua Data (Filter SPO)" ----
+  // Seluruh data sheet Form_Pengecekan_Thickness (semua tanggal). SPO diketik manual + dropdown suggest;
+  // tampilan baru berubah kalau teksnya persis salah satu SPO (diketik penuh / dipilih) atau dikosongkan.
+  var tcAll = { rows: [], spo: '' };
+
+  function loadAllThickness() {
+    _tcActiveDay = 0;
+    tcAll.spo = '';
+    var el = document.getElementById('tcTodayList');
+    document.getElementById('tcTodayLoadTime').textContent = '';
+    el.innerHTML = '<div class="wip-filter" style="margin-bottom:8px">'
+      + '<div class="spo-ac-wrap" style="flex:1">'
+      + '<input type="text" class="wip-filter-input" id="tcAllSpo" placeholder="Ketik / pilih SPO..." autocomplete="off" style="width:100%;box-sizing:border-box">'
+      + '<div class="spo-ac-drop" id="tcAllDrop"></div>'
+      + '</div></div>'
+      + '<div id="tcAllResult"><div class="wip-empty">Memuat...</div></div>';
+    setupTcAllFilter();
+    var t0 = Date.now();
+    jsonp(GAS_URL + '?type=all_thickness', function(err, data) {
+      if (!document.getElementById('tcAllResult')) return; // user sudah pindah tab
+      _showLoadTime('tcTodayLoadTime', Date.now() - t0);
+      if (err || !data || data.status !== 'ok') {
+        document.getElementById('tcAllResult').innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>';
+        return;
+      }
+      tcAll.rows = data.rows || [];
+      renderTcAll();
+    });
+  }
+
+  function tcAllSpoList() {
+    var seen = {};
+    var out = [];
+    tcAll.rows.forEach(function(r) {
+      if (seen[r.spo]) return;
+      seen[r.spo] = true;
+      out.push({ spo: r.spo, style: r.style });
+    });
+    return _acSort(out, 'spo');
+  }
+
+  function setupTcAllFilter() {
+    var input = document.getElementById('tcAllSpo');
+    var drop  = document.getElementById('tcAllDrop');
+
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      var list = tcAllSpoList().filter(function(s) { return !q || s.spo.toLowerCase().indexOf(q) >= 0 || s.style.toLowerCase().indexOf(q) >= 0; });
+      if (!tcAll.rows.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+      } else if (!list.length) {
+        drop.innerHTML = '<div class="spo-ac-empty">SPO tidak ditemukan</div>';
+      } else {
+        drop.innerHTML = list.map(function(s) {
+          var hl = q ? _escWip(s.spo).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>') : _escWip(s.spo);
+          return '<div class="spo-ac-item" data-spo="' + _escWip(s.spo) + '"><span class="spo-ac-spo">' + hl + '</span><span class="spo-ac-style">' + _escWip(s.style) + '</span></div>';
+        }).join('');
+      }
+      drop.classList.add('open');
+    }
+
+    input.oninput = function() {
+      renderDrop();
+      var raw = input.value.trim().toLowerCase();
+      if (!raw) { tcAll.spo = ''; renderTcAll(); return; }
+      var match = null;
+      tcAllSpoList().forEach(function(s) { if (s.spo.toLowerCase() === raw) match = s.spo; });
+      if (!match) return; // belum persis salah satu SPO -> tampilan belum berubah
+      input.value = match;
+      tcAll.spo = match;
+      renderTcAll();
+    };
+    input.onfocus = renderDrop;
+    drop.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-spo]');
+      if (!item) return;
+      input.value = item.getAttribute('data-spo');
+      tcAll.spo = input.value;
+      drop.classList.remove('open');
+      renderTcAll();
+    });
+    document.addEventListener('click', function onDoc(e) {
+      if (!document.body.contains(input)) { document.removeEventListener('click', onDoc); return; }
+      if (!input.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open');
+    });
+  }
+
+  function renderTcAll() {
+    var el = document.getElementById('tcAllResult');
+    if (!el) return;
+    if (!tcAll.spo) {
+      el.innerHTML = '<div class="wip-empty">Pilih SPO untuk melihat seluruh data pengecekan thickness SPO tersebut (' + tcAllSpoList().length + ' SPO tersedia, ' + tcAll.rows.length + ' data).</div>';
+      return;
+    }
+    var rows = tcAll.rows.filter(function(r) { return r.spo === tcAll.spo; });
+    if (!rows.length) { el.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+    rows = rows.slice().sort(function(a, b) {
+      return String(a.tanggal).localeCompare(String(b.tanggal))
+        || String(a.size).localeCompare(String(b.size), undefined, { numeric: true, sensitivity: 'base' })
+        || String(a.opck).localeCompare(String(b.opck), undefined, { numeric: true, sensitivity: 'base' });
+    });
+    var dates = {};
+    rows.forEach(function(r) { dates[r.tanggal] = true; });
+    var statsHtml = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty' }]);
+    var cols = ['Tanggal', 'Size', 'No. OPCK', 'Qty', 'Keterangan', 'Qty Lembar Minggir', 'Qty Lembar OPCK', 'Checker'];
+    var html = '<div class="today-label" style="margin-top:0">SPO ' + _escWip(tcAll.spo) + ' · Style ' + _escWip(rows[0].style || '-') + ' · ' + Object.keys(dates).length + ' tanggal</div>'
+      + statsHtml + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+      + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>'
+      + rows.map(function(r) {
+          return '<tr>'
+            + '<td>' + _escToday(r.tanggal) + '</td>'
+            + '<td>' + _escToday(r.size) + '</td>'
+            + '<td>' + _escToday(r.opck) + '</td>'
+            + '<td>' + _escToday(r.qty) + '</td>'
+            + '<td>' + _escToday(r.keterangan) + '</td>'
+            + '<td>' + _escToday(r.qtyLembarMinggir) + '</td>'
+            + '<td>' + _escToday(r.qtyLembarOpck) + '</td>'
+            + '<td>' + _escToday(r.checker) + '</td>'
+            + '</tr>';
+        }).join('')
+      + '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+    el.innerHTML = html;
   }
 
   function _tcCleanupDuplicates() {
