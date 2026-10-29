@@ -521,6 +521,17 @@
       cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
     }
     .today-del-btn:active { background: rgba(220,53,69,0.18); }
+    .rk-toggle-btn {
+      width: 100%; padding: 10px 12px; border-radius: 10px; margin-bottom: 12px;
+      border: 1.5px solid #D8DAD8; background: white; color: #555;
+      font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .rk-toggle-btn .rk-toggle-state {
+      font-size: 10px; padding: 2px 9px; border-radius: 99px; background: #ECEDEC; color: #777; letter-spacing: 0.5px;
+    }
+    .rk-toggle-btn.active { border-color: #DC3545; background: rgba(220,53,69,0.07); color: #B02A37; }
+    .rk-toggle-btn.active .rk-toggle-state { background: #DC3545; color: white; }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -1778,6 +1789,10 @@
             <div class="spo-ac-drop" id="rkRekMaterialDrop"></div>
           </div>
         </div>
+        <button type="button" class="rk-toggle-btn" id="rkKurangBtn" onclick="toggleRkKurang()">
+          <span><i class="ti ti-alert-triangle" style="font-size:15px;vertical-align:-2px"></i> Lihat yang kurang saja?</span>
+          <span class="rk-toggle-state" id="rkKurangState">NON AKTIF</span>
+        </button>
         <div class="wip-list" id="rkRekList"><div class="wip-empty">Memuat data...</div></div>
       </div>
 
@@ -12304,7 +12319,26 @@
     miss: { spo: 'rkMissSpo', spoDrop: 'rkMissSpoDrop', material: 'rkMissMaterial', materialDrop: 'rkMissMaterialDrop', list: 'rkMissList' }
   };
 
+  // Tombol "Lihat yang kurang saja?" (tab Rekap Outstanding): aktif = hanya baris yang Qty In-nya belum
+  // memenuhi Qty Plan (Gap In Unit < 0); non aktif = semua baris. Kombinasi dengan filter SPO/Material.
+  var rkKurangOnly = false;
+
+  function toggleRkKurang() {
+    rkKurangOnly = !rkKurangOnly;
+    _syncRkKurangBtn();
+    renderRkRekap();
+  }
+
+  function _syncRkKurangBtn() {
+    var btn = document.getElementById('rkKurangBtn');
+    if (!btn) return;
+    btn.classList.toggle('active', rkKurangOnly);
+    document.getElementById('rkKurangState').textContent = rkKurangOnly ? 'AKTIF' : 'NON AKTIF';
+  }
+
   function initSpRekapPage() {
+    rkKurangOnly = false;
+    _syncRkKurangBtn();
     ['rek', 'miss'].forEach(function(which) {
       rkApplied[which] = { spo: '', material: '' };
       document.getElementById(RK_IDS[which].spo).value = '';
@@ -12476,9 +12510,13 @@
     var f = rkApplied.rek;
     var container = document.getElementById(RK_IDS.rek.list);
     var rows = rkRows.filter(function(r) {
+      if (rkKurangOnly && !(r.gap !== '' && r.gap < 0)) return false;
       return (!f.spo || r.spo === f.spo) && (!f.material || r.material === f.material);
     });
-    if (!rows.length) { container.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
+    if (!rows.length) {
+      container.innerHTML = '<div class="wip-empty">' + (rkKurangOnly ? '✓ Tidak ada yang kurang' + (f.spo || f.material ? ' untuk filter ini' : '') : 'Tidak ada data') + '</div>';
+      return;
+    }
     rows = rows.slice().sort(function(a, b) {
       return a.spo.localeCompare(b.spo, undefined, { numeric: true, sensitivity: 'base' })
         || a.material.localeCompare(b.material, undefined, { numeric: true, sensitivity: 'base' })
