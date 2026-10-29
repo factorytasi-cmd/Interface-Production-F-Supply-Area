@@ -12596,7 +12596,7 @@
   // Unit & Con's otomatis dari rekap; Qty diisi manual; PIC Terima/Line manual + suggest dari sheet
   // "PIC TERIMA" (per menu). Cetak ke sheet "INV OUT ..." dan menambah Qty Out Unit di REKAP OUTSTANDING.
   var SPA_OUT_CFG = {
-    dist: { page: 'page-spa-out-dist', title: 'INV OUT DISTRIBUSI',  divisi: 'DISTRIBUSI',  picLabel: 'PIC Terima', icon: 'ti-truck-delivery' },
+    dist: { page: 'page-spa-out-dist', title: 'INV OUT DISTRIBUSI',  divisi: 'DISTRIBUSI',  picLabel: 'PIC Terima', icon: 'ti-truck-delivery', hasRemark: true },
     line: { page: 'page-spa-out-line', title: 'INV OUT LINE',        divisi: 'LINE',        picLabel: 'Line',       icon: 'ti-building-factory-2' },
     acc:  { page: 'page-spa-out-acc',  title: 'INV OUT ACCESSORIES', divisi: 'ACCESSORIES', picLabel: 'PIC Terima', icon: 'ti-tag' }
   };
@@ -12845,9 +12845,9 @@
         }).join('')
       + '</tbody></table></div>'
       + '<div class="today-label" style="margin-top:12px">Histori per Tanggal (' + Object.keys(dates).length + ' tanggal, ' + rows.length + ' pengiriman)</div>'
-      + '<div class="today-tablewrap"><table class="today-table"><thead><tr><th>Tanggal</th><th>Material/Komponen</th><th>' + _escWip(picLabel) + '</th><th>Unit</th><th>Qty Unit</th></tr></thead><tbody>'
+      + '<div class="today-tablewrap"><table class="today-table"><thead><tr><th>Tanggal</th><th>Material/Komponen</th><th>' + _escWip(picLabel) + '</th><th>Unit</th><th>Qty Unit</th>' + (SPA_OUT_CFG[k].hasRemark ? '<th>Remark</th>' : '') + '</tr></thead><tbody>'
       + rows.map(function(r) {
-          return '<tr><td>' + _escToday(r.tanggal) + '</td><td>' + _escToday(r.material) + '</td><td>' + _escToday(r.pic) + '</td><td>' + _escToday(r.unit) + '</td><td>' + _escToday(r.qty) + '</td></tr>';
+          return '<tr><td>' + _escToday(r.tanggal) + '</td><td>' + _escToday(r.material) + '</td><td>' + _escToday(r.pic) + '</td><td>' + _escToday(r.unit) + '</td><td>' + _escToday(r.qty) + '</td>' + (SPA_OUT_CFG[k].hasRemark ? '<td>' + _escToday(r.remark) + '</td>' : '') + '</tr>';
         }).join('')
       + '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
     el.innerHTML = html;
@@ -13091,6 +13091,12 @@
       + '<div class="spo-ac-drop" id="so-pic-drop-' + rid + '"></div>'
       + '</div>'
       + '</div>'
+      + (SPA_OUT_CFG[k].hasRemark
+        ? '<div class="row-field" style="margin-bottom:8px">'
+          + '<span class="row-field-label">Remark <span style="font-size:9px;color:#aaa;font-weight:400;letter-spacing:0">(opsional)</span></span>'
+          + '<input type="text" class="row-field-input so-remark-input" placeholder="Catatan..." autocomplete="off">'
+          + '</div>'
+        : '')
       + '</div>';
     container.appendChild(div);
     document.getElementById('so-pic-' + rid).value = prevPic;
@@ -13244,7 +13250,9 @@
         var pic = card.querySelector('.so-pic-input').value.trim();
         if (!qty || !(parseFloat(qty) > 0)) { errorMsg = 'Qty Unit wajib diisi (lebih dari 0) untuk ' + item.material + ' (SPO ' + data.spo + ')'; return; }
         if (!pic) { errorMsg = picLabel + ' wajib diisi untuk ' + item.material + ' (SPO ' + data.spo + ')'; return; }
-        allRows.push({ spo: data.spo, style: data.style, material: item.material, unit: item.unit, cons: item.cons === null ? '' : item.cons, qty: qty, pic: pic });
+        var rowOut = { spo: data.spo, style: data.style, material: item.material, unit: item.unit, cons: item.cons === null ? '' : item.cons, qty: qty, pic: pic };
+        if (SPA_OUT_CFG[k].hasRemark) rowOut.remark = card.querySelector('.so-remark-input').value.trim();
+        allRows.push(rowOut);
       });
     });
 
@@ -13285,10 +13293,11 @@
       el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>';
       return;
     }
-    // Duplikat = SPO + Material/Komponen + Unit + Qty Unit + PIC yang persis sama
+    // Duplikat = SPO + Material/Komponen + Unit + Qty Unit + PIC (+ Remark) yang persis sama
+    var hasRemark = !!SPA_OUT_CFG[k].hasRemark;
     var groups = {};
     rows.forEach(function(r) {
-      var key = [r.spo, r.material, r.unit, r.qty, r.pic].join('|').toLowerCase();
+      var key = [r.spo, r.material, r.unit, r.qty, r.pic, r.remark].join('|').toLowerCase();
       (groups[key] = groups[key] || []).push(r);
     });
     var del = [];
@@ -13301,12 +13310,13 @@
     soDupRows[k] = del;
 
     var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Qty Unit', "Con's Pcs", SPA_OUT_CFG[k].picLabel];
+    if (hasRemark) cols.push('Remark');
     var html = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', [])
       + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
       + cols.map(function(c) { return '<th>' + c + '</th>'; }).join('')
       + '</tr></thead><tbody>';
     rows.forEach(function(r) {
-      var n = groups[[r.spo, r.material, r.unit, r.qty, r.pic].join('|').toLowerCase()].length;
+      var n = groups[[r.spo, r.material, r.unit, r.qty, r.pic, r.remark].join('|').toLowerCase()].length;
       html += '<tr' + (n > 1 ? ' class="dup"' : '') + '>'
         + '<td>' + _escToday(r.spo) + (n > 1 ? '<span class="today-dup-badge">' + n + 'x</span>' : '') + '</td>'
         + '<td>' + _escToday(r.style) + '</td>'
@@ -13315,6 +13325,7 @@
         + '<td>' + _escToday(r.qty) + '</td>'
         + '<td>' + _escToday(r.cons) + '</td>'
         + '<td>' + _escToday(r.pic) + '</td>'
+        + (hasRemark ? '<td>' + _escToday(r.remark) + '</td>' : '')
         + '</tr>';
     });
     html += '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
