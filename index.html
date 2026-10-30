@@ -14785,7 +14785,29 @@
     var el = document.getElementById('pkCekList');
     if (!rows.length) { el.innerHTML = '<div class="wip-empty">Tidak ada data</div>'; return; }
     var statsHtml = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [{ field: 'qty', label: 'Total Qty Pcs' }, { field: 'qtyLembar', label: 'Total Qty Lembar' }]);
-    el.innerHTML = statsHtml + rows.map(function(r) {
+
+    // Rekap Per SPO Per Size (ikut filter SPO/Size yang aktif) — tabel, tampil di atas kotak total kumulatif
+    var bySpoSize = {};
+    rows.forEach(function(r) {
+      var key = r.spo + '||' + (r.size || '');
+      var g = bySpoSize[key] || (bySpoSize[key] = { spo: r.spo, size: r.size || '-', qty: 0 });
+      g.qty += parseFloat(r.qty) || 0;
+    });
+    var recapList = Object.keys(bySpoSize).map(function(k) { return bySpoSize[k]; }).sort(function(a, b) {
+      return a.spo.localeCompare(b.spo, undefined, { numeric: true, sensitivity: 'base' })
+        || String(a.size).localeCompare(String(b.size), undefined, { numeric: true, sensitivity: 'base' });
+    });
+    var recapTotal = 0;
+    recapList.forEach(function(g) { recapTotal += g.qty; });
+    var recapHtml = '<div class="today-label" style="margin-top:0">Rekap Per SPO Per Size</div>'
+      + '<div class="today-tablewrap" style="margin-bottom:10px"><table class="today-table"><thead><tr><th>SPO</th><th>Size</th><th>Qty</th></tr></thead><tbody>'
+      + recapList.map(function(g) {
+          return '<tr><td>' + _escWip(g.spo) + '</td><td>' + _escWip(g.size) + '</td><td>' + g.qty + '</td></tr>';
+        }).join('')
+      + '<tr style="font-weight:700;background:rgba(180,83,9,0.08)"><td colspan="2">Total</td><td>' + recapTotal + '</td></tr>'
+      + '</tbody></table></div>';
+
+    el.innerHTML = recapHtml + statsHtml + rows.map(function(r) {
       return '<div class="wip-item">'
         + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _escWip(r.size) + '</span></div>'
         + '<div class="wip-item-style">' + _escWip(r.style) + '</div>'
