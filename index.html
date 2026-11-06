@@ -533,6 +533,59 @@
     .rk-toggle-btn.active { border-color: #DC3545; background: rgba(220,53,69,0.07); color: #B02A37; }
     .rk-toggle-btn.active .rk-toggle-state { background: #DC3545; color: white; }
 
+    /* ===== Ganti Pola & Tracking Memo Kulit (Cutting Kulit Section) — aksen ungu ===== */
+    .card-mk  { background: rgba(155,109,220,0.1); border: 0.5px solid rgba(155,109,220,0.25); }
+    .badge-mk { background: rgba(155,109,220,0.15); color: #4A1D8A; }
+    .icon-mk  { background: rgba(155,109,220,0.15); }
+    .btn-mk   { background: rgba(155,109,220,0.1); color: #4A1D8A; border-color: rgba(155,109,220,0.32); }
+    #page-memo-kulit .form-header-pill { background: rgba(155,109,220,0.12); border-color: rgba(155,109,220,0.3); }
+    #page-memo-kulit .form-header-pill i { color: #9B6DDC; }
+    #page-memo-kulit .form-header-pill-txt { color: #4A1D8A; }
+    #page-memo-kulit .wip-toggle-btn.active { background: linear-gradient(135deg, #9B6DDC, #C084FC); color: white; border-color: transparent; }
+    #page-memo-kulit .wip-filter-input:focus { border-color: #9B6DDC; }
+    #page-memo-kulit .today-tab-btn { flex: 1; }
+    #mkBtnSubmit { background: linear-gradient(135deg, #9B6DDC, #7C3AED); box-shadow: 0 4px 16px rgba(155,109,220,0.35); }
+    .mk-submit-note { font-size: 10.5px; color: #999; text-align: center; margin-top: 6px; }
+    .mk-table th.stage, .mk-table td.stage { text-align: center; min-width: 74px; }
+    .mk-table th.stage { color: #4A1D8A; background: rgba(155,109,220,0.08); }
+    .mk-table th.stage label { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+    .mk-table td.stage { background: rgba(155,109,220,0.03); }
+    .mk-table .col-spo { font-weight: 700; color: #111; }
+    .mk-table .col-style { max-width: 150px; overflow: hidden; text-overflow: ellipsis; color: #555; }
+    .mk-check { width: 22px; height: 22px; accent-color: #9B6DDC; cursor: pointer; vertical-align: middle; }
+    .mk-check:disabled { cursor: not-allowed; opacity: 0.35; }
+    .mk-done { display: inline-block; font-size: 10.5px; font-weight: 700; color: #0A5C42; background: rgba(29,158,117,0.12); border-radius: 8px; padding: 3px 7px; line-height: 1.35; }
+    .mk-done small { font-weight: 500; font-size: 10px; }
+    .mk-table tr.has-check td { background: rgba(155,109,220,0.07); }
+    .mk-pill { font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+    .mk-pill-done { color: #0A5C42; background: rgba(29,158,117,0.12); }
+    .mk-pill-wait { color: #4A1D8A; background: rgba(155,109,220,0.14); }
+    .mk-steps { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #E8E8E6; }
+    .mk-step { text-align: center; font-size: 9px; color: #999; line-height: 1.3; }
+    .mk-step-dot { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; background: #ECEDEC; color: #aaa; }
+    .mk-step.done .mk-step-dot { background: #1D9E75; color: #fff; }
+    .mk-step.done { color: #0A5C42; }
+    .mk-step.next .mk-step-dot { background: rgba(155,109,220,0.15); color: #4A1D8A; border: 1.5px solid #9B6DDC; }
+    .mk-step.next { color: #4A1D8A; font-weight: 600; }
+    .mk-step-name { font-weight: 600; }
+    .mk-ket-btn { margin-top: 5px; display: inline-flex; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 600; color: #7C3AED; background: rgba(155,109,220,0.1); border: 1px solid rgba(155,109,220,0.3); border-radius: 99px; padding: 3px 8px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .mk-ket-btn:active { background: rgba(155,109,220,0.22); }
+    .mk-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,26,29,0.6); z-index: 997; align-items: center; justify-content: center; padding: 16px; }
+    .mk-modal-overlay.show { display: flex; }
+    .mk-modal-sheet { background: white; border-radius: 18px; width: 100%; max-width: 400px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .mk-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 16px 16px 12px; border-bottom: 1px solid #EEE; }
+    .mk-modal-title { font-size: 15px; font-weight: 700; color: #111; }
+    .mk-modal-sub { font-size: 11.5px; color: #777; margin-top: 3px; line-height: 1.4; }
+    .mk-modal-close { background: #F3F3F1; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; color: #666; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .mk-modal-body { padding: 12px 16px 16px; overflow-y: auto; min-width: 0; }
+    .ket-card { border: 1px solid #E8E8E6; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+    .ket-card.total { background: rgba(155,109,220,0.07); border-color: rgba(155,109,220,0.25); }
+    .ket-grid { display: grid; grid-template-columns: 0.8fr 1fr 1fr 1fr; gap: 6px; }
+    .ket-k { font-size: 9px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .ket-v { font-size: 13px; font-weight: 700; color: #111; font-variant-numeric: tabular-nums; }
+    .ket-text { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #E8E8E6; font-size: 12px; color: #444; line-height: 1.45; word-break: break-word; }
+    .ket-text .ket-k { display: block; margin-bottom: 2px; }
+
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
     #page-gap-cutting .wip-filter-input:focus { border-color: #E11D48; }
@@ -989,6 +1042,40 @@
           </div>
         </div>
 
+        <div class="card card-syn-placeholder" onclick="comingSoon('Ganti Pola')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-mk">Input</span>
+              <div class="card-icon-wrap icon-mk">
+                <i class="ti ti-replace" style="font-size:20px;color:#9B6DDC"></i>
+              </div>
+            </div>
+            <div class="card-title">Ganti Pola</div>
+            <div class="card-desc">Segera hadir</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-clock" style="font-size:13px"></i> Belum tersedia</span>
+              <span class="card-btn btn-mk">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-mk" onclick="goTo('page-memo-kulit')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-mk">Tracking</span>
+              <div class="card-icon-wrap icon-mk">
+                <i class="ti ti-route" style="font-size:20px;color:#9B6DDC"></i>
+              </div>
+            </div>
+            <div class="card-title">Tracking Memo Kulit</div>
+            <div class="card-desc">Checklist progres memo kulit: 3R → PPIC → Gudang Kulit → Terima Material</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-list-check" style="font-size:13px"></i> Tracking &amp; status</span>
+              <span class="card-btn btn-mk">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -996,6 +1083,134 @@
       <div class="live-row">
         <div class="live-dot"></div>
         <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: TRACKING MEMO KULIT (CUTTING KULIT SECTION) ==================== -->
+  <div class="page" id="page-memo-kulit">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">TRACKING MEMO KULIT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#9B6DDC,#C084FC)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › TRACKING MEMO KULIT</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill">
+        <i class="ti ti-route"></i>
+        <div>
+          <div class="form-header-pill-txt">Tracking Memo Kulit</div>
+          <div class="form-header-pill-sub">Cutting Kulit Section — data dari sheet MEMO KULIT</div>
+        </div>
+      </div>
+
+      <div class="demo-banner" id="mkDemoBanner" style="display:none;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.35);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:11.5px;color:#7A5700;line-height:1.5">
+        <b style="display:block;font-size:11px;letter-spacing:0.5px;margin-bottom:2px">MODE DEMO</b>
+        URL Apps Script (GAS_MEMO_URL) belum diisi, jadi yang tampil adalah contoh data dan tidak ada yang terkirim ke sheet.
+      </div>
+
+      <!-- STATUS -->
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data Memo (sheet MEMO KULIT)</label>
+        <span id="mkStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(155,109,220,0.15);color:#4A1D8A;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="mkLoadTime"></div>
+      <div class="load-error-row" id="mkErrorRow" style="display:none">
+        <span id="mkErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadMk()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <div class="wip-toggle">
+        <button type="button" class="wip-toggle-btn active" id="mkTabTrack" onclick="showMkView('track')"><i class="ti ti-checkbox"></i> Tracking</button>
+        <button type="button" class="wip-toggle-btn" id="mkTabStatus" onclick="showMkView('status')"><i class="ti ti-chart-dots"></i> Status Memo</button>
+      </div>
+
+      <!-- VIEW: TRACKING (checklist) -->
+      <div id="mkViewTrack">
+        <div class="wip-filter">
+          <input type="text" class="wip-filter-input" id="mkFilterSpo" placeholder="Cari No / SPO / Style..." oninput="renderMkTable()">
+          <select class="wip-filter-input" id="mkFilterStage" onchange="renderMkTable()">
+            <option value="">Semua tahap</option>
+          </select>
+        </div>
+        <div id="mkStats"></div>
+        <div id="mkTableWrap"><div class="wip-empty">Memuat data...</div></div>
+        <div class="today-scroll-hint">← geser tabel untuk lihat semua tahap → · Centang tahap yang sudah terpenuhi</div>
+
+        <button type="button" class="btn-submit" id="mkBtnSubmit" onclick="submitMk()">
+          <i class="ti ti-send" style="font-size:18px"></i> Kirim
+        </button>
+        <div class="mk-submit-note">Tanggal &amp; jam setiap tahap yang dicentang diisi otomatis saat data terkirim.</div>
+
+        <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+        <div class="today-tabs">
+          <button type="button" class="today-tab-btn active" id="mkSentTab0" onclick="setMkSentDay(0)">Hari Ini</button>
+          <button type="button" class="today-tab-btn" id="mkSentTab1" onclick="setMkSentDay(1)">Kemarin</button>
+        </div>
+        <div id="mkSentList"><div class="wip-empty">Memuat...</div></div>
+      </div>
+
+      <!-- VIEW: STATUS MEMO (monitoring) -->
+      <div id="mkViewStatus" style="display:none">
+        <div class="wip-filter">
+          <input type="text" class="wip-filter-input" id="mkStFilterSpo" placeholder="Cari No / SPO / Style..." oninput="renderMkStatus()">
+          <select class="wip-filter-input" id="mkStFilterDone" onchange="renderMkStatus()">
+            <option value="wait">Belum selesai</option>
+            <option value="done">Sudah selesai</option>
+            <option value="">Semua memo</option>
+          </select>
+        </div>
+        <div id="mkStStats"></div>
+        <div class="wip-list" id="mkStatusList"><div class="wip-empty">Memuat data...</div></div>
+      </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+
+    <!-- POP UP: Lihat keterangan memo (kolom I–M sheet MEMO KULIT) -->
+    <div class="mk-modal-overlay" id="mkKetModal" onclick="if(event.target===this)closeMkKet()">
+      <div class="mk-modal-sheet">
+        <div class="mk-modal-head">
+          <div>
+            <div class="mk-modal-title" id="mkKetTitle">Keterangan</div>
+            <div class="mk-modal-sub" id="mkKetSub"></div>
+          </div>
+          <button type="button" class="mk-modal-close" onclick="closeMkKet()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="mk-modal-body" id="mkKetBody"></div>
       </div>
     </div>
   </div>
@@ -4061,6 +4276,8 @@
   // (berakhiran /exec); selama masih kosong, menu SPA Factory menampilkan pesan URL belum diisi.
   var GAS_SPA_URL = 'https://script.google.com/macros/s/AKfycbxC8QmObuMULDKqbmsrBiPBvtTuRTdIGVj7zHAEJ8nMHVgSX-G1nBHYyKwsMvJLjww/exec';
   var GAS_ACCESSORIES_URL ='https://script.google.com/macros/s/AKfycby74BqjYolsANHnUrpDGM5RxG3OSQRudIJ_s6Hbot85vFTHCK6X8YfHBbRHcMY75ElI/exec';
+  // Ganti Pola & Tracking Memo Kulit = project Apps Script sendiri (sheet MEMO KULIT). Kosong = MODE DEMO.
+  var GAS_MEMO_URL = 'https://script.google.com/macros/s/AKfycbzqEsXCZ4rszh5uhlRiVgflhVcg4hX6QZnr7nHPOAbLTG__5uVpZmRFYOXTPO0Jvhk/exec';
   // ============================================================
 
   var masterData = { spo: [] };
@@ -4176,6 +4393,7 @@
     if (pageId === "page-inout-prc-synthetic") initPrcIoPage();
     if (pageId === "page-spa-in") initSpForm();
     if (pageId === "page-spa-rekap") initSpRekapPage();
+    if (pageId === "page-memo-kulit") initMk();
     if (pageId === "page-spa-out-dist") initSoPage('dist');
     if (pageId === "page-spa-out-line") initSoPage('line');
     if (pageId === "page-spa-out-acc") initSoPage('acc');
@@ -12304,6 +12522,440 @@
       loadTodaySp();
     });
   }
+
+  // ===== GANTI POLA & TRACKING MEMO KULIT (CUTTING KULIT SECTION) =====
+  // Dibungkus IIFE supaya nama helper (esc, pad2, STAGES, mk, ...) tidak bentrok dengan kode menu lain;
+  // hanya fungsi yang dipanggil dari atribut onclick/oninput HTML yang dibuka ke window.
+  // Backend: GAS_MEMO_URL (?type=memo_kulit_data, ?type=save_memo_kulit_tracking). Kosong = MODE DEMO.
+  (function() {
+    var STAGES = ['3R', 'PPIC', 'Gudang Kulit', 'Terima Material'];
+    var STAGES_SHORT = ['3R', 'PPIC', 'Gudang', 'Terima'];
+
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch) {
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
+      });
+    }
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function fmtDate(d) { return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear(); }
+    function fmtTime(d) { return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+
+    var mk = { memos: [], today: '', yesterday: '', checked: {}, visible: [], sentDay: 0, demo: false };
+
+    function initMk() {
+      var sel = document.getElementById('mkFilterStage');
+      if (sel.options.length === 1) {
+        STAGES.forEach(function(s, i) {
+          var o = document.createElement('option');
+          o.value = i; o.textContent = 'Menunggu ' + s;
+          sel.appendChild(o);
+        });
+      }
+      // Delegasi event checklist (dipasang sekali)
+      var wrap = document.getElementById('mkTableWrap');
+      if (!wrap._wired) {
+        wrap._wired = true;
+        wrap.addEventListener('change', onMkCheckChange);
+      }
+      loadMk();
+    }
+
+    // Data tracking selalu dimuat ulang tiap buka menu — supaya progres dari user lain langsung terlihat.
+    function loadMk() {
+      document.getElementById('mkErrorRow').style.display = 'none';
+      document.getElementById('mkLoadTime').textContent = '';
+      if (!GAS_MEMO_URL) {
+        mk.demo = true;
+        document.getElementById('mkDemoBanner').style.display = 'block';
+        if (!mk.memos.length) mk.memos = demoMemos();
+        mk.today = fmtDate(new Date());
+        mk.yesterday = fmtDate(new Date(Date.now() - 86400000));
+        setMkStatus('ok');
+        afterMkLoad();
+        return;
+      }
+      setMkStatus('loading');
+      var t0 = Date.now();
+      jsonp(GAS_MEMO_URL + '?type=memo_kulit_data', function(err, data) {
+        document.getElementById('mkLoadTime').textContent = 'Waktu memuat: ' + ((Date.now() - t0) / 1000).toFixed(1) + ' detik';
+        if (err || !data || data.status !== 'ok') {
+          setMkStatus('error');
+          document.getElementById('mkErrorMsg').textContent = _dataLoadErrorMessage(err, data);
+          document.getElementById('mkErrorRow').style.display = 'flex';
+          document.getElementById('mkTableWrap').innerHTML = '<div class="wip-empty">Data belum termuat.</div>';
+          return;
+        }
+        // Hanya pakai tahap yang dikenal app (abaikan kolom lain, mis. Beres Cutting dari GAS versi lama)
+        mk.memos = (data.memos || []).map(function(m) {
+          m.stages = (m.stages || []).slice(0, STAGES.length);
+          while (m.stages.length < STAGES.length) m.stages.push({ val: '', jam: '' });
+          m.done = m.stages.every(function(st) { return st.val; });
+          return m;
+        });
+        mk.today = data.today;
+        mk.yesterday = data.yesterday;
+        setMkStatus('ok');
+        afterMkLoad();
+      });
+    }
+
+    function afterMkLoad() {
+      // Buang centang untuk memo yang sudah tidak ada / tahapnya sudah terisi orang lain
+      Object.keys(mk.checked).forEach(function(row) {
+        var m = findMemo(row);
+        if (!m) { delete mk.checked[row]; return; }
+        Object.keys(mk.checked[row]).forEach(function(s) { if (m.stages[s].val) delete mk.checked[row][s]; });
+      });
+      renderMkTable();
+      renderMkStatus();
+      renderMkSent();
+    }
+
+    function setMkStatus(state) {
+      var el = document.getElementById('mkStatus');
+      var pending = mk.memos.filter(function(m) { return !m.done; }).length;
+      if (state === 'loading') { el.textContent = '⏳ Memuat...'; el.style.background = 'rgba(155,109,220,0.15)'; el.style.color = '#4A1D8A'; }
+      else if (state === 'ok') { el.textContent = '✓ ' + pending + ' memo belum selesai'; el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42'; }
+      else { el.textContent = '✕ Gagal memuat data'; el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B'; }
+    }
+
+    function findMemo(row) {
+      row = Number(row);
+      for (var i = 0; i < mk.memos.length; i++) if (mk.memos[i].row === row) return mk.memos[i];
+      return null;
+    }
+    function nextStage(m) {
+      for (var i = 0; i < m.stages.length; i++) if (!m.stages[i].val) return i;
+      return -1;
+    }
+    function isChecked(row, s) { return !!(mk.checked[row] && mk.checked[row][s]); }
+    function setChecked(row, s, on) {
+      if (on) { (mk.checked[row] = mk.checked[row] || {})[s] = true; }
+      else if (mk.checked[row]) { delete mk.checked[row][s]; if (!Object.keys(mk.checked[row]).length) delete mk.checked[row]; }
+    }
+    // Tahap s boleh dicentang kalau belum terisi & tahap sebelumnya sudah terisi ATAU ikut dicentang
+    function eligible(m, s) {
+      if (m.stages[s].val) return false;
+      return s === 0 || !!m.stages[s - 1].val || isChecked(m.row, s - 1);
+    }
+    function memoMatches(m, q) {
+      if (!q) return true;
+      return (m.no + ' ' + m.spo + ' ' + m.style).toLowerCase().indexOf(q) >= 0;
+    }
+
+    // ---- TABEL CHECKLIST (hanya memo yang belum lengkap semua tahap) ----
+    function stageCellHTML(m, s) {
+      var st = m.stages[s];
+      if (st.val) {
+        return '<span class="mk-done">' + esc(st.val) + (st.jam && st.jam !== st.val ? '<br><small>' + esc(st.jam) + '</small>' : '') + '</span>';
+      }
+      if (!eligible(m, s)) return '<input type="checkbox" class="mk-check" disabled title="' + esc(STAGES[s - 1]) + ' belum terpenuhi">';
+      return '<input type="checkbox" class="mk-check" data-row="' + m.row + '" data-stage="' + s + '"' + (isChecked(m.row, s) ? ' checked' : '') + '>';
+    }
+
+    function renderMkTable() {
+      var q = document.getElementById('mkFilterSpo').value.toLowerCase().trim();
+      var fStage = document.getElementById('mkFilterStage').value;
+      var wrap = document.getElementById('mkTableWrap');
+      var pendingAll = mk.memos.filter(function(m) { return !m.done; });
+      mk.visible = pendingAll.filter(function(m) {
+        if (!memoMatches(m, q)) return false;
+        if (fStage !== '' && nextStage(m) !== Number(fStage)) return false;
+        return true;
+      });
+      renderMkStats(pendingAll.length);
+      if (!pendingAll.length) { wrap.innerHTML = '<div class="wip-empty">✓ Semua memo kulit sudah selesai di-tracking.</div>'; return; }
+      if (!mk.visible.length) { wrap.innerHTML = '<div class="wip-empty">Tidak ada memo yang cocok dengan filter.</div>'; return; }
+
+      var html = '<div class="today-tablewrap" id="mkScroll"><table class="today-table mk-table"><thead><tr>'
+        + '<th>Tanggal</th><th>SPO</th><th>Style</th><th>Material</th><th>Jenis</th><th>Warna</th><th>Kekurangan (SF)</th>';
+      STAGES.forEach(function(name, s) {
+        html += '<th class="stage"><label>' + esc(STAGES_SHORT[s]) + '<input type="checkbox" class="mk-check mk-all" data-stage="' + s + '" title="Centang semua ' + esc(name) + '"></label></th>';
+      });
+      html += '</tr></thead><tbody>';
+      mk.visible.forEach(function(m) {
+        html += '<tr id="mk-tr-' + m.row + '"' + (mk.checked[m.row] ? ' class="has-check"' : '') + '>'
+          + '<td>' + esc(m.tanggal) + '</td>'
+          + '<td class="col-spo">' + esc(m.spo)
+          + '<br><button type="button" class="mk-ket-btn" onclick="openMkKet(' + m.row + ')"><i class="ti ti-file-description"></i> Lihat keterangan</button></td>'
+          + '<td class="col-style" title="' + esc(m.style) + '">' + esc(m.style) + '</td>'
+          + '<td>' + esc(m.material) + '</td>'
+          + '<td class="col-style" title="' + esc(m.jenis) + '">' + esc(m.jenis) + '</td>'
+          + '<td class="col-style" title="' + esc(m.warna) + '">' + esc(m.warna) + '</td>'
+          + '<td>' + esc(m.kekurangan) + '</td>';
+        for (var s = 0; s < STAGES.length; s++) html += '<td class="stage" id="mk-c-' + m.row + '-' + s + '">' + stageCellHTML(m, s) + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      var oldScroll = document.getElementById('mkScroll');
+      var keepLeft = oldScroll ? oldScroll.scrollLeft : 0;
+      wrap.innerHTML = html;
+      document.getElementById('mkScroll').scrollLeft = keepLeft;
+      syncAllHeaders();
+    }
+
+    function refreshRow(m) {
+      for (var s = 0; s < STAGES.length; s++) {
+        var td = document.getElementById('mk-c-' + m.row + '-' + s);
+        if (td) td.innerHTML = stageCellHTML(m, s);
+      }
+      var tr = document.getElementById('mk-tr-' + m.row);
+      if (tr) tr.classList.toggle('has-check', !!mk.checked[m.row]);
+    }
+
+    // Uncheck tahap s → tahap sesudahnya yang ikut dicentang jadi tidak valid, ikut dilepas
+    function uncheckCascade(m, s) {
+      for (var k = s; k < STAGES.length; k++) {
+        if (k > s && !isChecked(m.row, k)) break;
+        setChecked(m.row, k, false);
+      }
+    }
+
+    function onMkCheckChange(e) {
+      var cb = e.target;
+      if (!cb.classList.contains('mk-check')) return;
+      var s = Number(cb.getAttribute('data-stage'));
+      if (cb.classList.contains('mk-all')) {
+        mk.visible.forEach(function(m) {
+          if (cb.checked) { if (eligible(m, s)) setChecked(m.row, s, true); }
+          else if (isChecked(m.row, s)) uncheckCascade(m, s);
+          refreshRow(m);
+        });
+      } else {
+        var m = findMemo(cb.getAttribute('data-row'));
+        if (!m) return;
+        if (cb.checked) setChecked(m.row, s, true); else uncheckCascade(m, s);
+        refreshRow(m);
+      }
+      syncAllHeaders();
+      renderMkStats(mk.memos.filter(function(x) { return !x.done; }).length);
+    }
+
+    function syncAllHeaders() {
+      document.querySelectorAll('#mkTableWrap .mk-all').forEach(function(h) {
+        var s = Number(h.getAttribute('data-stage'));
+        var elig = 0, chk = 0;
+        mk.visible.forEach(function(m) {
+          if (isChecked(m.row, s)) { chk++; elig++; } else if (eligible(m, s)) elig++;
+        });
+        h.disabled = elig === 0;
+        h.checked = elig > 0 && chk === elig;
+        h.indeterminate = chk > 0 && chk < elig;
+      });
+    }
+
+    function countChecked() {
+      var n = 0;
+      Object.keys(mk.checked).forEach(function(r) { n += Object.keys(mk.checked[r]).length; });
+      return n;
+    }
+
+    function renderMkStats(pendingCount) {
+      var n = countChecked();
+      document.getElementById('mkStats').innerHTML = '<div class="today-stats" style="margin-bottom:10px">'
+        + '<div class="today-stat-chip"><span class="today-stat-value">' + pendingCount + '</span><span class="today-stat-label">Memo Belum Selesai</span></div>'
+        + '<div class="today-stat-chip"><span class="today-stat-value">' + mk.visible.length + '</span><span class="today-stat-label">Tampil (Filter)</span></div>'
+        + '<div class="today-stat-chip"><span class="today-stat-value" style="color:#7C3AED">' + n + '</span><span class="today-stat-label">Tahap Dicentang</span></div>'
+        + '</div>';
+      document.getElementById('mkBtnSubmit').innerHTML = '<i class="ti ti-send" style="font-size:18px"></i> Kirim' + (n ? ' (' + n + ' tahap)' : '');
+    }
+
+    // ---- SUBMIT ----
+    function submitMk() {
+      var items = [];
+      var perStage = STAGES.map(function() { return 0; });
+      Object.keys(mk.checked).forEach(function(row) {
+        var m = findMemo(row);
+        if (!m) return;
+        var stages = Object.keys(mk.checked[row]).map(Number).sort(function(a, b) { return a - b; });
+        if (!stages.length) return;
+        stages.forEach(function(s) { perStage[s]++; });
+        items.push({ row: m.row, no: m.no, spo: m.spo, stages: stages });
+      });
+      if (!items.length) { showToast('⚠️ Centang minimal 1 tahap yang sudah terpenuhi', 'error'); return; }
+
+      var lines = STAGES.map(function(name, s) { return perStage[s] ? '• ' + name + ': ' + perStage[s] + ' memo' : null; }).filter(Boolean);
+      var ok = window.confirm('Kirim tracking untuk ' + items.length + ' memo?\n\n' + lines.join('\n')
+        + '\n\nTanggal & jam saat ini akan tercetak di kolom tahap yang dicentang.');
+      if (!ok) return;
+
+      if (mk.demo) {
+        var now = new Date();
+        items.forEach(function(it) {
+          var m = findMemo(it.row);
+          it.stages.forEach(function(s) { m.stages[s] = { val: fmtDate(now), jam: fmtTime(now) }; });
+          m.done = m.stages.every(function(st) { return st.val; });
+        });
+        mk.checked = {};
+        showToast('✓ (Demo) ' + countStages(items) + ' tahap ditandai — tidak tersimpan ke sheet', 'success');
+        afterMkLoad();
+        setMkStatus('ok');
+        return;
+      }
+
+      showLoading(true);
+      var url = GAS_MEMO_URL + '?type=save_memo_kulit_tracking&payload=' + encodeURIComponent(JSON.stringify({ items: items }));
+      jsonp(url, function(err, result) {
+        showLoading(false);
+        if (err) {
+          showToast('Gagal terima konfirmasi server. Data mungkin sudah tersimpan — cek "Cek Data Terkirim" sebelum kirim ulang!', 'error');
+          loadMk();
+          return;
+        }
+        if (!result || result.status !== 'ok') { showToast('Gagal: ' + (result && result.message ? result.message : 'Coba lagi'), 'error'); return; }
+        mk.checked = {};
+        if (result.skipped && result.skipped.length) {
+          showToast('✓ ' + result.updated + ' tahap tersimpan. ' + result.skipped.length + ' dilewati: ' + result.skipped.slice(0, 2).join('; '), 'error');
+        } else {
+          showToast('✓ ' + result.updated + ' tahap tersimpan (' + result.tanggal + ' ' + result.jam + ')', 'success');
+        }
+        setMkSentDay(0, true);
+        loadMk();
+      });
+    }
+    function countStages(items) { return items.reduce(function(n, it) { return n + it.stages.length; }, 0); }
+
+    // ---- CEK DATA TERKIRIM (dibaca dari tanggal yang tercetak di kolom tahap) ----
+    function setMkSentDay(day, noRender) {
+      mk.sentDay = day;
+      document.getElementById('mkSentTab0').classList.toggle('active', day === 0);
+      document.getElementById('mkSentTab1').classList.toggle('active', day === 1);
+      if (!noRender) renderMkSent();
+    }
+
+    function renderMkSent() {
+      var el = document.getElementById('mkSentList');
+      var target = mk.sentDay ? mk.yesterday : mk.today;
+      var dayLabel = mk.sentDay ? 'kemarin' : 'hari ini';
+      var list = [];
+      mk.memos.forEach(function(m) {
+        m.stages.forEach(function(st, s) {
+          if (st.val === target) list.push({ m: m, s: s, jam: st.jam });
+        });
+      });
+      if (!list.length) { el.innerHTML = '<div class="wip-empty">Belum ada tracking yang terkirim ' + dayLabel + ' (' + esc(target) + ').</div>'; return; }
+      list.sort(function(a, b) { return (b.jam || '').localeCompare(a.jam || '') || a.m.row - b.m.row; });
+      var memoSet = {};
+      list.forEach(function(x) { memoSet[x.m.row] = true; });
+      var html = '<div class="today-stats" style="margin-bottom:10px">'
+        + '<div class="today-stat-chip"><span class="today-stat-value">' + Object.keys(memoSet).length + '</span><span class="today-stat-label">Jumlah Memo</span></div>'
+        + '<div class="today-stat-chip"><span class="today-stat-value">' + list.length + '</span><span class="today-stat-label">Tahap Terkirim</span></div>'
+        + '</div><div class="today-tablewrap"><table class="today-table"><thead><tr>'
+        + '<th>Jam</th><th>No</th><th>SPO</th><th>Tahap</th><th>Style</th></tr></thead><tbody>';
+      list.forEach(function(x) {
+        html += '<tr><td>' + esc(x.jam) + '</td><td>' + esc(x.m.no) + '</td><td><b>' + esc(x.m.spo) + '</b></td>'
+          + '<td><span class="mk-done">' + esc(STAGES[x.s]) + '</span></td><td>' + esc(x.m.style) + '</td></tr>';
+      });
+      el.innerHTML = html + '</tbody></table></div>';
+    }
+
+    // ---- STATUS MEMO (monitoring semua memo) ----
+    var MK_STATUS_LIMIT = 100;
+    function renderMkStatus() {
+      var q = document.getElementById('mkStFilterSpo').value.toLowerCase().trim();
+      var fDone = document.getElementById('mkStFilterDone').value;
+      var list = mk.memos.filter(function(m) {
+        if (fDone === 'wait' && m.done) return false;
+        if (fDone === 'done' && !m.done) return false;
+        return memoMatches(m, q);
+      }).slice().sort(function(a, b) { return b.row - a.row; }); // terbaru dulu
+      var el = document.getElementById('mkStatusList');
+      var doneN = mk.memos.filter(function(m) { return m.done; }).length;
+      document.getElementById('mkStStats').innerHTML = '<div class="today-stats" style="margin-bottom:10px">'
+        + '<div class="today-stat-chip"><span class="today-stat-value">' + mk.memos.length + '</span><span class="today-stat-label">Total Memo</span></div>'
+        + '<div class="today-stat-chip"><span class="today-stat-value" style="color:#0A5C42">' + doneN + '</span><span class="today-stat-label">Selesai</span></div>'
+        + '<div class="today-stat-chip"><span class="today-stat-value" style="color:#7C3AED">' + (mk.memos.length - doneN) + '</span><span class="today-stat-label">Belum Selesai</span></div>'
+        + '</div>';
+      if (!list.length) { el.innerHTML = '<div class="wip-empty">Tidak ada memo yang cocok.</div>'; return; }
+
+      var shown = list.slice(0, MK_STATUS_LIMIT);
+      var html = shown.map(function(m) {
+        var ns = nextStage(m);
+        var doneCount = m.stages.filter(function(st) { return st.val; }).length;
+        var steps = m.stages.map(function(st, s) {
+          var cls = st.val ? 'done' : (s === ns ? 'next' : '');
+          var icon = st.val ? '<i class="ti ti-check"></i>' : (s + 1);
+          var sub = st.val ? esc(st.val === 'FULL' ? 'FULL' : st.val.slice(0, 5)) + (st.jam && st.jam !== st.val ? '<br>' + esc(st.jam) : '') : (s === ns ? 'Menunggu' : '-');
+          return '<div class="mk-step ' + cls + '"><div class="mk-step-dot">' + icon + '</div><div class="mk-step-name">' + esc(STAGES_SHORT[s]) + '</div>' + sub + '</div>';
+        }).join('');
+        return '<div class="wip-item" id="mk-st-' + m.row + '">'
+          + '<div class="wip-item-top"><span class="wip-item-spo">#' + esc(m.no) + ' · ' + esc(m.spo) + '</span>'
+          + '<span class="mk-pill ' + (m.done ? 'mk-pill-done">✓ Selesai' : 'mk-pill-wait">' + doneCount + '/' + STAGES.length + ' · ' + esc(STAGES[ns])) + '</span></div>'
+          + '<div class="wip-item-style">' + esc(m.style) + '</div>'
+          + '<div class="wip-item-meta">' + esc(m.tanggal) + (m.week ? ' · Week ' + esc(m.week) : '') + ' · Kekurangan ' + esc(m.kekurangan || '-') + ' SF</div>'
+          + '<div class="wip-item-meta">' + esc(m.material) + ' · ' + esc(m.jenis) + ' · ' + esc(m.warna) + '</div>'
+          + '<div class="mk-steps">' + steps + '</div>'
+          + '<button type="button" class="mk-ket-btn" style="margin-top:10px" onclick="openMkKet(' + m.row + ')"><i class="ti ti-file-description"></i> Lihat keterangan</button>'
+          + '</div>';
+      }).join('');
+      if (list.length > shown.length) html += '<div class="wip-empty">Menampilkan ' + shown.length + ' dari ' + list.length + ' memo — persempit pencarian untuk melihat lainnya.</div>';
+      el.innerHTML = html;
+    }
+
+    // ---- POP UP "Lihat keterangan": kolom I–M dari baris memo s/d 1 baris di atas memo berikutnya ----
+    function openMkKet(row) {
+      var m = findMemo(row);
+      if (!m) return;
+      document.getElementById('mkKetTitle').textContent = 'Memo #' + m.no + ' · SPO ' + m.spo;
+      document.getElementById('mkKetSub').textContent = m.tanggal + ' · ' + m.style + ' · Kekurangan ' + (m.kekurangan || '-') + ' SF';
+      var body = document.getElementById('mkKetBody');
+      if (!m.sizes || !m.sizes.length) { body.innerHTML = '<div class="wip-empty">Tidak ada data keterangan.</div>'; openModal(); return; }
+      var totQty = 0, totCons = 0;
+      function cell(k, v) { return '<div><div class="ket-k">' + k + '</div><div class="ket-v">' + esc(v === '' || v == null ? '-' : v) + '</div></div>'; }
+      var cards = m.sizes.map(function(sz) {
+        totQty += parseFloat(sz.qty) || 0;
+        totCons += parseFloat(sz.totalCons) || 0;
+        return '<div class="ket-card"><div class="ket-grid">'
+          + cell('Size', sz.size) + cell('Qty Size', sz.qty) + cell('Cons Size', sz.cons) + cell('Total Cons', sz.totalCons)
+          + '</div>' + (sz.ket ? '<div class="ket-text"><span class="ket-k">Keterangan</span>' + esc(sz.ket) + '</div>' : '') + '</div>';
+      }).join('');
+      body.innerHTML = cards
+        + '<div class="ket-card total"><div class="ket-grid">'
+        + cell('Total', m.sizes.length + ' size') + cell('Qty Size', Math.round(totQty * 100) / 100) + cell('', '') + cell('Total Cons', Math.round(totCons * 100) / 100)
+        + '</div></div>';
+      openModal();
+    }
+    function openModal() { document.getElementById('mkKetModal').classList.add('show'); }
+    function closeMkKet() { document.getElementById('mkKetModal').classList.remove('show'); }
+
+    function showMkView(which) {
+      document.getElementById('mkViewTrack').style.display  = which === 'track'  ? 'block' : 'none';
+      document.getElementById('mkViewStatus').style.display = which === 'status' ? 'block' : 'none';
+      document.getElementById('mkTabTrack').classList.toggle('active', which === 'track');
+      document.getElementById('mkTabStatus').classList.toggle('active', which === 'status');
+    }
+
+    // ---- DATA CONTOH untuk MODE DEMO (dipakai hanya kalau GAS_MEMO_URL dikosongkan) ----
+    function demoMemos() {
+      function stg(n) { var a = []; for (var i = 0; i < STAGES.length; i++) a.push(i < n ? { val: 'FULL', jam: 'FULL' } : { val: '', jam: '' }); return a; }
+      function sz(size, qty, cons, totalCons, ket) { return { size: size, qty: qty, cons: cons, totalCons: totalCons, ket: ket || '' }; }
+      function memo(row, no, tgl, spo, style, jenis, warna, sf, week, sizes, done) {
+        return { row: row, no: no, tanggal: tgl, spo: spo, style: style, material: 'KULIT', jenis: jenis, warna: warna,
+          kekurangan: sf, ket: sizes[0].ket, week: week, sizes: sizes, stages: stg(done ? STAGES.length : 0), done: !!done };
+      }
+      return [
+        memo(1540, '374', '28-Oct', '1814/26', 'TM26 STRATUS SOFT GLOVE', 'GOAT GOLF D 0.50-0.60 C0', 'OFF WHITE', '16.75', '44', [
+          sz('M', '21', '0.73', '15.33', 'GANTI REJECT K08'),
+          sz('ML', '2', '0.73', '1.46', 'POLA BERGARIS,KOTOR KUNING,SOBEK')], true),
+        memo(1542, '375', '29-Oct', '2179/26', 'Opti Grip 2PK 26 KR', 'SHEEP CABRETTA TR (D,E) 0.45-0.60 MM', 'SNOW WHITE', '43.2', '44', [
+          sz('S', '49', '0.27', '13.23', 'GANTI REJECT F04'),
+          sz('M', '30', '0.27', '8.1', 'KOTOR KUNING,KEGUNTING')]),
+        memo(1545, '376', '30-Oct', '2034/26', 'Dawn Patrol 2024 Men', 'GOAT CABRETTA CD 0.45-0.60 PEACOCK C0', 'PEARL WHITE SSN', '68.8', '44', [
+          sz('ML', '34', '0.62', '21.08', 'GANTI REJECT K09'),
+          sz('XL', '22', '0.62', '13.64', 'BOLONG,KOTOR KUNING,MOLOR')])
+      ];
+    }
+
+    window.initMk = initMk;
+    window.loadMk = loadMk;
+    window.showMkView = showMkView;
+    window.renderMkTable = renderMkTable;
+    window.renderMkStatus = renderMkStatus;
+    window.submitMk = submitMk;
+    window.setMkSentDay = setMkSentDay;
+    window.openMkKet = openMkKet;
+    window.closeMkKet = closeMkKet;
+  })();
 
   // ===== REKAP OUTSTANDING (SPA FACTORY) =====
   // Report read-only, 2 tab. Tab 1 "Rekap Outstanding": isi sheet REKAP OUTSTANDING (1 kartu per
