@@ -643,6 +643,15 @@
     .so-t:focus { border-color: #65A30D; }
     .so-t.need { border-color: #DC3545; background: #FDECEE; }
     .so-submitbar { position: sticky; bottom: 0; z-index: 30; padding: 12px 0 8px; background: linear-gradient(to top, #F0F2F1 70%, rgba(240,242,241,0)); }
+    /* ===== REKAP OUTSTANDING — tampilan tabel ===== */
+    .rk-tbl { border-collapse: separate; border-spacing: 0; min-width: 1100px; }
+    .rk-tbl th.sticky, .rk-tbl td.sticky { position: sticky; left: 0; z-index: 2; background: #fff; box-shadow: 2px 0 0 #E6E8E6; }
+    .rk-tbl th.sticky { background: #F7F8F7; z-index: 3; }
+    .rk-tbl td.sticky { font-weight: 700; }
+    .rk-tbl th.num, .rk-tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .rk-tbl td.clip { max-width: 170px; overflow: hidden; text-overflow: ellipsis; }
+    .rk-tbl td.neg { color: #DC2626; font-weight: 700; }
+    .rk-tbl td.wipb { font-weight: 800; color: #0369A1; }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -13870,25 +13879,30 @@
         || a.divisi.localeCompare(b.divisi);
     });
     var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', []);
-    container.innerHTML = statsHtml + rows.map(function(r) {
-      var gapStyle = (r.gap !== '' && r.gap < 0) ? ' style="color:#DC2626"' : '';
-      return '<div class="wip-item">'
-        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _rkFmt(r.divisi) + '</span></div>'
-        + '<div class="wip-item-style">' + _rkFmt(r.style) + '</div>'
-        + '<div class="wip-item-grid">'
-        + '<div class="full"><div class="wip-item-k">Material/Komponen</div><div class="wip-item-v">' + _rkFmt(r.material) + '</div></div>'
-        + '<div><div class="wip-item-k">Unit</div><div class="wip-item-v">' + _rkFmt(r.unit) + '</div></div>'
-        + '<div><div class="wip-item-k">Con\'s Pcs</div><div class="wip-item-v">' + _rkFmt(r.cons) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty Plan Pcs</div><div class="wip-item-v">' + _rkFmt(r.plan) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty Plan Unit</div><div class="wip-item-v">' + _rkFmt(r.planUnit) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty In Unit</div><div class="wip-item-v">' + _rkFmt(r.qtyIn) + '</div></div>'
-        + '<div><div class="wip-item-k">Gap In Unit</div><div class="wip-item-v"' + gapStyle + '>' + _rkFmt(r.gap) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty Out Unit</div><div class="wip-item-v">' + _rkFmt(r.qtyOut) + '</div></div>'
-        + '<div><div class="wip-item-k">WIP Pcs</div><div class="wip-item-v">' + _rkFmt(r.wipPcs) + '</div></div>'
-        + '</div>'
-        + '<div class="wip-item-qty"><span class="wip-item-qty-label">WIP Unit</span><span class="wip-item-qty-value">' + _rkFmt(r.wip) + '</span></div>'
-        + '</div>';
-    }).join('');
+    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Divisi', "Con's Pcs", 'Qty Plan Pcs', 'Qty Plan Unit', 'Qty In Unit', 'Gap In Unit', 'Qty Out Unit', 'WIP Unit', 'WIP Pcs'];
+    container.innerHTML = statsHtml
+      + '<div class="today-tablewrap"><table class="today-table rk-tbl"><thead><tr>'
+      + cols.map(function(c, i) { return '<th' + (i === 0 ? ' class="sticky"' : (i >= 5 ? ' class="num"' : '')) + '>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>'
+      + rows.map(function(r) {
+          var neg = r.gap !== '' && r.gap < 0;
+          return '<tr>'
+            + '<td class="sticky">' + _escToday(r.spo) + '</td>'
+            + '<td class="clip" title="' + _escWip(r.style) + '">' + _rkFmt(r.style) + '</td>'
+            + '<td class="clip" title="' + _escWip(r.material) + '">' + _rkFmt(r.material) + '</td>'
+            + '<td>' + _rkFmt(r.unit) + '</td>'
+            + '<td>' + _rkFmt(r.divisi) + '</td>'
+            + '<td class="num">' + _rkFmt(r.cons) + '</td>'
+            + '<td class="num">' + _rkFmt(r.plan) + '</td>'
+            + '<td class="num">' + _rkFmt(r.planUnit) + '</td>'
+            + '<td class="num">' + _rkFmt(r.qtyIn) + '</td>'
+            + '<td class="num' + (neg ? ' neg' : '') + '">' + _rkFmt(r.gap) + '</td>'
+            + '<td class="num">' + _rkFmt(r.qtyOut) + '</td>'
+            + '<td class="num wipb">' + _rkFmt(r.wip) + '</td>'
+            + '<td class="num">' + _rkFmt(r.wipPcs) + '</td>'
+            + '</tr>';
+        }).join('')
+      + '</tbody></table></div><div class="today-scroll-hint">← geser tabel ke kanan untuk melihat semua kolom → (kolom SPO tetap menempel di kiri)</div>';
   }
 
   function renderRkMissing() {
