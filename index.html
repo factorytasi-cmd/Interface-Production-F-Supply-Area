@@ -2,12 +2,15 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0A1A1D">
-  <title>LITRA-ASI — Supply Area</title>
+  <title>LITRA-ASI — Supply Area (Mode Aplikasi)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -721,6 +724,107 @@
       .header-zone { padding-top: env(safe-area-inset-top, 20px); }
       .footer-zone { padding-bottom: env(safe-area-inset-bottom, 28px); }
     }
+
+    /* =====================================================================
+       MODE APLIKASI MOBILE (app.html) — lapisan tampilan di atas isi yang sama dengan index.html.
+       Navigasi bawah, beranda, app bar ringkas, daftar menu bergaya aplikasi, huruf DM Sans.
+       ===================================================================== */
+    :root { --app-bg: #F0F2F1; --app-line: #E4E6E4; --app-teal: #1D9E75; }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea { font-family: inherit; }
+    .phone { background: var(--app-bg); overflow: visible; overflow: clip; }
+    .footer-zone { display: none; }
+    body.nav-on .phone { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+    body.nav-on .toast { bottom: 96px; }
+
+    /* ---- App bar ringkas (menggantikan header besar di halaman dalam) ---- */
+    .page > .header-zone.appbar { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 11px; padding: calc(11px + env(safe-area-inset-top, 0px)) 14px 11px; background: #0A1A1D; }
+    .ab-back { width: 36px; height: 36px; border-radius: 12px; background: rgba(255,255,255,.09); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 19px; cursor: pointer; flex-shrink: 0; }
+    .ab-back:active { background: rgba(255,255,255,.18); }
+    .ab-ttl { flex: 1; min-width: 0; }
+    .ab-ttl b { display: block; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: .15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ab-ttl small { display: block; color: rgba(255,255,255,.45); font-size: 10.5px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .3px; }
+    .content-zone, .form-zone { padding-top: 16px; }
+
+    /* ---- Halaman hub (daftar menu section) bergaya daftar baris ---- */
+    #page-cutting .cards, #page-cutting-synthetic .cards, #page-accessories .cards, #page-spa-factory .cards, #page-ganti-pola .cards {
+      gap: 0; background: #fff; border: 1px solid var(--app-line); border-radius: 16px; overflow: hidden; }
+    #page-cutting .card, #page-cutting-synthetic .card, #page-accessories .card, #page-spa-factory .card, #page-ganti-pola .card {
+      background: #fff !important; border: none !important; border-bottom: 1px solid #EEF0EE !important; border-radius: 0; opacity: 1; }
+    #page-cutting .card:last-child, #page-cutting-synthetic .card:last-child, #page-accessories .card:last-child, #page-spa-factory .card:last-child, #page-ganti-pola .card:last-child { border-bottom: none !important; }
+    #page-cutting .card:active, #page-cutting-synthetic .card:active, #page-accessories .card:active, #page-spa-factory .card:active, #page-ganti-pola .card:active { transform: none; background: #F6F7F6 !important; }
+    #page-cutting .card-inner, #page-cutting-synthetic .card-inner, #page-accessories .card-inner, #page-spa-factory .card-inner, #page-ganti-pola .card-inner {
+      padding: 13px 14px; display: grid; grid-template-columns: 42px 1fr 14px; column-gap: 12px; align-items: center; }
+    #page-cutting .card-top, #page-cutting-synthetic .card-top, #page-accessories .card-top, #page-spa-factory .card-top, #page-ganti-pola .card-top { display: contents; }
+    #page-cutting .card-badge, #page-cutting-synthetic .card-badge, #page-accessories .card-badge, #page-spa-factory .card-badge, #page-ganti-pola .card-badge { display: none; }
+    #page-cutting .card-icon-wrap, #page-cutting-synthetic .card-icon-wrap, #page-accessories .card-icon-wrap, #page-spa-factory .card-icon-wrap, #page-ganti-pola .card-icon-wrap {
+      grid-column: 1; grid-row: 1 / span 2; width: 42px; height: 42px; border-radius: 13px; }
+    #page-cutting .card-title, #page-cutting-synthetic .card-title, #page-accessories .card-title, #page-spa-factory .card-title, #page-ganti-pola .card-title {
+      grid-column: 2; grid-row: 1; font-size: 14px; font-weight: 700; margin: 0; letter-spacing: -.005em; }
+    #page-cutting .card-desc, #page-cutting-synthetic .card-desc, #page-accessories .card-desc, #page-spa-factory .card-desc, #page-ganti-pola .card-desc {
+      grid-column: 2; grid-row: 2; font-size: 11.5px; margin: 2px 0 0; color: #8A8F8A; line-height: 1.35; }
+    #page-cutting .card-footer, #page-cutting-synthetic .card-footer, #page-accessories .card-footer, #page-spa-factory .card-footer, #page-ganti-pola .card-footer { display: none; }
+    #page-cutting .card-inner::after, #page-cutting-synthetic .card-inner::after, #page-accessories .card-inner::after, #page-spa-factory .card-inner::after, #page-ganti-pola .card-inner::after {
+      content: '\203A'; grid-column: 3; grid-row: 1 / span 2; font-size: 24px; line-height: 1; color: #C5C8C5; }
+    #page-cutting .card-syn-placeholder .card-inner, #page-cutting-synthetic .card-syn-placeholder .card-inner, #page-accessories .card-syn-placeholder .card-inner,
+    #page-spa-factory .card-syn-placeholder .card-inner, #page-ganti-pola .card-syn-placeholder .card-inner { opacity: .5; }
+
+    /* ---- Beranda ---- */
+    .ah-hero { background: #0A1A1D; color: #fff; padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 56px; border-radius: 0 0 28px 28px; }
+    .ah-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 8px; }
+    .ah-brand { display: flex; align-items: center; gap: 9px; }
+    .ah-brand b { font-size: 16px; letter-spacing: 1.2px; }
+    .ah-logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #378ADD, #1D9E75); display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .ah-pill { font-size: 10.5px; color: rgba(255,255,255,.6); background: rgba(255,255,255,.07); border-radius: 99px; padding: 6px 11px; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .ah-hello { font-size: 12.5px; color: rgba(255,255,255,.55); font-weight: 500; }
+    .ah-who { font-size: 24px; font-weight: 700; margin-top: 2px; letter-spacing: -.02em; }
+    .ah-tag { font-size: 9px; color: #5DCAA5; letter-spacing: 2.6px; text-transform: uppercase; margin-top: 6px; }
+    .ah-search { margin: -26px 16px 0; background: #fff; border-radius: 14px; padding: 0 14px; display: flex; align-items: center; gap: 10px; color: #888; box-shadow: 0 6px 20px rgba(0,0,0,.08); position: relative; z-index: 2; }
+    .ah-search input { flex: 1; min-width: 0; border: none; outline: none; background: transparent; padding: 14px 0; font-size: 13.5px; color: #111; }
+    .ah-search-flat { margin: 4px 16px 0; box-shadow: none; border: 1px solid var(--app-line); }
+    .ah-clear { cursor: pointer; padding: 4px; }
+    .ah-block { padding: 0 16px; margin-top: 22px; }
+    .ah-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+    .ah-h h3 { font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+    .ah-h a { font-size: 11.5px; color: var(--app-teal); font-weight: 700; cursor: pointer; }
+    .ah-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .ah-tile { background: #fff; border: 1px solid var(--app-line); border-radius: 16px; padding: 14px 6px 11px; text-align: center; cursor: pointer; transition: transform .1s; }
+    .ah-tile:active { transform: scale(.95); }
+    .ah-ic { width: 44px; height: 44px; border-radius: 14px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .ah-tile span { font-size: 11px; font-weight: 600; line-height: 1.25; display: block; }
+    .ah-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .ah-chips::-webkit-scrollbar { display: none; }
+    .ah-chip { flex: 0 0 auto; background: #fff; border: 1px solid var(--app-line); border-radius: 99px; padding: 8px 14px 8px 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 7px; cursor: pointer; }
+    .ah-chip i { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .ah-list, .ap-list { background: #fff; border: 1px solid var(--app-line); border-radius: 16px; overflow: hidden; }
+    .ah-empty { text-align: center; padding: 26px 16px; color: #aaa; font-size: 13px; }
+
+    /* ---- Baris daftar (dipakai Menu, Monitoring, Akun, hasil cari) ---- */
+    .ap-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #EEF0EE; cursor: pointer; color: inherit; text-decoration: none; }
+    .ap-row:last-child { border-bottom: none; } .ap-row:active { background: #F6F7F6; }
+    .ap-ic { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+    .ap-m { flex: 1; min-width: 0; } .ap-m b { font-size: 13.5px; font-weight: 700; display: block; letter-spacing: -.005em; } .ap-m small { font-size: 11px; color: #8A8F8A; display: block; margin-top: 1px; line-height: 1.35; }
+    .ap-row > .ti-chevron-right, .ap-row > .ti-chevron-down { color: #C5C8C5; }
+    .ap-row.soon { opacity: .5; }
+    .ap-soon { font-size: 9.5px; font-weight: 700; background: #EEF0EE; color: #777; border-radius: 99px; padding: 3px 8px; }
+    .ap-lbl { font-size: 10px; letter-spacing: 1.6px; color: #8A8F8A; font-weight: 700; text-transform: uppercase; margin: 20px 16px 8px; }
+    .ap-sec { margin: 0 16px; }
+    .ap-bar { padding: calc(18px + env(safe-area-inset-top, 0px)) 18px 6px; }
+    .ap-ttl b { font-size: 22px; font-weight: 700; letter-spacing: -.02em; display: block; }
+    .ap-ttl small { font-size: 12px; color: #8A8F8A; }
+    .ap-profile { margin: 14px 16px 0; background: #fff; border: 1px solid var(--app-line); border-radius: 18px; padding: 16px; display: flex; align-items: center; gap: 13px; }
+    .ap-profile b { font-size: 15px; display: block; } .ap-profile small { font-size: 11.5px; color: #8A8F8A; }
+    .ap-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #378ADD, #1D9E75); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; }
+    .ap-help { padding: 4px 16px 14px 66px; font-size: 12px; color: #666; line-height: 1.7; border-bottom: 1px solid #EEF0EE; }
+
+    /* ---- Navigasi bawah ---- */
+    .ap-tabbar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: #fff; border-top: 1px solid var(--app-line); display: none; padding: 7px 6px calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 60; }
+    body.nav-on .ap-tabbar { display: flex; }
+    .ap-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; color: #9AA09B; font-size: 10.5px; font-weight: 600; cursor: pointer; padding: 4px 0; position: relative; }
+    .ap-tab i { font-size: 23px; }
+    .ap-tab.on { color: var(--app-teal); }
+    .ap-tab.on::before { content: ''; position: absolute; top: -8px; width: 26px; height: 3px; border-radius: 0 0 4px 4px; background: var(--app-teal); }
+    @media (max-width: 420px) { .ap-tabbar { max-width: none; } }
   </style>
 </head>
 <body>
@@ -826,131 +930,98 @@
 
 <div class="phone">
 
-  <!-- ==================== PAGE 1: SUPPLY AREA ==================== -->
+  <!-- ==================== MODE APLIKASI: BERANDA ==================== -->
   <div class="page active" id="page-home">
-    <div class="header-zone">
-      <div class="status-bar">
-        <span>PT. ASI</span>
-        <span class="waktu-el">--:--</span>
+    <div class="ah-hero">
+      <div class="ah-top">
+        <div class="ah-brand"><div class="ah-logo">L</div><b>LITRA-ASI</b></div>
+        <div class="ah-pill"><i class="ti ti-calendar"></i> <span class="tgl-el">Memuat...</span></div>
       </div>
-      <div class="logo-wrap">
-        <div class="logo-box">L</div>
-        <div class="logo-text">LITRA-ASI</div>
-      </div>
-      <div class="tagline">Leading Industrial Transformation</div>
-      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
-      <div class="date-pill">
-        <span>
-          <i class="ti ti-calendar" style="font-size:13px"></i>
-          <span class="tgl-el">Memuat...</span>
-        </span>
-      </div>
+      <div class="ah-hello" id="ahGreet">Selamat datang,</div>
+      <div class="ah-who">Supply Area</div>
+      <div class="ah-tag">Leading Industrial Transformation</div>
     </div>
 
-    <div class="area-label">
-      <div class="area-label-text">SUPPLY AREA</div>
-      <div class="area-divider"></div>
+    <div class="ah-search">
+      <i class="ti ti-search"></i>
+      <input type="text" id="ahSearch" placeholder="Cari menu... (mis. Out Tab, Penukaran)" autocomplete="off" oninput="ahSearch(this.value)">
+      <i class="ti ti-x ah-clear" id="ahClear" onclick="ahClearSearch()" style="display:none"></i>
     </div>
 
-    <div class="content-zone">
-      <div class="section-lbl">Input Data Produksi</div>
-      <div class="cards">
+    <div id="ahSearchRes" style="display:none"></div>
 
-        <div class="card card-cutting" onclick="goTo('page-cutting')">
-          <div class="card-inner">
-            <div class="card-top">
-              <span class="card-badge badge-cutting">Section</span>
-              <div class="card-icon-wrap icon-cutting">
-                <i class="ti ti-scissors" style="font-size:20px;color:#9B6DDC"></i>
-              </div>
-            </div>
-            <div class="card-title">Cutting Kulit Section</div>
-            <div class="card-desc">Input data penerimaan kulit dan pengeluaran pola dari cutting kulit</div>
-            <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 7 menu tersedia</span>
-              <span class="card-btn btn-cutting">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
-            </div>
-          </div>
+    <div id="ahMain">
+      <div class="ah-block">
+        <div class="ah-h"><h3>Section</h3></div>
+        <div class="ah-grid">
+          <div class="ah-tile" onclick="goTo('page-cutting')"><div class="ah-ic" style="background:#F1EAFB;color:#9B6DDC"><i class="ti ti-scissors"></i></div><span>Cutting Kulit</span></div>
+          <div class="ah-tile" onclick="goTo('page-cutting-synthetic')"><div class="ah-ic" style="background:#E8E9FD;color:#6366F1"><i class="ti ti-cut"></i></div><span>Cutting Synthetic</span></div>
+          <div class="ah-tile" onclick="goTo('page-accessories')"><div class="ah-ic" style="background:#DDF3F0;color:#0D9488"><i class="ti ti-tag"></i></div><span>Accessories</span></div>
+          <div class="ah-tile" onclick="goTo('page-spa-factory')"><div class="ah-ic" style="background:#ECF7D9;color:#65A30D"><i class="ti ti-building-warehouse"></i></div><span>SPA Factory</span></div>
+          <div class="ah-tile" onclick="goTo('page-daily-issue')"><div class="ah-ic" style="background:#E3EEFB;color:#378ADD"><i class="ti ti-alert-triangle"></i></div><span>Daily Issue</span></div>
+          <div class="ah-tile" onclick="goTo('page-monitoring')"><div class="ah-ic" style="background:#E0F2FE;color:#0EA5E9"><i class="ti ti-chart-dots"></i></div><span>Monitoring</span></div>
         </div>
-
-        <div class="card card-synthetic" onclick="goTo('page-cutting-synthetic')">
-          <div class="card-inner">
-            <div class="card-top">
-              <span class="card-badge badge-synthetic">Section</span>
-              <div class="card-icon-wrap icon-synthetic">
-                <i class="ti ti-cut" style="font-size:20px;color:#6366F1"></i>
-              </div>
-            </div>
-            <div class="card-title">Cutting Synthetic Section</div>
-            <div class="card-desc">Input data penerimaan material dan pengeluaran pola dari cutting synthetic</div>
-            <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 8 menu tersedia</span>
-              <span class="card-btn btn-synthetic">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-accessories" onclick="goTo('page-accessories')">
-          <div class="card-inner">
-            <div class="card-top">
-              <span class="card-badge badge-accessories">Section</span>
-              <div class="card-icon-wrap icon-accessories">
-                <i class="ti ti-tag" style="font-size:20px;color:#0D9488"></i>
-              </div>
-            </div>
-            <div class="card-title">Accessories Section</div>
-            <div class="card-desc">Input data penerimaan logo dan alur proses accessories</div>
-            <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 7 menu tersedia</span>
-              <span class="card-btn btn-accessories">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-spa" onclick="goTo('page-spa-factory')">
-          <div class="card-inner">
-            <div class="card-top">
-              <span class="card-badge badge-spa">Section</span>
-              <div class="card-icon-wrap icon-spa">
-                <i class="ti ti-building-warehouse" style="font-size:20px;color:#65A30D"></i>
-              </div>
-            </div>
-            <div class="card-title">SPA Factory</div>
-            <div class="card-desc">Inventory masuk, distribusi, line, accessories, dan data 3%</div>
-            <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 6 menu</span>
-              <span class="card-btn btn-spa">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-issue" onclick="goTo('page-daily-issue')">
-          <div class="card-inner">
-            <div class="card-top">
-              <span class="card-badge badge-issue">Harian</span>
-              <div class="card-icon-wrap icon-issue">
-                <i class="ti ti-alert-triangle" style="font-size:20px;color:#378ADD"></i>
-              </div>
-            </div>
-            <div class="card-title">Daily Issue</div>
-            <div class="card-desc">Rekam kendala dan issue dari leader line produksi setiap shift</div>
-            <div class="card-footer">
-              <span class="card-hint"><i class="ti ti-file-description" style="font-size:13px"></i> Input tiap shift</span>
-              <span class="card-btn btn-issue">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </div>
 
-    <div class="footer-zone">
-      <div class="live-row">
-        <div class="live-dot"></div>
-        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      <div class="ah-block" id="ahRecentBlock" style="display:none">
+        <div class="ah-h"><h3>Terakhir dibuka</h3><a onclick="ahClearRecents()">Hapus</a></div>
+        <div class="ah-chips" id="ahRecent"></div>
+      </div>
+
+      <div class="ah-block">
+        <div class="ah-h"><h3>Pintasan monitoring</h3><a onclick="goTo('page-monitoring')">Lihat semua</a></div>
+        <div class="ah-list" id="ahMonQuick"></div>
       </div>
     </div>
   </div>
+
+  <!-- ==================== MODE APLIKASI: MENU ==================== -->
+  <div class="page" id="page-menu">
+    <div class="ap-bar"><div class="ap-ttl"><b>Menu</b><small>Semua menu, dikelompokkan per section</small></div></div>
+    <div class="ah-search ah-search-flat">
+      <i class="ti ti-search"></i>
+      <input type="text" id="amSearch" placeholder="Filter menu..." autocomplete="off" oninput="renderMenuTab(this.value)">
+    </div>
+    <div id="amList"></div>
+  </div>
+
+  <!-- ==================== MODE APLIKASI: MONITORING ==================== -->
+  <div class="page" id="page-monitoring">
+    <div class="ap-bar"><div class="ap-ttl"><b>Monitoring</b><small>Laporan &amp; posisi WIP, GAP, dan outstanding</small></div></div>
+    <div id="amMonList"></div>
+  </div>
+
+  <!-- ==================== MODE APLIKASI: AKUN ==================== -->
+  <div class="page" id="page-akun">
+    <div class="ap-bar"><div class="ap-ttl"><b>Akun</b><small>Pengaturan aplikasi</small></div></div>
+    <div class="ap-profile"><div class="ap-avatar">S</div><div><b>Supply Area</b><small>PT. ASI — Supply Division</small></div></div>
+
+    <div class="ap-lbl">Tampilan</div>
+    <div class="ap-list">
+      <a class="ap-row" href="index.html"><div class="ap-ic" style="background:#EEF0EE;color:#555"><i class="ti ti-layout-list"></i></div><div class="ap-m"><b>Pakai tampilan klasik</b><small>Kembali ke tampilan lama (index.html)</small></div><i class="ti ti-chevron-right"></i></a>
+      <div class="ap-row" onclick="appRefresh()"><div class="ap-ic" style="background:#EEF0EE;color:#555"><i class="ti ti-refresh"></i></div><div class="ap-m"><b>Muat ulang aplikasi</b><small>Ambil versi terbaru kalau ada pembaruan</small></div><i class="ti ti-chevron-right"></i></div>
+    </div>
+
+    <div class="ap-lbl">Aplikasi</div>
+    <div class="ap-list">
+      <div class="ap-row" onclick="appToggleHelp()"><div class="ap-ic" style="background:#E3F5EE;color:#1D9E75"><i class="ti ti-device-mobile"></i></div><div class="ap-m"><b>Pasang di layar utama</b><small>Buka seperti aplikasi, tanpa bilah browser</small></div><i class="ti ti-chevron-down"></i></div>
+      <div class="ap-help" id="apHelp" style="display:none">
+        <b>Android (Chrome):</b> ketuk menu ⋮ di kanan atas → <i>Tambahkan ke layar utama</i>.<br>
+        <b>iPhone (Safari):</b> ketuk tombol Bagikan → <i>Tambah ke Layar Utama</i>.
+      </div>
+      <div class="ap-row" onclick="ahClearRecents(true)"><div class="ap-ic" style="background:#EEF0EE;color:#555"><i class="ti ti-history"></i></div><div class="ap-m"><b>Hapus riwayat "Terakhir dibuka"</b><small>Hanya di HP ini</small></div></div>
+      <div class="ap-row"><div class="ap-ic" style="background:#EEF0EE;color:#555"><i class="ti ti-info-circle"></i></div><div class="ap-m"><b>Mode</b><small>Tampilan aplikasi mobile (app.html)</small></div></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODE APLIKASI: NAVIGASI BAWAH ==================== -->
+  <nav class="ap-tabbar" id="apTabbar">
+    <div class="ap-tab on" data-t="home" onclick="goTo('page-home')"><i class="ti ti-home"></i>Beranda</div>
+    <div class="ap-tab" data-t="menu" onclick="goTo('page-menu')"><i class="ti ti-layout-grid"></i>Menu</div>
+    <div class="ap-tab" data-t="mon" onclick="goTo('page-monitoring')"><i class="ti ti-chart-dots"></i>Monitoring</div>
+    <div class="ap-tab" data-t="acc" onclick="goTo('page-akun')"><i class="ti ti-user"></i>Akun</div>
+  </nav>
+
 
   <!-- ==================== PAGE 2: CUTTING KULIT ==================== -->
   <div class="page" id="page-cutting">
@@ -18332,5 +18403,210 @@
     setTimeout(function() { t.className = 'toast'; }, 3500);
   }
 </script>
+
+<script>
+// =====================================================================
+// MODE APLIKASI MOBILE (app.html) — lapisan navigasi di atas logika yang sama dengan index.html:
+// navigasi bawah, beranda + pencarian menu, "Terakhir dibuka", app bar ringkas, daftar menu & monitoring.
+// Tidak mengubah fungsi form/laporan; hanya membungkus goTo() dan merapikan header halaman.
+// =====================================================================
+(function() {
+  // t=judul, s=section, p=id halaman, i=ikon, f=warna ikon, b=latar ikon, d=deskripsi,
+  // k=jenis (input | track | monitor), soon=belum tersedia, hub=halaman submenu (tidak masuk "Terakhir dibuka")
+  var SEC = ['Cutting Kulit', 'Cutting Synthetic', 'Accessories', 'SPA Factory', 'Daily Issue'];
+  var MENU_INDEX = [
+    // Cutting Kulit
+    { t: 'In Kulit dari Gudang', s: SEC[0], p: 'page-form-in', i: 'ti-package-import', f: '#EAB308', b: '#FEF6D6', d: 'Penerimaan bahan kulit dari gudang', k: 'input' },
+    { t: 'Rak ke Proses', s: SEC[0], p: 'page-form-rak', i: 'ti-transfer', f: '#EA580C', b: '#FFEDE0', d: 'Perpindahan kulit dari rak ke proses', k: 'input' },
+    { t: 'Out Pola dari Cutting Kulit', s: SEC[0], p: 'page-form-out', i: 'ti-package-export', f: '#1D9E75', b: '#DDF3EA', d: 'Pengeluaran pola ke line produksi', k: 'input' },
+    { t: 'Penukaran Kulit', s: SEC[0], p: 'page-penukaran-kulit', i: 'ti-replace', f: '#B45309', b: '#F5EBDD', d: 'Penukaran kulit ke supplier & status kembali', k: 'input' },
+    { t: 'Pengecekan Thickness', s: SEC[0], p: 'page-thickness-check', i: 'ti-ruler-2', f: '#0891B2', b: '#DDF3F8', d: 'Cek ketebalan kulit per OPCK', k: 'input' },
+    { t: 'Ganti Pola', s: SEC[0], p: 'page-ganti-pola', i: 'ti-replace', f: '#EA580C', b: '#FFEDE0', d: 'Tracking permintaan ganti pola', k: 'track', hub: true },
+    { t: 'Ganti Pola Kulit', s: SEC[0], p: 'page-gp-kulit', i: 'ti-scissors', f: '#EA580C', b: '#FFEDE0', d: 'Checklist Sudah Cutting → Sudah Ambil', k: 'track', searchOnly: true },
+    { t: 'Tracking Memo Kulit', s: SEC[0], p: 'page-memo-kulit', i: 'ti-route', f: '#9B6DDC', b: '#F1EAFB', d: '3R → PPIC → Gudang Kulit → Terima Material', k: 'track' },
+    { t: 'Data GAP IN/OUT Cutting Kulit', s: SEC[0], p: 'page-gap-cutting', i: 'ti-alert-triangle', f: '#E11D48', b: '#FFE4EA', d: 'Lihat data GAP IN dan GAP OUT', k: 'monitor' },
+    { t: 'Data WIP Cutting Kulit', s: SEC[0], p: 'page-wip-cutting', i: 'ti-chart-bar', f: '#0EA5E9', b: '#E0F2FE', d: 'WIP Rak dan WIP Proses', k: 'monitor' },
+    // Cutting Synthetic
+    { t: 'In Material dari Gudang Synthetic', s: SEC[1], p: 'page-synthetic-in', i: 'ti-package-import', f: '#EAB308', b: '#FEF6D6', d: 'Penerimaan material dari gudang', k: 'input' },
+    { t: 'Rak ke Proses (Synthetic)', s: SEC[1], p: 'page-rak-synthetic', i: 'ti-transfer', f: '#EA580C', b: '#FFEDE0', d: 'Perpindahan material rak ke proses', k: 'input' },
+    { t: 'Out Pola dari Cutting Synthetic', s: SEC[1], p: 'page-out-synthetic', i: 'ti-package-export', f: '#1D9E75', b: '#DDF3EA', d: 'Pengeluaran pola hasil cutting', k: 'input' },
+    { t: 'Input Potong Boros', s: SEC[1], p: 'page-boros-synthetic', i: 'ti-cut', f: '#DB2777', b: '#FCE7F3', d: 'Catat potong boros', k: 'input' },
+    { t: 'Data GAP IN/OUT Cutting Synthetic', s: SEC[1], p: '', i: 'ti-alert-triangle', f: '#E11D48', b: '#FFE4EA', d: 'Segera hadir', k: 'monitor', soon: true },
+    { t: 'Data WIP Cutting Synthetic', s: SEC[1], p: 'page-wip-synthetic', i: 'ti-chart-bar', f: '#0EA5E9', b: '#E0F2FE', d: 'WIP Rak, Rak PRC, Proses', k: 'monitor' },
+    { t: 'IN/OUT Set Material', s: SEC[1], p: 'page-inout-set-synthetic', i: 'ti-arrows-exchange', f: '#0EA5E9', b: '#E0F2FE', d: 'Rekap IN/OUT set per SPO & size', k: 'monitor' },
+    { t: 'IN/OUT PRC Material', s: SEC[1], p: 'page-inout-prc-synthetic', i: 'ti-arrows-exchange', f: '#0EA5E9', b: '#E0F2FE', d: 'Rincian IN/OUT per PRC', k: 'monitor' },
+    // Accessories
+    { t: 'Penerimaan Logo', s: SEC[2], p: 'page-penerimaan-logo', i: 'ti-package-import', f: '#EAB308', b: '#FEF6D6', d: 'Catat penerimaan logo', k: 'input' },
+    { t: 'Rak Ke Proses Persiapan', s: SEC[2], p: 'page-rak-persiapan', i: 'ti-transfer', f: '#EA580C', b: '#FFEDE0', d: 'Rak ke proses persiapan', k: 'input' },
+    { t: 'Persiapan Ke Proses Cutting', s: SEC[2], p: 'page-persiapan-cutting', i: 'ti-transfer', f: '#EA580C', b: '#FFEDE0', d: 'Persiapan ke proses cutting', k: 'input' },
+    { t: 'Proses Cutting ke Sewing', s: SEC[2], p: 'page-cutting-sewing', i: 'ti-package-export', f: '#1D9E75', b: '#DDF3EA', d: 'Cutting ke sewing', k: 'input' },
+    { t: 'Out Tab dari Accessories', s: SEC[2], p: 'page-out-tab', i: 'ti-package-export', f: '#1D9E75', b: '#DDF3EA', d: 'Input QC, repair & reject', k: 'input' },
+    { t: 'Data GAP IN/OUT Accessories', s: SEC[2], p: '', i: 'ti-alert-triangle', f: '#E11D48', b: '#FFE4EA', d: 'Segera hadir', k: 'monitor', soon: true },
+    { t: 'Data WIP Accessories', s: SEC[2], p: 'page-wip-accessories', i: 'ti-chart-bar', f: '#0EA5E9', b: '#E0F2FE', d: 'WIP Rak, Persiapan, Cutting, Sewing', k: 'monitor' },
+    // SPA Factory
+    { t: 'IN INVENTORY', s: SEC[3], p: 'page-spa-in', i: 'ti-package-import', f: '#65A30D', b: '#ECF7D9', d: 'Penerimaan material/komponen per SPO', k: 'input' },
+    { t: 'INV OUT DISTRIBUSI', s: SEC[3], p: 'page-spa-out-dist', i: 'ti-truck-delivery', f: '#1D9E75', b: '#DDF3EA', d: 'Pengeluaran ke distribusi', k: 'input' },
+    { t: 'INV OUT LINE', s: SEC[3], p: 'page-spa-out-line', i: 'ti-building-factory-2', f: '#1D9E75', b: '#DDF3EA', d: 'Pengeluaran ke line', k: 'input' },
+    { t: 'INV OUT ACCESSORIES', s: SEC[3], p: 'page-spa-out-acc', i: 'ti-tag', f: '#1D9E75', b: '#DDF3EA', d: 'Pengeluaran ke accessories', k: 'input' },
+    { t: 'DATA 3%', s: SEC[3], p: '', i: 'ti-percentage', f: '#0EA5E9', b: '#E0F2FE', d: 'Segera hadir', k: 'monitor', soon: true },
+    { t: 'REKAP OUTSTANDING', s: SEC[3], p: 'page-spa-rekap', i: 'ti-report-analytics', f: '#0EA5E9', b: '#E0F2FE', d: 'Qty plan, in, out, WIP & yang belum diterima', k: 'monitor' },
+    // Daily Issue
+    { t: 'Daily Issue', s: SEC[4], p: 'page-daily-issue', i: 'ti-alert-triangle', f: '#378ADD', b: '#E3EEFB', d: 'Rekam kendala dari leader line tiap shift', k: 'input' }
+  ];
+
+  // Halaman yang menampilkan navigasi bawah -> tab yang menyala
+  var NAV_MAP = {
+    'page-home': 'home', 'page-menu': 'menu', 'page-monitoring': 'mon', 'page-akun': 'acc',
+    'page-cutting': 'menu', 'page-cutting-synthetic': 'menu', 'page-accessories': 'menu', 'page-spa-factory': 'menu', 'page-ganti-pola': 'menu'
+  };
+  var RECENT_KEY = 'litraRecents';
+
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+  function byPage(p) { for (var i = 0; i < MENU_INDEX.length; i++) if (MENU_INDEX[i].p === p) return MENU_INDEX[i]; return null; }
+  function idxOf(m) { return MENU_INDEX.indexOf(m); }
+  function storeGet() { try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch (e) { return []; } }
+  function storeSet(a) { try { localStorage.setItem(RECENT_KEY, JSON.stringify(a)); } catch (e) {} }
+
+  function row(m) {
+    return '<div class="ap-row' + (m.soon ? ' soon' : '') + '" onclick="appOpen(' + idxOf(m) + ')">'
+      + '<div class="ap-ic" style="background:' + m.b + ';color:' + m.f + '"><i class="ti ' + m.i + '"></i></div>'
+      + '<div class="ap-m"><b>' + esc(m.t) + '</b><small>' + esc(m.s) + ' · ' + esc(m.d) + '</small></div>'
+      + (m.soon ? '<span class="ap-soon">Segera</span>' : '<i class="ti ti-chevron-right"></i>') + '</div>';
+  }
+
+  window.appOpen = function(i) {
+    var m = MENU_INDEX[i];
+    if (!m) return;
+    if (m.soon) { comingSoon(m.t); return; }
+    goTo(m.p);
+  };
+
+  // ---- Beranda ----
+  function greet() {
+    var h = new Date().getHours();
+    return h < 11 ? 'Selamat pagi,' : h < 15 ? 'Selamat siang,' : h < 18 ? 'Selamat sore,' : 'Selamat malam,';
+  }
+
+  function renderRecents() {
+    var ids = storeGet();
+    var items = ids.map(byPage).filter(Boolean);
+    var block = document.getElementById('ahRecentBlock');
+    block.style.display = items.length ? 'block' : 'none';
+    document.getElementById('ahRecent').innerHTML = items.map(function(m) {
+      return '<div class="ah-chip" onclick="appOpen(' + idxOf(m) + ')"><i class="ti ' + m.i + '" style="background:' + m.b + ';color:' + m.f + '"></i>' + esc(m.t) + '</div>';
+    }).join('');
+  }
+  window.ahClearRecents = function(toast) { storeSet([]); renderRecents(); if (toast) showToast('✓ Riwayat dihapus', 'success'); };
+
+  function renderMonQuick() {
+    var pick = ['Data WIP Cutting Kulit', 'Data WIP Cutting Synthetic', 'Data WIP Accessories', 'REKAP OUTSTANDING'];
+    document.getElementById('ahMonQuick').innerHTML = pick.map(function(t) {
+      for (var i = 0; i < MENU_INDEX.length; i++) if (MENU_INDEX[i].t === t) return row(MENU_INDEX[i]);
+      return '';
+    }).join('');
+  }
+
+  window.ahSearch = function(q) {
+    q = (q || '').toLowerCase().trim();
+    document.getElementById('ahClear').style.display = q ? 'block' : 'none';
+    var res = document.getElementById('ahSearchRes');
+    document.getElementById('ahMain').style.display = q ? 'none' : 'block';
+    res.style.display = q ? 'block' : 'none';
+    if (!q) return;
+    var list = MENU_INDEX.filter(function(m) { return (m.t + ' ' + m.s + ' ' + m.d).toLowerCase().indexOf(q) >= 0; });
+    res.innerHTML = list.length
+      ? '<div class="ap-lbl">' + list.length + ' menu ditemukan</div><div class="ap-sec"><div class="ap-list">' + list.map(row).join('') + '</div></div>'
+      : '<div class="ah-empty">Menu tidak ditemukan</div>';
+  };
+  window.ahClearSearch = function() { var i = document.getElementById('ahSearch'); i.value = ''; ahSearch(''); i.focus(); };
+
+  // ---- Tab Menu & Monitoring ----
+  window.renderMenuTab = function(q) {
+    q = (q || '').toLowerCase().trim();
+    var html = '';
+    SEC.forEach(function(sec) {
+      var list = MENU_INDEX.filter(function(m) { return m.s === sec && !m.searchOnly && (!q || (m.t + ' ' + m.d).toLowerCase().indexOf(q) >= 0); });
+      if (!list.length) return;
+      html += '<div class="ap-lbl">' + esc(sec) + '</div><div class="ap-sec"><div class="ap-list">' + list.map(row).join('') + '</div></div>';
+    });
+    document.getElementById('amList').innerHTML = html || '<div class="ah-empty">Menu tidak ditemukan</div>';
+  };
+
+  function renderMonTab() {
+    var html = '';
+    SEC.forEach(function(sec) {
+      var list = MENU_INDEX.filter(function(m) { return m.s === sec && m.k === 'monitor'; });
+      if (!list.length) return;
+      html += '<div class="ap-lbl">' + esc(sec) + '</div><div class="ap-sec"><div class="ap-list">' + list.map(row).join('') + '</div></div>';
+    });
+    document.getElementById('amMonList').innerHTML = html;
+  }
+
+  // ---- Akun ----
+  window.appRefresh = function() { location.reload(); };
+  window.appToggleHelp = function() { var h = document.getElementById('apHelp'); h.style.display = h.style.display === 'none' ? 'block' : 'none'; };
+
+  // ---- Navigasi: bungkus goTo() ----
+  function afterNav(id) {
+    var t = NAV_MAP[id];
+    document.body.classList.toggle('nav-on', !!t);
+    document.querySelectorAll('.ap-tab').forEach(function(el) { el.classList.toggle('on', el.getAttribute('data-t') === t); });
+    if (id === 'page-menu') renderMenuTab(document.getElementById('amSearch').value);
+    if (id === 'page-home') renderRecents();
+    var m = byPage(id);
+    if (m && !m.hub && !m.soon) {
+      var r = storeGet().filter(function(x) { return x !== id; });
+      r.unshift(id);
+      storeSet(r.slice(0, 6));
+    }
+  }
+  var originalGoTo = window.goTo;
+  window.goTo = function(id) { originalGoTo(id); afterNav(id); };
+
+  // Judul halaman asli HURUF BESAR semua -> Huruf Awal Besar (singkatan tetap kapital)
+  var ACRONYMS = { 'SPA': 1, 'SPO': 1, 'WIP': 1, 'PRC': 1, 'GAP': 1, 'QC': 1, 'PIC': 1, 'OPCK': 1, 'INV': 1, 'IN/OUT': 1, '3R': 1, 'PPIC': 1 };
+  function titleCase(s) {
+    return s.split(' ').map(function(w) {
+      if (ACRONYMS[w]) return w;
+      return w.charAt(0) + w.slice(1).toLowerCase();
+    }).join(' ');
+  }
+
+  // ---- Header besar -> app bar ringkas di semua halaman dalam ----
+  function buildAppBars() {
+    var skip = { 'page-home': 1, 'page-menu': 1, 'page-monitoring': 1, 'page-akun': 1 };
+    document.querySelectorAll('.page').forEach(function(p) {
+      if (skip[p.id]) return;
+      var hz = p.querySelector(':scope > .header-zone');
+      if (!hz || hz.classList.contains('appbar')) return;
+      var back = hz.querySelector('.back-btn');
+      var onclick = back ? back.getAttribute('onclick') : "goTo('page-home')";
+      var tEl = p.querySelector('.area-label-text');
+      var label = p.querySelector(':scope > .area-label');
+      var crumb = label ? label.nextElementSibling : null;
+      var title = tEl ? titleCase(tEl.textContent.trim()) : '';
+      var sub = '';
+      if (crumb && crumb.textContent.indexOf('›') >= 0) {
+        var parts = crumb.textContent.split('›').map(function(s) { return s.trim(); });
+        sub = parts.length > 2 ? parts.slice(1, -1).join(' › ') : parts[0];
+      } else { crumb = null; }
+      hz.className = 'header-zone appbar';
+      hz.innerHTML = '<div class="ab-back" onclick="' + onclick.replace(/"/g, '&quot;') + '"><i class="ti ti-arrow-left"></i></div>'
+        + '<div class="ab-ttl"><b>' + esc(title) + '</b>' + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</div>';
+      if (label) label.parentNode.removeChild(label);
+      if (crumb) crumb.parentNode.removeChild(crumb);
+    });
+  }
+
+  buildAppBars();
+  document.getElementById('ahGreet').textContent = greet();
+  renderMonQuick();
+  renderMonTab();
+  renderMenuTab('');
+  afterNav('page-home');
+  if (typeof update === 'function') update(); // isi tanggal di Beranda
+})();
+</script>
+
 </body>
 </html>
