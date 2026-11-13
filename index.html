@@ -12368,10 +12368,15 @@
   var SPA_DIVISI = ['DISTRIBUSI', 'LINE', 'ACCESSORIES'];
 
   // Con's terakhir untuk Style+Material (dari kolom M "REKAP OUTSTANDING"); null kalau belum pernah ada.
+  // Con's bawaan: 1) kolom D sheet DATABASE_INVENTORY (Style+Komponen), 2) kalau kosong, Con's terakhir di REKAP OUTSTANDING.
   function spFindCons(style, material) {
     var s = (style || '').trim().toLowerCase();
     var m = (material || '').trim().toLowerCase();
     if (!s || !m) return null;
+    for (var j = 0; j < spMaster.inventory.length; j++) {
+      var iv = spMaster.inventory[j];
+      if (iv.cons != null && iv.style.toLowerCase() === s && iv.komponen.toLowerCase() === m) return iv.cons;
+    }
     for (var i = 0; i < spMaster.cons.length; i++) {
       var r = spMaster.cons[i];
       if (r.style.toLowerCase() === s && r.material.toLowerCase() === m) return r.cons;
